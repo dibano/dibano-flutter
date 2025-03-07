@@ -1,3 +1,5 @@
+import 'package:dibano/ui/widgets/track_activities.dart';
+import 'package:dibano/ui/widgets/activity_summary.dart';
 import 'package:flutter/material.dart';
 
 // --- ButtonData-Klasse ---
@@ -6,13 +8,14 @@ import 'package:flutter/material.dart';
 class ButtonData {
   final IconData icon; // Das Icon des Buttons (z.B. Icons.home)
   final String title; // Der Text des Buttons
-  final String routeName; // Der Routenname, zu dem navigiert werden soll
+  final Widget routeWidget; // Der Routenname, zu dem navigiert werden soll
+
 
   // Konstruktor für die ButtonData-Klasse.
   ButtonData({
     required this.icon,
     required this.title,
-    required this.routeName,
+    required this.routeWidget
   });
 }
 
@@ -21,30 +24,21 @@ class ButtonData {
 // Hier werden alle visuellen Elemente und die Logik für den Startbildschirm definiert.
 class HomeScreen extends StatelessWidget {
   // Konstruktor für den HomeScreen.
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.title});
+  final String title;
 
   // --- Button-Liste: Definition der Button-Daten ---
   // Hier werden die Daten für alle Buttons auf dem Home Screen in einer Liste von ButtonData-Objekten gespeichert.
   static final List<ButtonData> buttonDataList = [
     ButtonData(
-      icon: Icons.home_outlined,
-      title: 'Mein Bauernhof',
-      routeName: '/meinBauernhof',
-    ),
-    ButtonData(
-      icon: Icons.add_task_outlined,
-      title: 'Tätigkeit erfassen',
-      routeName: '/taetigkeitErfassen',
+      icon: Icons.add_task,
+      title: 'Tätigkeiten erfassen',
+      routeWidget: TrackActivities(title: 'Tätigkeiten erfassen'),
     ),
     ButtonData(
       icon: Icons.list_alt_outlined,
-      title: 'Übersicht der Tätigkeiten',
-      routeName: '/uebersichtTaetigkeiten',
-    ),
-    ButtonData(
-      icon: Icons.info_outline,
-      title: 'Informationen zum App',
-      routeName: '/informationenZumApp',
+      title: 'Übersicht',
+      routeWidget: ActivitySummary(title: "Übersicht"),
     ),
   ];
 
@@ -62,7 +56,7 @@ class HomeScreen extends StatelessWidget {
 
   // Methode zum Erstellen der App Bar.
   AppBar _buildAppBar() {
-    return AppBar(title: const Text('Home'));
+    return AppBar(title: Text(title));
   }
 
   // Methode zum Erstellen des Hauptinhalts (Body).
@@ -104,7 +98,7 @@ class HomeScreen extends StatelessWidget {
   List<Widget> _createButtons(double buttonSize) {
     return [
       for (final buttonData in buttonDataList) // Schleife durch die Button-Daten
-        _createButton(buttonData, buttonSize), // Erstelle jeden Button
+        _createButton(buttonData, buttonSize, ), // Erstelle jeden Button
     ];
   }
 
@@ -117,7 +111,13 @@ class HomeScreen extends StatelessWidget {
         width: buttonSize, // Breite des Buttons
         height: buttonSize, // Höhe des Buttons
         child: ElevatedButton( // ElevatedButton für jeden Button
-          onPressed: () => Navigator.pushNamed(context, buttonData.routeName), // Navigation
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => buttonData.routeWidget),
+          );
+        },
+            //Navigator.pushNamed(context, buttonData.routeName), // Navigation
           style: ElevatedButton.styleFrom( // Styling des Buttons
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)), // Abgerundete Ecken
             padding: const EdgeInsets.all(20.0), // Padding innerhalb des Buttons
