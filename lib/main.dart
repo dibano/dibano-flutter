@@ -1,4 +1,5 @@
 import 'package:dibano/home.dart';
+import 'package:dibano/track_activities.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,9 +14,9 @@ class Dibano extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 69, 132, 7)),
       ),
-      home: const Home(title: 'Flutter Demo Home Page'),
+      home: const TrackActivities(title: 'Tätigkeit erfassen'),
     );
   }
 }
