@@ -1,78 +1,34 @@
-import 'package:dibano/ui/widgets/track_activities.dart';
-import 'package:dibano/ui/widgets/activity_summary.dart';
+import 'package:dibano/ui/view_model/button_data.dart';
+import 'package:dibano/ui/view_model/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 
-// --- ButtonData-Klasse ---
-// Diese Klasse definiert die Datenstruktur für jeden Button auf dem Home Screen.
-// Jedes ButtonData-Objekt enthält das Icon, den Titel und den Routennamen.
-class ButtonData {
-  final IconData icon; // Das Icon des Buttons (z.B. Icons.home)
-  final String title; // Der Text des Buttons
-  final Widget routeWidget; // Der Routenname, zu dem navigiert werden soll
-
-
-  // Konstruktor für die ButtonData-Klasse.
-  ButtonData({
-    required this.icon,
-    required this.title,
-    required this.routeWidget
-  });
-}
-
-// --- HomeScreen-Klasse ---
-// Diese Klasse stellt den Home Screen der App dar.
-// Hier werden alle visuellen Elemente und die Logik für den Startbildschirm definiert.
 class HomeScreen extends StatelessWidget {
-  // Konstruktor für den HomeScreen.
-  const HomeScreen({super.key, required this.title});
+  HomeScreen({super.key, required this.title});
   final String title;
+  final HomeScreenViewModel viewModel = HomeScreenViewModel();
 
-  // --- Button-Liste: Definition der Button-Daten ---
-  // Hier werden die Daten für alle Buttons auf dem Home Screen in einer Liste von ButtonData-Objekten gespeichert.
-  static final List<ButtonData> buttonDataList = [
-    ButtonData(
-      icon: Icons.add_task,
-      title: 'Tätigkeiten erfassen',
-      routeWidget: TrackActivities(title: 'Tätigkeiten erfassen'),
-    ),
-    ButtonData(
-      icon: Icons.list_alt_outlined,
-      title: 'Übersicht',
-      routeWidget: ActivitySummary(title: "Übersicht"),
-    ),
-  ];
-
-  // --- build-Methode: Aufbau des Home Screens ---
-  // Die build-Methode wird aufgerufen, wenn Flutter das Widget neu zeichnen muss.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(), // Erstellt die App Bar
-      body: _buildBody(context), // Erstellt den Hauptinhalt
+      appBar: CustomAppBar(title: title),
+      body: _buildBody(context),
     );
   }
 
-  // --- Hilfsmethoden für den Aufbau ---
-
-  // Methode zum Erstellen der App Bar.
-  AppBar _buildAppBar() {
-    return AppBar(title: Text(title));
-  }
-
-  // Methode zum Erstellen des Hauptinhalts (Body).
   Widget _buildBody(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isLandscape = constraints.maxWidth > constraints.maxHeight; // Prüft, ob das Gerät im Landscape-Modus ist
-        final buttonSize = _calculateButtonSize(isLandscape, constraints); // Berechnet die Grösse der Buttons
-        return _buildButtonList(buttonSize); //Erstellt die Liste der Buttons
+        final isLandscape = constraints.maxWidth > constraints.maxHeight;
+        final buttonSize = _calculateButtonSize(isLandscape, constraints);
+        return _buildButtonList(buttonSize);
       },
     );
   }
 
   // Methode zum Berechnen der Button-Größe.
   double _calculateButtonSize(bool isLandscape, BoxConstraints constraints) {
-    const padding = 16.0; // Padding zwischen den Buttons
+    const padding = 16.0;
     return isLandscape
         ? constraints.maxWidth / 4 - (padding * 1.5)
         : constraints.maxWidth / 2 - (padding * 1.5);
@@ -80,15 +36,15 @@ class HomeScreen extends StatelessWidget {
 
   // Methode zum Erstellen der Scrollbaren Button Liste
   Widget _buildButtonList(double buttonSize) {
-    const padding = 10.0; // Padding für den Button Container
-    return SingleChildScrollView( // SingleChildScrollView ermöglicht das Scrollen
-      padding: const EdgeInsets.all(padding), // Padding um den gesamten Inhalt
-      child: Center( // Zentriert die Buttons
-        child: Wrap( // Wrap-Widget ordnet die Buttons an
-          spacing: padding, // Horizontaler Abstand
-          runSpacing: padding, // Vertikaler Abstand
-          alignment: WrapAlignment.center, // Zentriert die Buttons
-          children: _createButtons(buttonSize), // Erstellt die Liste der Buttons
+    const padding = 10.0;
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(padding),
+      child: Center(
+        child: Wrap(
+          spacing: padding,
+          runSpacing: padding,
+          alignment: WrapAlignment.center,
+          children: _createButtons(buttonSize),
         ),
       ),
     );
@@ -96,42 +52,46 @@ class HomeScreen extends StatelessWidget {
 
   // Methode zum erstellen der Buttons
   List<Widget> _createButtons(double buttonSize) {
+    final buttonDataList = viewModel.getButtonDataList();
     return [
-      for (final buttonData in buttonDataList) // Schleife durch die Button-Daten
-        _createButton(buttonData, buttonSize, ), // Erstelle jeden Button
+      for (final buttonData
+          in buttonDataList) // Schleife durch die Button-Daten
+        _createButton(buttonData, buttonSize), // Erstelle jeden Button
     ];
   }
 
   // Methode zum Erstellen eines einzelnen Buttons
   Widget _createButton(ButtonData buttonData, double buttonSize) {
-    const iconSize = 48.0; // Grösse der Icons
-    return Builder( // Builder Widget notwendig damit Context verfügbar ist.
+    const iconSize = 48.0;
+    return Builder(
       builder: (context) {
-      return SizedBox( // SizedBox für die Grösse des Buttons
-        width: buttonSize, // Breite des Buttons
-        height: buttonSize, // Höhe des Buttons
-        child: ElevatedButton( // ElevatedButton für jeden Button
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => buttonData.routeWidget),
-          );
-        },
-            //Navigator.pushNamed(context, buttonData.routeName), // Navigation
-          style: ElevatedButton.styleFrom( // Styling des Buttons
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)), // Abgerundete Ecken
-            padding: const EdgeInsets.all(20.0), // Padding innerhalb des Buttons
+        return SizedBox(
+          width: buttonSize,
+          height: buttonSize,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => buttonData.routeWidget),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              padding: const EdgeInsets.all(20.0),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(buttonData.icon, size: iconSize),
+                const SizedBox(height: 8),
+                Text(buttonData.title, textAlign: TextAlign.center),
+              ],
+            ),
           ),
-          child: Column( // Spalte für Icon und Text
-            mainAxisAlignment: MainAxisAlignment.center, // Zentriert Icon und Text
-            children: [
-              Icon(buttonData.icon, size: iconSize), // Icon des Buttons
-              const SizedBox(height: 8), // Abstand
-              Text(buttonData.title, textAlign: TextAlign.center), // Text des Buttons
-            ],
-          ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }

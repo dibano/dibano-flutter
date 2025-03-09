@@ -11,11 +11,13 @@ class Dibano extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'DIBANO',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 69, 132, 7)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 69, 132, 7),
+        ),
       ),
-      home: const HomeScreen(title: 'Home'),
+      home: HomeScreen(title: 'Home'),
     );
   }
 }

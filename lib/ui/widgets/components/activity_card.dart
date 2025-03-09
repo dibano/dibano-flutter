@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dibano/ui/view_model/activity_summary.dart';
+import 'package:dibano/ui/view_model/components/activity_card.dart';
 
 class ActivityCard extends StatefulWidget {
   const ActivityCard({super.key, required this.activity});
