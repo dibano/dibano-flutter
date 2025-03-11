@@ -1,4 +1,4 @@
-import 'package:dibano/ui/view_model/track_activeties.dart';
+import 'package:dibano/ui/view_model/track_activities.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/form_dropdown.dart';
@@ -14,7 +14,7 @@ class TrackActivities extends StatefulWidget {
 }
 
 class _TrackActivitiesState extends State<TrackActivities> {
-  TrackActivetiesViewModel trackActiveties = new TrackActivetiesViewModel();
+  TrackActivitiesViewModel trackActiveties = new TrackActivitiesViewModel();
   //Ort Dropdown
   String _selectedArea = 'Ort wählen';
 
