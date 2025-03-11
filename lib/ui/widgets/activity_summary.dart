@@ -49,7 +49,7 @@ class _ActivitySummaryState extends State<ActivitySummary> {
                   },
                   icon: Icon(Icons.sort),
                 ),
-                SizedBox(width: 8), // Abstand zwischen den Buttons
+                SizedBox(width: 8),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
@@ -61,7 +61,7 @@ class _ActivitySummaryState extends State<ActivitySummary> {
                     ),
                   ),
                 ),
-                SizedBox(width: 8), // Abstand zwischen den Buttons
+                SizedBox(width: 8),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
@@ -81,7 +81,11 @@ class _ActivitySummaryState extends State<ActivitySummary> {
               padding: const EdgeInsets.all(8.0),
               child: ListView(
                 children: <Widget>[
-                  for (int i = 0; i < 20; i++) // simulate 20 activities
+                  for (
+                    int i = 0;
+                    i < 20;
+                    i++
+                  ) // simulate 20 activities for example
                     ActivityCard(activity: activities.getActivities()[0]),
                 ],
               ),
@@ -128,7 +132,7 @@ class _ActivitySummaryState extends State<ActivitySummary> {
                     child: Text('E-Mail', style: TextStyle(fontSize: 16)),
                   ),
                 ),
-                SizedBox(width: 8), // Abstand zwischen den Buttons
+                SizedBox(width: 8),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
@@ -140,7 +144,7 @@ class _ActivitySummaryState extends State<ActivitySummary> {
                     ),
                   ),
                 ),
-                SizedBox(width: 8), // Abstand zwischen den Buttons
+                SizedBox(width: 8),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {

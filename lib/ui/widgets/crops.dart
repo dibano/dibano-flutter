@@ -2,7 +2,7 @@ import 'package:dibano/ui/view_model/components/detail_card.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_title.dart';
 import 'package:dibano/ui/widgets/components/detail_card.dart';
-import 'package:dibano/ui/widgets/corps_edit.dart';
+import 'package:dibano/ui/widgets/crops_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:dibano/ui/view_model/crops.dart';
@@ -33,7 +33,7 @@ class Crops extends StatelessWidget {
                         detail: Detail(
                           name: crop.field,
                           description: crop.crop,
-                          routeWidget: CorpsEdit(), //to do: add route
+                          routeWidget: CropsEdit(), //to do: add route
                         ),
                       ),
                   ],

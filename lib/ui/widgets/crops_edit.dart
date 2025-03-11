@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CorpsEdit extends StatelessWidget {
-  const CorpsEdit({super.key});
+class CropsEdit extends StatelessWidget {
+  const CropsEdit({super.key});
 
   @override
   Widget build(BuildContext context) {
