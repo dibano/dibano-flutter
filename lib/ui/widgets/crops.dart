@@ -14,7 +14,7 @@ class Crops extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CropsViewModel crops = new CropsViewModel();
+    CropsViewModel crops = CropsViewModel();
 
     return Scaffold(
       appBar: CustomAppBar(title: title),

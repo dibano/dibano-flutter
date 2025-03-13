@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:dibano/ui/view_model/crop.dart';
 
 class CropsViewModel extends ChangeNotifier {
-  List<Crop> _crops = [
+  final List<Crop> _crops = [
     Crop(field: "Feld A", crop: "Weizen"),
     Crop(field: "Feld B", crop: "Gerste"),
     Crop(field: "Feld C", crop: "Hafer"),
