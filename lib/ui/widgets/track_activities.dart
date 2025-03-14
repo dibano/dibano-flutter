@@ -3,6 +3,7 @@ import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/form_dropdown.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
+import 'package:provider/provider.dart';
 
 class TrackActivities extends StatefulWidget {
   const TrackActivities({super.key, required this.title});
@@ -14,7 +15,7 @@ class TrackActivities extends StatefulWidget {
 }
 
 class _TrackActivitiesState extends State<TrackActivities> {
-  TrackActivitiesViewModel trackActiveties = new TrackActivitiesViewModel();
+  TrackActivetiesViewModel trackActiveties = TrackActivetiesViewModel();
   //Ort Dropdown
   String _selectedArea = 'Ort wählen';
 
@@ -80,6 +81,14 @@ class _TrackActivitiesState extends State<TrackActivities> {
   }
 
   @override
+  void initState(){
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      Provider.of<TrackActivetiesViewModel>(context,listen: false).getFields();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -91,15 +100,17 @@ class _TrackActivitiesState extends State<TrackActivities> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FormDropdown(
-                  label: "Feld",
-                  value: _selectedArea,
-                  items: trackActiveties.getAreaList(),
-                  onChanged: (value) {
-                    setState(() => _selectedArea = value!);
-                  },
-                ),
-
+                Consumer<TrackActivetiesViewModel>(
+                  builder:(context,trackActiveties,child){
+                    return FormDropdown(
+                      label: "Feld",
+                      value: _selectedArea,
+                      items: ["Ort wählen", ...trackActiveties.fieldsList],
+                      onChanged: (value) {
+                        setState(() => _selectedArea = value!);
+                      },
+                    );
+                  }),
                 FormTextfield(
                   label: "Beschreibung",
                   controller: _descriptionController,
@@ -110,7 +121,7 @@ class _TrackActivitiesState extends State<TrackActivities> {
                 FormDropdown(
                   label: "Aktivität",
                   value: _selectedActivity,
-                  items: trackActiveties.getActivityList(),
+                  items: ["Aktivität wählen", "Aktivität 1", "Aktivität 2", "Aktivität 3"],
                   onChanged: (value) {
                     setState(() => _selectedActivity = value!);
                   },
@@ -120,7 +131,7 @@ class _TrackActivitiesState extends State<TrackActivities> {
                   FormDropdown(
                     label: "Düngemittel",
                     value: _selectedFertilizers,
-                    items: trackActiveties.getFertilizersList(),
+                    items: ["Düngemittel wählen", "Düngemittel 1", "Düngemittel 2", "Düngemittel 3"],
                     onChanged: (value) {
                       setState(() => _selectedFertilizers = value!);
                     },
@@ -148,7 +159,7 @@ class _TrackActivitiesState extends State<TrackActivities> {
                 FormDropdown(
                   label: "Kultur",
                   value: _selectedCulture,
-                  items: trackActiveties.getCultureList(),
+                  items: ["Kultur wählen", "Kultur 1", "Kultur 2", "Kultur 3"],
                   onChanged: (value) {
                     setState(() => _selectedCulture = value!);
                   },
@@ -157,7 +168,7 @@ class _TrackActivitiesState extends State<TrackActivities> {
                 FormDropdown(
                   label: "Person",
                   value: _selectedPerson,
-                  items: trackActiveties.getPersonList(),
+                  items: ["Person wählen", "Person 1", "Person 2", "Person 3"],
                   onChanged: (value) {
                     setState(() => _selectedPerson = value!);
                   },

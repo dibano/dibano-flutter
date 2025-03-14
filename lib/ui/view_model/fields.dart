@@ -1,26 +1,32 @@
+import 'package:dibano/data/database_handler.dart';
 import 'package:flutter/widgets.dart';
+import 'package:dibano/data/model/field_model.dart';
 
 class FieldsViewModel extends ChangeNotifier {
-  List<String> _fields = ["Feld A", "Feld B", "Feld C", "Feld D", "Feld E"];
+  final DatabaseHandler _databaseHandler = DatabaseHandler();
+  List<Field> _fields = [];
+  List<Field> get fields => _fields;
+  String tableName = "Field";
 
-  List<String> getFields() {
-    return _fields;
-  }
-
-  void addField(String field) {
-    _fields.add(field);
+  Future<void> addField(String fieldName) async{
+    var field = Field(fieldName: fieldName);
+    await _databaseHandler.insert(field, tableName);
     notifyListeners();
   }
 
-  void removeField(String field) {
-    _fields.remove(field);
+  Future<void> getFields() async{
+    _fields = await _databaseHandler.fields();
     notifyListeners();
   }
 
-  void updateFields(int index, String newField) {
-    if (index >= 0 && index < _fields.length) {
-      _fields[index] = newField;
-      notifyListeners();
-    }
+  Future<void> remove(int id) async{
+    await _databaseHandler.remove(id, tableName);
+    notifyListeners();
+  }
+
+  Future<void> update(int id, String fieldName) async{
+    var field = Field(id: id, fieldName: fieldName);
+    await _databaseHandler.update(field, tableName);
+    notifyListeners();
   }
 }

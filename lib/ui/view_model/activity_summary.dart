@@ -2,7 +2,7 @@ import 'package:dibano/ui/view_model/components/activity_card.dart';
 import 'package:flutter/widgets.dart';
 
 class ActivitySummaryViewModel extends ChangeNotifier {
-  List<Activity> _activities = [
+  final List<Activity> _activities = [
     Activity(
       activity: "Dügung mit 250kg Harnstoff",
       date: "23.05.2025",

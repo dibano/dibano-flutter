@@ -6,7 +6,7 @@ import 'package:dibano/ui/widgets/track_activities.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreenViewModel extends ChangeNotifier {
-  List<ButtonData> _buttonDataList = [
+  final List<ButtonData> _buttonDataList = [
     ButtonData(
       icon: Icons.add_task,
       title: 'Tätigkeiten erfassen',
