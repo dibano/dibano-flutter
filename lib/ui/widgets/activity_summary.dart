@@ -1,6 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:dibano/ui/view_model/activity_summary.dart';
+import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
+import 'package:dibano/ui/widgets/components/custom_title.dart';
+import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/activity_card.dart';
+import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 
 class ActivitySummary extends StatefulWidget {
   const ActivitySummary({super.key, required this.title});
@@ -12,21 +15,12 @@ class ActivitySummary extends StatefulWidget {
 }
 
 class _ActivitySummaryState extends State<ActivitySummary> {
+  ActivitySummaryViewModel activities = ActivitySummaryViewModel();
+
   @override
   Widget build(BuildContext context) {
-    var activity = Activity(
-      activity: "Dügung mit 250kg Harnstoff",
-      date: "23.05.2025",
-      field: "Feld A Ost",
-    );
-
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Center(
-          child: Text(widget.title, style: TextStyle(fontSize: 42)),
-        ),
-      ),
+      appBar: CustomAppBar(title: widget.title),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
@@ -55,7 +49,7 @@ class _ActivitySummaryState extends State<ActivitySummary> {
                   },
                   icon: Icon(Icons.sort),
                 ),
-                SizedBox(width: 8), // Abstand zwischen den Buttons
+                SizedBox(width: 8),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
@@ -67,7 +61,7 @@ class _ActivitySummaryState extends State<ActivitySummary> {
                     ),
                   ),
                 ),
-                SizedBox(width: 8), // Abstand zwischen den Buttons
+                SizedBox(width: 8),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
@@ -87,8 +81,12 @@ class _ActivitySummaryState extends State<ActivitySummary> {
               padding: const EdgeInsets.all(8.0),
               child: ListView(
                 children: <Widget>[
-                  for (int i = 0; i < 20; i++) // simulate 20 activities
-                    ActivityCard(activity: activity),
+                  for (
+                    int i = 0;
+                    i < 20;
+                    i++
+                  ) // simulate 20 activities for example
+                    ActivityCard(activity: activities.getActivities()[0]),
                 ],
               ),
             ),
@@ -114,7 +112,7 @@ class _ActivitySummaryState extends State<ActivitySummary> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Teilen', style: TextStyle(fontSize: 24)),
+                  CustomTitle(text: 'Teilen'),
                   SizedBox(height: 8),
                   Text('PDF übertragen', style: TextStyle(fontSize: 16)),
                 ],
@@ -134,7 +132,7 @@ class _ActivitySummaryState extends State<ActivitySummary> {
                     child: Text('E-Mail', style: TextStyle(fontSize: 16)),
                   ),
                 ),
-                SizedBox(width: 8), // Abstand zwischen den Buttons
+                SizedBox(width: 8),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
@@ -146,7 +144,7 @@ class _ActivitySummaryState extends State<ActivitySummary> {
                     ),
                   ),
                 ),
-                SizedBox(width: 8), // Abstand zwischen den Buttons
+                SizedBox(width: 8),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
@@ -161,21 +159,11 @@ class _ActivitySummaryState extends State<ActivitySummary> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              width: double.infinity,
-              height: 60.0,
-              child: ElevatedButton(
-                onPressed: () {
-                  // To do: Handle button press
-                },
-                child: Text(
-                  'Per Schnittstelle weiterleiten',
-                  style: TextStyle(fontSize: 24),
-                ),
-              ),
-            ),
+          CustomButtonLarge(
+            text: 'Per Schnittstelle weiterleiten',
+            onPressed: () {
+              // To do: Handle button press
+            },
           ),
         ],
       ),
