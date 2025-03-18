@@ -1,37 +1,25 @@
+import 'package:dibano/ui/view_model/People.dart';
 import 'package:dibano/ui/view_model/fields.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
-import 'package:dibano/ui/widgets/components/form_dropdown.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CropsEdit extends StatefulWidget {
-  CropsEdit({
-    super.key,
-    required this.title,
-    this.fieldName = "",
-    this.cropName = "",
-  });
+class PersonEdit extends StatelessWidget {
+  PersonEdit({super.key, required this.title, this.name = ""});
 
   final String title;
-  final String fieldName;
-  final String cropName;
+  final String name;
 
-  @override
-  State<CropsEdit> createState() => _CropsEditState();
-}
-
-class _CropsEditState extends State<CropsEdit> {
   final TextEditingController _descriptionController = TextEditingController();
-  String _selectedfield = 'Feld wählen';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: widget.title),
+      appBar: CustomAppBar(title: title),
       body: Consumer<FieldsViewModel>(
-        builder: (context, fieldsViewModel, child) {
+        builder: (context, peopleViewModel, child) {
           return Center(
             child: Column(
               children: <Widget>[
@@ -42,18 +30,10 @@ class _CropsEditState extends State<CropsEdit> {
                       children: <Widget>[
                         SizedBox(height: 24),
                         FormTextfield(
-                          label: "Kultur",
+                          label: "Name",
                           controller: _descriptionController,
                           keyboardType: TextInputType.text,
                           maxLine: 1,
-                        ),
-                        FormDropdown(
-                          label: "Feld",
-                          value: _selectedfield,
-                          items: ["Feld wählen", "Feld 1", "Feld 2", "Feld 3"],
-                          onChanged: (value) {
-                            setState(() => _selectedfield = value!);
-                          },
                         ),
                       ],
                     ),
@@ -62,7 +42,7 @@ class _CropsEditState extends State<CropsEdit> {
                 CustomButtonLarge(
                   text: 'Speichern',
                   onPressed: () async {
-                    // To do save crop
+                    // To do save field
                   },
                 ),
               ],

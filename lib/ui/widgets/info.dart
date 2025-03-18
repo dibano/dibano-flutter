@@ -14,7 +14,7 @@ class Info extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: title),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             SizedBox(height: 24),

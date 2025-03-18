@@ -33,7 +33,11 @@ class Crops extends StatelessWidget {
                         detail: Detail(
                           name: crop.field,
                           description: crop.crop,
-                          routeWidget: CropsEdit(), //to do: add route
+                          routeWidget: CropsEdit(
+                            title: "Kultur bearbeiten",
+                            fieldName: crop.field,
+                            cropName: crop.crop,
+                          ),
                         ),
                       ),
                   ],
@@ -43,7 +47,12 @@ class Crops extends StatelessWidget {
             CustomButtonLarge(
               text: 'Kulturen hinzufügen',
               onPressed: () {
-                // To do: Handle button press
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CropsEdit(title: "Kultur erstellen"),
+                  ),
+                );
               },
             ),
           ],
