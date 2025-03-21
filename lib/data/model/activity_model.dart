@@ -9,7 +9,10 @@ class Activity extends DatabaseModel{
       this.id,
       required this.activityName
   });
-  
+
+  static Future<List<Activity>> getAll() async{
+    return await DatabaseModel.dbHandler.activity();
+  }  
   // Convert a Dog into a Map. The keys must correspond to the names of the
   // columns in the database.
   @override
@@ -26,5 +29,8 @@ class Activity extends DatabaseModel{
   String toString() {
     return 'activity{id: $id, activityName: $activityName}';
   }
+  
+  @override
+  String get tableName => 'Activity';
 
 }

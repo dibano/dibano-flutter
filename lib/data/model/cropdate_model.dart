@@ -3,8 +3,8 @@ import 'package:dibano/data/model/database_model.dart';
 class CropDate extends DatabaseModel{
   @override
   final int? id;
-  final DateTime startDate;
-  final DateTime endDate;
+  final String startDate;
+  final String endDate;
   final int cropId;
   final int fieldId;
   
@@ -16,6 +16,9 @@ class CropDate extends DatabaseModel{
       required this.fieldId,
   });
   
+  static Future<List<CropDate>> getAll() async{
+    return await DatabaseModel.dbHandler.cropDates();
+  }
   // Convert a Dog into a Map. The keys must correspond to the names of the
   // columns in the database.
   @override
@@ -35,5 +38,8 @@ class CropDate extends DatabaseModel{
   String toString() {
     return 'cropDate{id: $id, startDate: $startDate, endDate: $endDate, cropId: $cropId, fieldId: $fieldId}';
   }
+
+  @override
+  String get tableName => 'CropDate';
 
 }

@@ -9,24 +9,27 @@ class FieldsViewModel extends ChangeNotifier {
   String tableName = "Field";
 
   Future<void> addField(String fieldName) async{
-    var field = Field(fieldName: fieldName);
-    await _databaseHandler.insert(field, tableName);
+    Field field = Field(fieldName: fieldName);
+    await field.insert();
     notifyListeners();
   }
 
   Future<void> getFields() async{
-    _fields = await _databaseHandler.fields();
+    _fields = await Field.getAll();
     notifyListeners();
   }
 
   Future<void> remove(int id) async{
-    await _databaseHandler.remove(id, tableName);
+    Field removeField = _fields.firstWhere((field) => field.id == id);
+    _fields.removeWhere((field)=>field.id==id);
+    await removeField.delete();
     notifyListeners();
   }
 
   Future<void> update(int id, String fieldName) async{
-    var field = Field(id: id, fieldName: fieldName);
-    await _databaseHandler.update(field, tableName);
+    Field field = Field(id:id, fieldName: fieldName);
+    await field.update();
+    await getFields();
     notifyListeners();
   }
 }

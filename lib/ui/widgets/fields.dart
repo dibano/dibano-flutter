@@ -8,18 +8,33 @@ import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:provider/provider.dart';
 
-class Fields extends StatelessWidget {
+class Fields extends StatefulWidget {
   const Fields({super.key, required this.title});
   final String title;
+
+  @override
+  State<Fields> createState()=>_FieldsState();
+}
+
+class _FieldsState extends State<Fields>{
+  bool _initialized = false;
+  @override
+  void didChangeDependencies(){
+    super.didChangeDependencies();
+    if(!_initialized){
+      Provider.of<FieldsViewModel>(context, listen: false).getFields();
+      _initialized = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     FieldsViewModel fieldsViewModel = Provider.of<FieldsViewModel>(context);
     return Scaffold(
-      appBar: CustomAppBar(title: title),
+      appBar: CustomAppBar(title: widget.title),
       body: Consumer<FieldsViewModel>(
         builder: (context, fieldsViewModel, child) {
-          fieldsViewModel.getFields();
+          Provider.of<FieldsViewModel>(context, listen: false).getFields();
           return Center(
             child: Column(
               children: <Widget>[
@@ -37,6 +52,7 @@ class Fields extends StatelessWidget {
                               routeWidget: FieldEdit(
                                 title: "Feld bearbeiten",
                                 fieldName: field.fieldName,
+                                fieldId: field.id
                               ),
                             ),
                           ),
@@ -47,13 +63,16 @@ class Fields extends StatelessWidget {
                 CustomButtonLarge(
                   text: 'Feld hinzufügen',
                   onPressed: () async {
-                    Navigator.push(
+                    final result = Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder:
                             (context) => FieldEdit(title: "Feld erstellen"),
                       ),
                     );
+                    if(result == true){
+                      await Provider.of<FieldsViewModel>(context, listen: false).getFields();
+                    }
                   },
                 ),
               ],

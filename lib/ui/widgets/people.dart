@@ -1,7 +1,5 @@
-import 'package:dibano/data/model/person_model.dart';
-import 'package:dibano/ui/view_model/People.dart';
+import 'package:dibano/ui/view_model/people.dart';
 import 'package:dibano/ui/view_model/components/detail_card.dart';
-import 'package:dibano/ui/view_model/fields.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_title.dart';
 import 'package:dibano/ui/widgets/components/detail_card.dart';
@@ -10,18 +8,34 @@ import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:provider/provider.dart';
 
-class People extends StatelessWidget {
+class People extends StatefulWidget {
   const People({super.key, required this.title});
   final String title;
 
   @override
+  State<People> createState()=>_PeopleState();
+}
+
+class _PeopleState extends State<People>{
+  bool _initialized = false;
+  @override
+  void didChangeDependencies(){
+    super.didChangeDependencies();
+    if(!_initialized){
+      Provider.of<PersonViewModel>(context, listen: false).getPerson();
+      _initialized = true;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    FieldsViewModel peopleViewModel = Provider.of<FieldsViewModel>(context);
+    PersonViewModel peopleViewModel = Provider.of<PersonViewModel>(context);
     return Scaffold(
-      appBar: CustomAppBar(title: title),
-      body: Consumer<FieldsViewModel>(
+      appBar: CustomAppBar(title: widget.title),
+      body: Consumer<PersonViewModel>(
         builder: (context, peopleViewModel, child) {
-          //  peopleViewModel.get();
+          Provider.of<PersonViewModel>(context, listen: false).getPerson();
+          peopleViewModel.getPerson();
           return Center(
             child: Column(
               children: <Widget>[
@@ -32,13 +46,14 @@ class People extends StatelessWidget {
                       children: <Widget>[
                         SizedBox(height: 24),
                         CustomTitle(text: 'Personen konfigurieren'),
-                        for (var person in peopleViewModel.fields)
+                        for (var person in peopleViewModel.personList)
                           DetailCard(
                             detail: Detail(
-                              name: person.fieldName,
+                              name: person.personName,
                               routeWidget: PersonEdit(
                                 title: "Person bearbeiten",
-                                name: person.fieldName,
+                                personName: person.personName,
+                                personId: person.id,
                               ),
                             ),
                           ),
@@ -49,13 +64,16 @@ class People extends StatelessWidget {
                 CustomButtonLarge(
                   text: 'Person hinzufügen',
                   onPressed: () async {
-                    Navigator.push(
+                    final result = Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder:
                             (context) => PersonEdit(title: "Person erstellen"),
                       ),
                     );
+                    if(result == true){
+                      await Provider.of<PersonViewModel>(context, listen: false).getPerson();
+                    }
                   },
                 ),
               ],

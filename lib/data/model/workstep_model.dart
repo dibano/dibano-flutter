@@ -1,3 +1,4 @@
+import 'package:dibano/data/database_handler.dart';
 import 'package:dibano/data/model/database_model.dart';
 
 class Workstep extends DatabaseModel{
@@ -6,6 +7,7 @@ class Workstep extends DatabaseModel{
   final String description;
   final String person;
   final int cropDateId;
+  final dbHandler = DatabaseHandler();
   
   Workstep({
       this.id,
@@ -13,7 +15,7 @@ class Workstep extends DatabaseModel{
       required this.person,
       required this.cropDateId,
   });
-  
+
   // Convert a Dog into a Map. The keys must correspond to the names of the
   // columns in the database.
   @override
@@ -32,5 +34,8 @@ class Workstep extends DatabaseModel{
   String toString() {
     return 'workstep{id: $id, description: $description, person: $person, cropDateId: $cropDateId}';
   }
+
+  @override
+  String get tableName => 'Workstep';
 
 }

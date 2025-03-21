@@ -1,9 +1,15 @@
 import 'dart:async';
 
+import 'package:dibano/data/model/completeCrop_model.dart';
+import 'package:dibano/data/model/cropdate_model.dart';
 import 'package:dibano/data/model/database_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:dibano/data/model/field_model.dart';
+import 'package:dibano/data/model/crop_model.dart';
+import 'package:dibano/data/model/person_model.dart';
+import 'package:dibano/data/model/activity_model.dart';
+
 
 class DatabaseHandler{
   static Future<Database> get database async{
@@ -73,6 +79,20 @@ class DatabaseHandler{
             FOREIGN KEY(workstepId) REFERENCES Workstep(id)
           )
         ''');
+
+        await database.execute('''
+          CREATE VIEW CompleteCrops AS
+            SELECT cr.cropName
+                  ,cd.startDate
+                  ,cd.endDate
+                  ,cd.fieldId
+                  ,fl.fieldName
+            FROM Crop cr
+            INNER JOIN CropDate cd
+            on cd.cropId = cr.id
+            INNER JOIN Field fl
+            on fl.id = cd.fieldId
+        ''');
       }
     );
   }
@@ -89,6 +109,16 @@ class DatabaseHandler{
       databaseModel.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,  
     );
+  }
+
+  Future<int> insertReturnId(DatabaseModel databaseModel, String tableName) async {
+    final db = await database;
+    int id = await db.insert(
+      tableName,
+      databaseModel.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,  
+    );
+    return id;
   }
 
   Future<void> remove(int id, String tableName) async {
@@ -126,6 +156,53 @@ class DatabaseHandler{
       for (final {'id': id as int, 'fieldName': fieldName as String}
           in fieldMaps)
         Field(id: id, fieldName: fieldName),
+    ];
+  }
+
+  // A method that retrieves all the Fields from the fields table.
+  Future<List<CropDate>> cropDates() async {
+    final db = await database;
+    final List<Map<String, Object?>> cropDatesMap = await db.query('CropDate');
+    return [
+      for (final {'id': id as int, 'startDate': startDate as String, 'endDate': endDate as String, 'cropId':cropId as int, 'fieldId':fieldId as int}
+          in cropDatesMap)
+        CropDate(id: id, startDate: startDate, endDate: endDate, cropId: cropId, fieldId: fieldId),
+    ];
+  }
+
+  Future<List<Crop>> crops() async {
+    final db = await database;
+    final List<Map<String, Object?>> cropMaps = await db.query('Crop');
+    return [
+      for (final {'id': id as int, 'cropName': cropName as String}
+          in cropMaps)
+        Crop(id: id, cropName: cropName),
+    ];
+  }
+
+  Future<List<CompleteCrop>> completeCrops() async {
+    final db = await database;
+    final List<Map<String, Object?>> completeCropMap = await db.query('CompleteCrops');
+    return completeCropMap.map((map) => CompleteCrop.fromMap(map)).toList();
+  }
+
+  Future<List<Person>> person() async {
+    final db = await database;
+    final List<Map<String, Object?>> personMaps = await db.query('Person');
+    return [
+      for (final {'id': id as int, 'personName': personName as String}
+          in personMaps)
+        Person(id: id, personName: personName),
+    ];
+  }
+
+  Future<List<Activity>> activity() async {
+    final db = await database;
+    final List<Map<String, Object?>> activityMaps = await db.query('Activity');
+    return [
+      for (final {'id': id as int, 'activityName': activityName as String}
+          in activityMaps)
+        Activity(id: id, activityName: activityName),
     ];
   }
 }

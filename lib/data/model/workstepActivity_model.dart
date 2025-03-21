@@ -31,4 +31,7 @@ class WorkstepActivity extends DatabaseModel{
     return 'workstepActivity{id: $id, workstepId: $workstepId, activityId: $activityId';
   }
 
+  @override
+  String get tableName => 'WorkstepActivity';
+
 }

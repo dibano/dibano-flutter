@@ -1,37 +1,65 @@
-import 'package:dibano/ui/view_model/fields.dart';
+import 'package:dibano/ui/view_model/crops.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
+import 'package:dibano/ui/widgets/components/custom_iconbutton_large.dart';
+import 'package:dibano/ui/widgets/components/form_date.dart';
 import 'package:dibano/ui/widgets/components/form_dropdown.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
+import 'package:dibano/ui/view_model/fields.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CropsEdit extends StatefulWidget {
   CropsEdit({
-    super.key,
-    required this.title,
-    this.fieldName = "",
+    super.key, 
+    required this.title, 
     this.cropName = "",
-  });
+    this.cropId,
+    this.startDate,
+    this.fieldId,
+    this.endDate});
 
   final String title;
-  final String fieldName;
   final String cropName;
+  final int? cropId;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final int? fieldId;
 
   @override
   State<CropsEdit> createState() => _CropsEditState();
 }
 
 class _CropsEditState extends State<CropsEdit> {
+
+  @override
+  void initState(){
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      Provider.of<FieldsViewModel>(context,listen: false).getFields();
+    });
+
+    setState(() {
+      _startDate=widget.startDate;
+      _endDate = widget.endDate;
+      _selectedField = widget.fieldId?.toString()?? "-1";
+      _descriptionController.text = widget.cropName;
+    });
+  }
+
+  String? _selectedField = "-1";
+  DateTime? _startDate;
+  DateTime? _endDate;
+
   final TextEditingController _descriptionController = TextEditingController();
-  String _selectedfield = 'Feld wählen';
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: CustomAppBar(title: widget.title),
-      body: Consumer<FieldsViewModel>(
-        builder: (context, fieldsViewModel, child) {
+      body: Consumer<CropsViewModel>(
+        builder: (context, cropsViewModel, child) {
           return Center(
             child: Column(
               children: <Widget>[
@@ -42,29 +70,85 @@ class _CropsEditState extends State<CropsEdit> {
                       children: <Widget>[
                         SizedBox(height: 24),
                         FormTextfield(
-                          label: "Kultur",
+                          label: "Kulturname",
                           controller: _descriptionController,
                           keyboardType: TextInputType.text,
                           maxLine: 1,
                         ),
-                        FormDropdown(
-                          label: "Feld",
-                          value: _selectedfield,
-                          items: ["Feld wählen", "Feld 1", "Feld 2", "Feld 3"],
-                          onChanged: (value) {
-                            setState(() => _selectedfield = value!);
-                          },
+
+                        FormDate(
+                          label: "Startdatum",
+                          placeholderDate: DateTime.now(),
+                          dateSelected: (date){
+                            setState(() => _startDate = date!);
+                          }
                         ),
+
+                        FormDate(
+                          label: "Enddatum",
+                          placeholderDate: DateTime.now(),
+                          dateSelected: (date){
+                            setState(() => _endDate = date!);
+                          }
+                        ),
+
+                        Consumer<FieldsViewModel>(
+                          builder:(context,fieldsViewModel,child){
+                            return FormDropdown(
+                              label: "Feld",
+                              value: _selectedField!,
+                              items: [
+                                DropdownMenuItem(
+                                  value: "-1",
+                                  child: Text("Ort wählen"),
+                                ),
+                                ...fieldsViewModel.fields.map((field) => DropdownMenuItem(
+                                  value:field.id.toString(),
+                                  child: Text(field.fieldName),
+                                )),
+                              ],
+                              onChanged: (value) {
+                                setState(() => _selectedField = value ?? "");
+                              },
+                            );
+                          }),
                       ],
                     ),
                   ),
                 ),
-                CustomButtonLarge(
-                  text: 'Speichern',
-                  onPressed: () async {
-                    // To do save crop
-                  },
-                ),
+                Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,  
+                children: [
+                  Flexible(
+                    child:
+                      CustomButtonLarge(
+                        text: 'Speichern',
+                        onPressed: () async {
+                          if(widget.cropId == null){
+                            int? fieldId = int.tryParse(_selectedField!); // Konvertiert String zu int
+                            cropsViewModel.add(_descriptionController.text, _startDate!, _endDate!, fieldId!);
+                            print("crop added");
+                          }
+                          else{
+                            int? fieldId = int.tryParse(_selectedField!); // Konvertiert String zu int
+                            cropsViewModel.update(_descriptionController.text, _startDate!, _endDate!, fieldId!, widget.cropId!);
+                            print("crop updated");
+                          }
+                          Navigator.pop(context);
+                        },
+                      ),
+                  ),
+                  Flexible(
+                    child:
+                      CustomIconButtonLarge(
+                        icon: Icon(Icons.delete),
+                        onPressed: () async {
+                            cropsViewModel.remove(widget.cropId!);
+                            Navigator.pop(context);
+                        },
+                      ),
+                  )
+                ],)
               ],
             ),
           );

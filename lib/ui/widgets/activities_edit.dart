@@ -1,4 +1,4 @@
-import 'package:dibano/ui/view_model/fields.dart';
+import 'package:dibano/ui/view_model/activities.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:dibano/ui/widgets/components/custom_iconbutton_large.dart';
@@ -6,23 +6,23 @@ import 'package:dibano/ui/widgets/components/form_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class FieldEdit extends StatelessWidget {
-  FieldEdit({super.key, required this.title, this.fieldName = "", this.fieldId});
+class ActivitiesEdit extends StatelessWidget {
+  ActivitiesEdit({super.key, required this.title, this.activityName = "", this.activityId});
 
   final String title;
-  final String fieldName;
-  final int? fieldId;
+  final String activityName;
+  final int? activityId;
 
   final TextEditingController _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    _descriptionController.text = fieldName;
+    _descriptionController.text = activityName;
 
     return Scaffold(
       appBar: CustomAppBar(title: title),
-      body: Consumer<FieldsViewModel>(
-        builder: (context, fieldsViewModel, child) {
+      body: Consumer<ActivitiesViewModel>(
+        builder: (context, activitiesViewModel, child) {
           return Center(
             child: Column(
               children: <Widget>[
@@ -50,15 +50,15 @@ class FieldEdit extends StatelessWidget {
                       CustomButtonLarge(
                         text: 'Speichern',
                         onPressed: () async {
-                          if(fieldId == null){
-                            fieldsViewModel.addField(_descriptionController.text);
-                            print("crop added");
+                          if(activityId == null){
+                            activitiesViewModel.add(_descriptionController.text);
+                            print("activity added");
                           }
                           else{
-                            fieldsViewModel.update(fieldId!, _descriptionController.text);
-                            print("crop updated");
+                            activitiesViewModel.update(activityId!, _descriptionController.text);
+                            print("activity updated");
                           }
-                          Navigator.pop(context, true);
+                          Navigator.pop(context);
                         },
                       ),
                   ),
@@ -67,8 +67,8 @@ class FieldEdit extends StatelessWidget {
                       CustomIconButtonLarge(
                         icon: Icon(Icons.delete),
                         onPressed: () async {
-                            fieldsViewModel.remove(fieldId!);
-                            Navigator.pop(context, true);
+                            activitiesViewModel.remove(activityId!);
+                            Navigator.pop(context);
                         },
                       ),
                   )

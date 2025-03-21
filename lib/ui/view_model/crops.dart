@@ -1,33 +1,60 @@
+import 'package:dibano/data/database_handler.dart';
+import 'package:dibano/data/model/completeCrop_model.dart';
+import 'package:dibano/data/model/cropdate_model.dart';
 import 'package:flutter/widgets.dart';
-import 'package:dibano/ui/view_model/crop.dart';
+import 'package:dibano/data/model/crop_model.dart';
 
 class CropsViewModel extends ChangeNotifier {
-  final List<Crop> _crops = [
-    Crop(field: "Feld A", crop: "Weizen"),
-    Crop(field: "Feld B", crop: "Gerste"),
-    Crop(field: "Feld C", crop: "Hafer"),
-    Crop(field: "Feld D", crop: "Roggen"),
-    Crop(field: "Feld E", crop: "Mais"),
-  ];
+  final DatabaseHandler _databaseHandler = DatabaseHandler();
 
-  List<Crop> getCrops() {
-    return _crops;
-  }
+  List<CropDate> _cropDateList = [];
+  List<CropDate> get cropDateList => _cropDateList;
 
-  void addCrop(Crop crop) {
-    _crops.add(crop);
+  List<CompleteCrop> _completeCrop = [];
+  List<CompleteCrop> get completeCrop => _completeCrop;
+
+  List<Crop> _cropList = [];
+  List<Crop> get cropList => _cropList;
+
+  String tableName = "Crop";
+
+  Future<void> add(String cropName, DateTime startDate, DateTime endDate, int fieldId) async{
+    Crop crop = Crop(cropName: cropName);
+    print(crop);
+    int cropId = await crop.insertReturnId(crop);
+
+
+    CropDate cropDate = CropDate(startDate: startDate.toIso8601String(), endDate: endDate.toIso8601String(), cropId: cropId, fieldId: fieldId);
+    await cropDate.insert();
     notifyListeners();
   }
 
-  void removeCrop(Crop crop) {
-    _crops.remove(crop);
+  Future<void> getCrops() async{
+    _cropList = await Crop.getAll();
+    _cropDateList = await CropDate.getAll();
     notifyListeners();
   }
 
-  void updateCrop(int index, Crop newCrop) {
-    if (index >= 0 && index < _crops.length) {
-      _crops[index] = newCrop;
-      notifyListeners();
-    }
+  Future<void> remove(int id) async{
+    CropDate removeCropDate = _cropDateList.firstWhere((crop) => crop.id == id);
+    _cropDateList.removeWhere((crop)=>crop.id==id);
+    await removeCropDate.delete();
   }
+
+  Future<void> update(String cropName, DateTime startDate, DateTime endDate, int fieldId, int cropId) async{
+    Crop crop = Crop(id: cropId, cropName: cropName);
+    await crop.update();
+
+    CropDate cropDate = CropDate(startDate: startDate.toIso8601String(), endDate: endDate.toIso8601String(), cropId: cropId, fieldId: fieldId);
+    cropDate.update();
+
+    await getCrops();
+    notifyListeners();
+  }
+
+  Future<void> getCompleteCrops() async{
+    _completeCrop = await CompleteCrop.getCompleteCrops();
+    notifyListeners();
+  }
+
 }

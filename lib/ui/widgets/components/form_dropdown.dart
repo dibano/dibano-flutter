@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class FormDropdown extends StatelessWidget{
   final String label;
   final String value;
-  final List<String> items;
+  final List<DropdownMenuItem<String>> items;
   final ValueChanged<String?> onChanged;
 
   const FormDropdown({
@@ -38,12 +38,7 @@ class FormDropdown extends StatelessWidget{
             border: OutlineInputBorder(),
           ),
           onChanged: onChanged,
-          items: items.map<DropdownMenuItem<String>>((String item){
-            return DropdownMenuItem(
-              value: item,
-              child: Text(item),
-            );
-          }).toList(),
+          items: items,
         ),
         const SizedBox(
           height: 15
