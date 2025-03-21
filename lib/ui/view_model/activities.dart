@@ -14,12 +14,14 @@ class ActivitiesViewModel extends ChangeNotifier {
 
   Future<void> getActivities() async{
     _activities = await Activity.getAll();
+    notifyListeners();
   }
 
   Future<void> remove(int id) async{
     Activity removeActivity = _activities.firstWhere((activity) => activity.id == id);
     _activities.removeWhere((activity)=>activity.id==id);
     await removeActivity.delete();
+    notifyListeners();
   }
 
   Future<void> update(int id, String activityName) async{

@@ -12,7 +12,10 @@ class WorkstepActivity extends DatabaseModel{
       required this.workstepId,
       required this.activityId,
   });
-  
+
+  static Future<List<WorkstepActivity>> getAll() async{
+    return await DatabaseModel.dbHandler.workstepActivities();
+  }  
   // Convert a Dog into a Map. The keys must correspond to the names of the
   // columns in the database.
   @override

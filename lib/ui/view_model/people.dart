@@ -14,12 +14,14 @@ class PersonViewModel extends ChangeNotifier {
 
   Future<void> getPerson() async{
     _personList = await Person.getAll();
+    notifyListeners();
   }
 
   Future<void> remove(int id) async{
     Person removePerson = _personList.firstWhere((person) => person.id == id);
     _personList.removeWhere((person)=>person.id==id);
     await removePerson.delete();
+    notifyListeners();
   }
 
   Future<void> update(int id, String personName) async{

@@ -35,7 +35,6 @@ class _PeopleState extends State<People>{
       body: Consumer<PersonViewModel>(
         builder: (context, peopleViewModel, child) {
           Provider.of<PersonViewModel>(context, listen: false).getPerson();
-          peopleViewModel.getPerson();
           return Center(
             child: Column(
               children: <Widget>[

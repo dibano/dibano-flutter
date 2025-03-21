@@ -33,7 +33,7 @@ class ActivitiesEdit extends StatelessWidget {
                       children: <Widget>[
                         SizedBox(height: 24),
                         FormTextfield(
-                          label: "Feldname",
+                          label: "Name der Aktivität",
                           controller: _descriptionController,
                           keyboardType: TextInputType.text,
                           maxLine: 1,

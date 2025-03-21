@@ -1,14 +1,18 @@
 import 'dart:async';
 
 import 'package:dibano/data/model/completeCrop_model.dart';
+import 'package:dibano/data/model/completeWorkstep_model.dart';
 import 'package:dibano/data/model/cropdate_model.dart';
 import 'package:dibano/data/model/database_model.dart';
+import 'package:dibano/data/model/workstepActivity_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:dibano/data/model/field_model.dart';
 import 'package:dibano/data/model/crop_model.dart';
 import 'package:dibano/data/model/person_model.dart';
 import 'package:dibano/data/model/activity_model.dart';
+import 'package:dibano/data/model/workstep_model.dart';
+
 
 
 class DatabaseHandler{
@@ -58,8 +62,9 @@ class DatabaseHandler{
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             cropdateId INTEGER NOT NULL,
             description VARCHAR(200) NOT NULL,
-            person VARCHAR(50) NOT NULL,
+            personId INTEGER NOT NULL,
             FOREIGN KEY(cropdateId) REFERENCES CropDate(id)
+            FOREIGN KEY(personId) REFERENCES Person(id)
           )
         ''');
 
@@ -82,16 +87,42 @@ class DatabaseHandler{
 
         await database.execute('''
           CREATE VIEW CompleteCrops AS
-            SELECT cr.cropName
+            SELECT cd.id
+                  ,cr.cropName
                   ,cd.startDate
                   ,cd.endDate
                   ,cd.fieldId
                   ,fl.fieldName
+                  ,cd.id AS cropDateId
             FROM Crop cr
             INNER JOIN CropDate cd
             on cd.cropId = cr.id
             INNER JOIN Field fl
             on fl.id = cd.fieldId
+        ''');
+
+        await database.execute('''
+          CREATE VIEW CompleteWorkstep AS
+            SELECT cd.id
+              ,wa.id as workstepActivityId
+              ,ws.id as workstepId
+              ,wa.activityId
+              ,ws.personId
+              ,ac.activityName
+              ,fd.fieldName
+              ,cp.cropName
+              ,ws.description
+            FROM WorkstepActivity wa
+            INNER JOIN Workstep ws
+            on ws.id = wa.workstepId
+            INNER JOIN Activity ac
+            on ac.id = wa.activityId
+            INNER JOIN CropDate cd
+            on cd.id = ws.cropdateId
+            INNER JOIN Crop cp
+            on cp.id = cd.cropId
+            INNER JOIN Field fd
+            on fd.id = cd.fieldId
         ''');
       }
     );
@@ -186,6 +217,13 @@ class DatabaseHandler{
     return completeCropMap.map((map) => CompleteCrop.fromMap(map)).toList();
   }
 
+  Future<List<CompleteWorkstep>> completeWorksteps() async {
+    final db = await database;
+    final List<Map<String, Object?>> completeWorkstepMap = await db.query('CompleteWorkstep');
+    print("workstepsliste: $completeWorkstepMap");
+    return completeWorkstepMap.map((map) => CompleteWorkstep.fromMap(map)).toList();
+  }
+
   Future<List<Person>> person() async {
     final db = await database;
     final List<Map<String, Object?>> personMaps = await db.query('Person');
@@ -205,4 +243,24 @@ class DatabaseHandler{
         Activity(id: id, activityName: activityName),
     ];
   }
+
+   Future<List<WorkstepActivity>> workstepActivities() async {
+    final db = await database;
+    final List<Map<String, Object?>> workstepActivities = await db.query('WorkstepActivity');
+    return [
+      for (final {'id': id as int, 'activityId': activityId as int, 'workstepId': workstepId as int}
+        in workstepActivities)
+        WorkstepActivity(id: id, activityId: activityId, workstepId: workstepId),
+      ];  
+    }
+
+  /*Future<List<Workstep>> worksteps() async {
+    final db = await database;
+    final List<Map<String, Object?>> worksteps = await db.query('Workstep');
+    return [
+      for (final {'id': id as int, 'description': description as String, 'personId': personId as int, 'cropDateId': cropDateId as int}
+        in worksteps)
+        Workstep(id: id, description:description, personId: personId, cropDateId: cropDateId)
+      ];  
+    }*/
 }

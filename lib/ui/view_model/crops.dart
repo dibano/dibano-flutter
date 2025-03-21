@@ -20,7 +20,6 @@ class CropsViewModel extends ChangeNotifier {
 
   Future<void> add(String cropName, DateTime startDate, DateTime endDate, int fieldId) async{
     Crop crop = Crop(cropName: cropName);
-    print(crop);
     int cropId = await crop.insertReturnId(crop);
 
 
@@ -41,11 +40,11 @@ class CropsViewModel extends ChangeNotifier {
     await removeCropDate.delete();
   }
 
-  Future<void> update(String cropName, DateTime startDate, DateTime endDate, int fieldId, int cropId) async{
+  Future<void> update(String cropName, DateTime startDate, DateTime endDate, int fieldId, int cropId, int cropDateId) async{
     Crop crop = Crop(id: cropId, cropName: cropName);
     await crop.update();
 
-    CropDate cropDate = CropDate(startDate: startDate.toIso8601String(), endDate: endDate.toIso8601String(), cropId: cropId, fieldId: fieldId);
+    CropDate cropDate = CropDate(id:cropDateId, startDate: startDate.toIso8601String(), endDate: endDate.toIso8601String(), cropId: cropId, fieldId: fieldId);
     cropDate.update();
 
     await getCrops();
@@ -54,7 +53,17 @@ class CropsViewModel extends ChangeNotifier {
 
   Future<void> getCompleteCrops() async{
     _completeCrop = await CompleteCrop.getCompleteCrops();
+    print("Get:  $_completeCrop");
     notifyListeners();
   }
 
+  String getCropName(int cropDateId){
+    print("Get2:  $_completeCrop");
+    for (CompleteCrop crop in _completeCrop){
+      if(crop.id == cropDateId){
+        return crop.cropName;
+      }
+    }
+    return "unbekannt";
+  }
 }

@@ -17,7 +17,8 @@ class CropsEdit extends StatefulWidget {
     this.cropId,
     this.startDate,
     this.fieldId,
-    this.endDate});
+    this.endDate,
+    this.cropDateId,});
 
   final String title;
   final String cropName;
@@ -25,6 +26,7 @@ class CropsEdit extends StatefulWidget {
   final DateTime? startDate;
   final DateTime? endDate;
   final int? fieldId;
+  final int? cropDateId;
 
   @override
   State<CropsEdit> createState() => _CropsEditState();
@@ -78,7 +80,7 @@ class _CropsEditState extends State<CropsEdit> {
 
                         FormDate(
                           label: "Startdatum",
-                          placeholderDate: DateTime.now(),
+                          placeholderDate: _startDate ?? DateTime.now(),
                           dateSelected: (date){
                             setState(() => _startDate = date!);
                           }
@@ -86,7 +88,7 @@ class _CropsEditState extends State<CropsEdit> {
 
                         FormDate(
                           label: "Enddatum",
-                          placeholderDate: DateTime.now(),
+                          placeholderDate: _endDate ?? DateTime.now(),
                           dateSelected: (date){
                             setState(() => _endDate = date!);
                           }
@@ -126,12 +128,12 @@ class _CropsEditState extends State<CropsEdit> {
                         onPressed: () async {
                           if(widget.cropId == null){
                             int? fieldId = int.tryParse(_selectedField!); // Konvertiert String zu int
-                            cropsViewModel.add(_descriptionController.text, _startDate!, _endDate!, fieldId!);
+                            cropsViewModel.add(_descriptionController.text, _startDate ?? DateTime.now(), _endDate ?? DateTime.now(), fieldId!);
                             print("crop added");
                           }
                           else{
                             int? fieldId = int.tryParse(_selectedField!); // Konvertiert String zu int
-                            cropsViewModel.update(_descriptionController.text, _startDate!, _endDate!, fieldId!, widget.cropId!);
+                            cropsViewModel.update(_descriptionController.text, _startDate!, _endDate!, fieldId!, widget.cropId!, widget.cropDateId!);
                             print("crop updated");
                           }
                           Navigator.pop(context);

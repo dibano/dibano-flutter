@@ -49,6 +49,8 @@ class _CropsState extends State<Crops>{
                         detail: Detail(
                           name: crop.cropName,
                           routeWidget: CropsEdit(
+                            cropId: crop.id,
+                            cropDateId: crop.cropDateId,
                             title: "Kultur bearbeiten",
                             cropName: crop.cropName,
                             startDate: DateTime.tryParse(crop.startDate),
