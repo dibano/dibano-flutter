@@ -13,15 +13,15 @@ class Fields extends StatefulWidget {
   final String title;
 
   @override
-  State<Fields> createState()=>_FieldsState();
+  State<Fields> createState() => _FieldsState();
 }
 
-class _FieldsState extends State<Fields>{
+class _FieldsState extends State<Fields> {
   bool _initialized = false;
   @override
-  void didChangeDependencies(){
+  void didChangeDependencies() {
     super.didChangeDependencies();
-    if(!_initialized){
+    if (!_initialized) {
       Provider.of<FieldsViewModel>(context, listen: false).getFields();
       _initialized = true;
     }
@@ -52,7 +52,7 @@ class _FieldsState extends State<Fields>{
                               routeWidget: FieldEdit(
                                 title: "Feld bearbeiten",
                                 fieldName: field.fieldName,
-                                fieldId: field.id
+                                fieldId: field.id,
                               ),
                             ),
                           ),
@@ -67,11 +67,17 @@ class _FieldsState extends State<Fields>{
                       context,
                       MaterialPageRoute(
                         builder:
-                            (context) => FieldEdit(title: "Feld erstellen"),
+                            (context) => FieldEdit(
+                              title: "Feld erstellen",
+                              isCreate: true,
+                            ),
                       ),
                     );
-                    if(result == true){
-                      await Provider.of<FieldsViewModel>(context, listen: false).getFields();
+                    if (result == true) {
+                      await Provider.of<FieldsViewModel>(
+                        context,
+                        listen: false,
+                      ).getFields();
                     }
                   },
                 ),

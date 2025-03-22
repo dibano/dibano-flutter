@@ -7,11 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PersonEdit extends StatelessWidget {
-  PersonEdit({super.key, required this.title, this.personName = "", this.personId});
+  PersonEdit({
+    super.key,
+    required this.title,
+    this.personName = "",
+    this.personId,
+    this.isCreate = false,
+  });
 
   final String title;
   final String personName;
   final int? personId;
+  bool isCreate;
 
   final TextEditingController _descriptionController = TextEditingController();
 
@@ -43,36 +50,38 @@ class PersonEdit extends StatelessWidget {
                   ),
                 ),
                 Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,  
-                children: [
-                  Flexible(
-                    child:
-                      CustomButtonLarge(
-                        text: 'Speichern',
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Flexible(
+                      child: CustomIconButtonLarge(
+                        icon: Icon(Icons.save),
                         onPressed: () async {
-                          if(personId == null){
+                          if (personId == null) {
                             personViewModel.add(_descriptionController.text);
                             print("person added");
-                          }
-                          else{
-                            personViewModel.update(personId!, _descriptionController.text);
+                          } else {
+                            personViewModel.update(
+                              personId!,
+                              _descriptionController.text,
+                            );
                             print("person updated");
                           }
                           Navigator.pop(context);
                         },
                       ),
-                  ),
-                  Flexible(
-                    child:
-                      CustomIconButtonLarge(
-                        icon: Icon(Icons.delete),
-                        onPressed: () async {
+                    ),
+                    if (!isCreate)
+                      Flexible(
+                        child: CustomIconButtonLarge(
+                          icon: Icon(Icons.delete),
+                          onPressed: () async {
                             personViewModel.remove(personId!);
                             Navigator.pop(context);
-                        },
+                          },
+                        ),
                       ),
-                  )
-                ],)
+                  ],
+                ),
               ],
             ),
           );

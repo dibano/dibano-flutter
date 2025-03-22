@@ -7,11 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FieldEdit extends StatelessWidget {
-  FieldEdit({super.key, required this.title, this.fieldName = "", this.fieldId});
+  FieldEdit({
+    super.key,
+    required this.title,
+    this.fieldName = "",
+    this.fieldId,
+    this.isCreate = false,
+  });
 
   final String title;
   final String fieldName;
   final int? fieldId;
+  bool isCreate;
 
   final TextEditingController _descriptionController = TextEditingController();
 
@@ -43,36 +50,40 @@ class FieldEdit extends StatelessWidget {
                   ),
                 ),
                 Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,  
-                children: [
-                  Flexible(
-                    child:
-                      CustomButtonLarge(
-                        text: 'Speichern',
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Flexible(
+                      child: CustomIconButtonLarge(
+                        icon: Icon(Icons.save),
                         onPressed: () async {
-                          if(fieldId == null){
-                            fieldsViewModel.addField(_descriptionController.text);
+                          if (fieldId == null) {
+                            fieldsViewModel.addField(
+                              _descriptionController.text,
+                            );
                             print("crop added");
-                          }
-                          else{
-                            fieldsViewModel.update(fieldId!, _descriptionController.text);
+                          } else {
+                            fieldsViewModel.update(
+                              fieldId!,
+                              _descriptionController.text,
+                            );
                             print("crop updated");
                           }
                           Navigator.pop(context, true);
                         },
                       ),
-                  ),
-                  Flexible(
-                    child:
-                      CustomIconButtonLarge(
-                        icon: Icon(Icons.delete),
-                        onPressed: () async {
+                    ),
+                    if (!isCreate)
+                      Flexible(
+                        child: CustomIconButtonLarge(
+                          icon: Icon(Icons.delete),
+                          onPressed: () async {
                             fieldsViewModel.remove(fieldId!);
                             Navigator.pop(context, true);
-                        },
+                          },
+                        ),
                       ),
-                  )
-                ],)
+                  ],
+                ),
               ],
             ),
           );

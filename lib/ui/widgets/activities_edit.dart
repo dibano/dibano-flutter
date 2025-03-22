@@ -7,11 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ActivitiesEdit extends StatelessWidget {
-  ActivitiesEdit({super.key, required this.title, this.activityName = "", this.activityId});
+  ActivitiesEdit({
+    super.key,
+    required this.title,
+    this.activityName = "",
+    this.activityId,
+    this.isCreate = false,
+  });
 
   final String title;
   final String activityName;
   final int? activityId;
+  bool isCreate;
 
   final TextEditingController _descriptionController = TextEditingController();
 
@@ -43,34 +50,38 @@ class ActivitiesEdit extends StatelessWidget {
                   ),
                 ),
                 Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,  
-                children: [
-                  Flexible(
-                    child:
-                      CustomButtonLarge(
-                        text: 'Speichern',
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Flexible(
+                      child: CustomIconButtonLarge(
+                        icon: Icon(Icons.save),
                         onPressed: () async {
-                          if(activityId == null){
-                            activitiesViewModel.add(_descriptionController.text);
-                          }
-                          else{
-                            activitiesViewModel.update(activityId!, _descriptionController.text);
+                          if (activityId == null) {
+                            activitiesViewModel.add(
+                              _descriptionController.text,
+                            );
+                          } else {
+                            activitiesViewModel.update(
+                              activityId!,
+                              _descriptionController.text,
+                            );
                           }
                           Navigator.pop(context);
                         },
                       ),
-                  ),
-                  Flexible(
-                    child:
-                      CustomIconButtonLarge(
-                        icon: Icon(Icons.delete),
-                        onPressed: () async {
+                    ),
+                    if (!isCreate)
+                      Flexible(
+                        child: CustomIconButtonLarge(
+                          icon: Icon(Icons.delete),
+                          onPressed: () async {
                             activitiesViewModel.remove(activityId!);
                             Navigator.pop(context);
-                        },
+                          },
+                        ),
                       ),
-                  )
-                ],)
+                  ],
+                ),
               ],
             ),
           );

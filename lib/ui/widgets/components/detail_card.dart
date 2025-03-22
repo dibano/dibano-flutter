@@ -10,8 +10,15 @@ class DetailCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(2.0),
-      child: SizedBox(
-        width: double.infinity,
+      child: GestureDetector(
+        onTap: () {
+          if (detail.routeWidget != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => detail.routeWidget!),
+            );
+          }
+        },
         child: Card(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -30,30 +37,8 @@ class DetailCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (detail.routeWidget != null && !detail.isInfo)
-                  IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => detail.routeWidget!,
-                        ),
-                      );
-                    },
-                    icon: Icon(Icons.edit),
-                  ),
-                if (detail.isInfo)
-                  IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => detail.routeWidget!,
-                        ),
-                      );
-                    },
-                    icon: Icon(Icons.info),
-                  ),
+                if (detail.routeWidget != null)
+                  Icon(detail.isInfo ? Icons.info : Icons.edit),
               ],
             ),
           ),

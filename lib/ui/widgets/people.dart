@@ -13,15 +13,15 @@ class People extends StatefulWidget {
   final String title;
 
   @override
-  State<People> createState()=>_PeopleState();
+  State<People> createState() => _PeopleState();
 }
 
-class _PeopleState extends State<People>{
+class _PeopleState extends State<People> {
   bool _initialized = false;
   @override
-  void didChangeDependencies(){
+  void didChangeDependencies() {
     super.didChangeDependencies();
-    if(!_initialized){
+    if (!_initialized) {
       Provider.of<PersonViewModel>(context, listen: false).getPerson();
       _initialized = true;
     }
@@ -67,11 +67,17 @@ class _PeopleState extends State<People>{
                       context,
                       MaterialPageRoute(
                         builder:
-                            (context) => PersonEdit(title: "Person erstellen"),
+                            (context) => PersonEdit(
+                              title: "Person erstellen",
+                              isCreate: true,
+                            ),
                       ),
                     );
-                    if(result == true){
-                      await Provider.of<PersonViewModel>(context, listen: false).getPerson();
+                    if (result == true) {
+                      await Provider.of<PersonViewModel>(
+                        context,
+                        listen: false,
+                      ).getPerson();
                     }
                   },
                 ),
