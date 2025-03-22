@@ -52,11 +52,9 @@ class ActivitiesEdit extends StatelessWidget {
                         onPressed: () async {
                           if(activityId == null){
                             activitiesViewModel.add(_descriptionController.text);
-                            print("activity added");
                           }
                           else{
                             activitiesViewModel.update(activityId!, _descriptionController.text);
-                            print("activity updated");
                           }
                           Navigator.pop(context);
                         },

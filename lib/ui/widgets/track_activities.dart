@@ -158,7 +158,7 @@ class _TrackActivitiesState extends State<TrackActivities> {
                 FormTextfield(
                   label: "Beschreibung",
                   controller: _descriptionController,
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: TextInputType.text,
                   maxLine: 5,
                 ),
 
