@@ -1,7 +1,9 @@
 import 'package:dibano/ui/view_model/components/detail_card.dart';
+import 'package:dibano/ui/widgets/acitivities.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_title.dart';
 import 'package:dibano/ui/widgets/components/detail_card.dart';
+import 'package:dibano/ui/widgets/people.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/fields.dart';
 import 'package:dibano/ui/widgets/crops.dart';
@@ -31,11 +33,22 @@ class MyFarm extends StatelessWidget {
                 routeWidget: Fields(title: title),
               ),
             ),
-            DetailCard(detail: Detail(name: "Personen konfigurieren")),
+            DetailCard(
+              detail: Detail(
+                name: "Personen konfigurieren",
+                routeWidget: People(title: title),
+              ),
+            ),
             DetailCard(
               detail: Detail(
                 name: "Kulturen konfigurieren",
                 routeWidget: Crops(title: title),
+              ),
+            ),
+            DetailCard(
+              detail: Detail(
+                name: "Aktivitäten konfigurieren",
+                routeWidget: Activities(title: title),
               ),
             ),
             DetailCard(detail: Detail(name: "Dieses Gerät konfigurieren")),

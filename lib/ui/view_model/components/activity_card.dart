@@ -1,12 +1,13 @@
 class Activity {
-  final String activity;
-  final String date;
-  final String field;
+  final String description;
+  final String fieldName;
+  final String cropName;
+  final String activityName;
 
-  Activity({required this.activity, required this.date, required this.field});
+  Activity({required this.description, required this.fieldName, required this.cropName, required this.activityName});
 
   @override
   String toString() {
-    return '$activity\n$date $field';
+    return '$description\n$fieldName $cropName $activityName';
   }
 }

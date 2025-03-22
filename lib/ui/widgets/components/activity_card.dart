@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:dibano/data/model/completeWorkstep_model.dart';
 import 'package:dibano/ui/view_model/components/activity_card.dart';
+import 'package:dibano/ui/widgets/track_activities.dart';
+import 'package:flutter/material.dart';
 
 class ActivityCard extends StatefulWidget {
-  const ActivityCard({super.key, required this.activity});
+  const ActivityCard({super.key, required this.workstep});
 
-  final Activity activity;
+  final CompleteWorkstep workstep;
 
   @override
   _ActivityCardState createState() => _ActivityCardState();
@@ -12,9 +14,9 @@ class ActivityCard extends StatefulWidget {
 
 class _ActivityCardState extends State<ActivityCard> {
   bool checkboxState = false;
-
   @override
   Widget build(BuildContext context) {
+    Activity activity = Activity(description: widget.workstep.description, fieldName: widget.workstep.fieldName, cropName: widget.workstep.cropName, activityName: widget.workstep.activityName);
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: SizedBox(
@@ -27,7 +29,7 @@ class _ActivityCardState extends State<ActivityCard> {
               children: [
                 Expanded(
                   child: Text(
-                    widget.activity.toString(),
+                    activity.toString(),
                     style: TextStyle(fontSize: 16),
                   ),
                 ),
@@ -41,7 +43,13 @@ class _ActivityCardState extends State<ActivityCard> {
                 ),
                 IconButton(
                   onPressed: () {
-                    // To do: Handle button press
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => TrackActivities(title: "Aktivität bearbeiten", selectedArea: widget.workstep.id.toString(), selectedActivity: widget.workstep.activityId.toString(), selectedPerson: widget.workstep.personId.toString(), description: widget.workstep.description, workstepActivityId: widget.workstep.workstepActivityId, workstepId: widget.workstep.workstepId),
+                      ),
+                    );
                   },
                   icon: Icon(Icons.edit),
                 ),

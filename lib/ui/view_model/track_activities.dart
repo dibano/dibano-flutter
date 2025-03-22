@@ -1,15 +1,34 @@
-import 'package:dibano/data/database_handler.dart';
+import 'package:dibano/data/model/workstepActivity_model.dart';
+import 'package:dibano/data/model/workstep_model.dart';
 import 'package:flutter/widgets.dart';
-import 'package:dibano/data/model/field_model.dart';
+
 
 class TrackActivetiesViewModel extends ChangeNotifier {
-  final DatabaseHandler _databaseHandler = DatabaseHandler();
-  List<String> _fields = [];
-  List<String> get fieldsList => _fields;
+  List<Workstep> _worksteps = [];
+  List<Workstep> get worksteps => _worksteps;
+  String tableName = "Workstep";
 
-  Future<void> getFields() async{
-    List<Field> fields = await _databaseHandler.fields();
-    _fields = fields.map((field) => field.fieldName).toList();
+  Future<void> addWorkstepActivity(int cropDateId, String description, int personId, int activityId) async{
+    Workstep workstep = Workstep(description: description, personId: personId, cropDateId: cropDateId);
+    int workstepId = await workstep.insertReturnId(workstep);
+
+    print("Workstep wurde gespeichert: $workstep mit der ID $workstepId");
+
+
+    WorkstepActivity workstepActivity = WorkstepActivity(workstepId: workstepId, activityId: activityId);
+    workstepActivity.insert();
+
+    print("Workstepactivity wurde gespeichert: $workstepActivity");
+
+    notifyListeners();
+  }
+
+  Future<void> updateWorkStepActivity(int cropDateId, String description, int personId, int activityId, int workstepActivityId, int workstepId) async{
+    Workstep workstep = Workstep(id: workstepId, description: description, personId: personId, cropDateId: cropDateId);
+    await workstep.update();
+
+    WorkstepActivity workstepActivity = WorkstepActivity(id: workstepActivityId, workstepId: workstepId, activityId: activityId);
+    workstepActivity.update();
     notifyListeners();
   }
 }

@@ -4,6 +4,8 @@ import 'package:dibano/ui/widgets/components/custom_title.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/activity_card.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
+import 'package:provider/provider.dart';
+
 
 class ActivitySummary extends StatefulWidget {
   const ActivitySummary({super.key, required this.title});
@@ -15,7 +17,12 @@ class ActivitySummary extends StatefulWidget {
 }
 
 class _ActivitySummaryState extends State<ActivitySummary> {
-  ActivitySummaryViewModel activities = ActivitySummaryViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ActivitySummaryViewModel>(context,listen: false).getCompleteWorksteps();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,15 +86,18 @@ class _ActivitySummaryState extends State<ActivitySummary> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ListView(
-                children: <Widget>[
-                  for (
-                    int i = 0;
-                    i < 20;
-                    i++
-                  ) // simulate 20 activities for example
-                    ActivityCard(activity: activities.getActivities()[0]),
-                ],
+              child: Consumer<ActivitySummaryViewModel>(
+                builder:(context,activitySummaryViewModel, child){
+                  final workstepList = activitySummaryViewModel.completeWorksteps;
+                  return ListView.builder(
+                    itemCount: workstepList.length,
+                    itemBuilder: (context, index){
+                      return ActivityCard(
+                            workstep: workstepList[index],
+                      );
+                    },
+                  );
+                },
               ),
             ),
           ),

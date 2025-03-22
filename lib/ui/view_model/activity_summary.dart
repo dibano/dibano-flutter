@@ -1,33 +1,15 @@
-import 'package:dibano/ui/view_model/components/activity_card.dart';
+import 'package:dibano/data/model/completeWorkstep_model.dart';
+import 'package:dibano/data/model/workstep_model.dart';
 import 'package:flutter/widgets.dart';
 
 class ActivitySummaryViewModel extends ChangeNotifier {
-  final List<Activity> _activities = [
-    Activity(
-      activity: "Dügung mit 250kg Harnstoff",
-      date: "23.05.2025",
-      field: "Feld A Ost",
-    ),
-  ];
+  List<CompleteWorkstep> _completeWorksteps = [];
+  List<CompleteWorkstep> get completeWorksteps => _completeWorksteps;
+  String tableName = "CompleteWorkstep";
 
-  List<Activity> getActivities() {
-    return _activities;
-  }
-
-  void addActivity(Activity activity) {
-    _activities.add(activity);
+  Future<void> getCompleteWorksteps() async{
+    _completeWorksteps = await CompleteWorkstep.getCompleteWorksteps();
+    print(_completeWorksteps);
     notifyListeners();
-  }
-
-  void removeActivity(Activity activity) {
-    _activities.remove(activity);
-    notifyListeners();
-  }
-
-  void updateActivities(int index, Activity newActivity) {
-    if (index >= 0 && index < _activities.length) {
-      _activities[index] = newActivity;
-      notifyListeners();
-    }
   }
 }

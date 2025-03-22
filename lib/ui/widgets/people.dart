@@ -1,40 +1,40 @@
+import 'package:dibano/ui/view_model/people.dart';
 import 'package:dibano/ui/view_model/components/detail_card.dart';
-import 'package:dibano/ui/view_model/fields.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_title.dart';
 import 'package:dibano/ui/widgets/components/detail_card.dart';
-import 'package:dibano/ui/widgets/field_edit.dart';
+import 'package:dibano/ui/widgets/person_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:provider/provider.dart';
 
-class Fields extends StatefulWidget {
-  const Fields({super.key, required this.title});
+class People extends StatefulWidget {
+  const People({super.key, required this.title});
   final String title;
 
   @override
-  State<Fields> createState()=>_FieldsState();
+  State<People> createState()=>_PeopleState();
 }
 
-class _FieldsState extends State<Fields>{
+class _PeopleState extends State<People>{
   bool _initialized = false;
   @override
   void didChangeDependencies(){
     super.didChangeDependencies();
     if(!_initialized){
-      Provider.of<FieldsViewModel>(context, listen: false).getFields();
+      Provider.of<PersonViewModel>(context, listen: false).getPerson();
       _initialized = true;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    FieldsViewModel fieldsViewModel = Provider.of<FieldsViewModel>(context);
+    PersonViewModel peopleViewModel = Provider.of<PersonViewModel>(context);
     return Scaffold(
       appBar: CustomAppBar(title: widget.title),
-      body: Consumer<FieldsViewModel>(
-        builder: (context, fieldsViewModel, child) {
-          Provider.of<FieldsViewModel>(context, listen: false).getFields();
+      body: Consumer<PersonViewModel>(
+        builder: (context, peopleViewModel, child) {
+          Provider.of<PersonViewModel>(context, listen: false).getPerson();
           return Center(
             child: Column(
               children: <Widget>[
@@ -44,15 +44,15 @@ class _FieldsState extends State<Fields>{
                     child: Column(
                       children: <Widget>[
                         SizedBox(height: 24),
-                        CustomTitle(text: 'Felder konfigurieren'),
-                        for (var field in fieldsViewModel.fields)
+                        CustomTitle(text: 'Personen konfigurieren'),
+                        for (var person in peopleViewModel.personList)
                           DetailCard(
                             detail: Detail(
-                              name: field.fieldName,
-                              routeWidget: FieldEdit(
-                                title: "Feld bearbeiten",
-                                fieldName: field.fieldName,
-                                fieldId: field.id
+                              name: person.personName,
+                              routeWidget: PersonEdit(
+                                title: "Person bearbeiten",
+                                personName: person.personName,
+                                personId: person.id,
                               ),
                             ),
                           ),
@@ -61,17 +61,17 @@ class _FieldsState extends State<Fields>{
                   ),
                 ),
                 CustomButtonLarge(
-                  text: 'Feld hinzufügen',
+                  text: 'Person hinzufügen',
                   onPressed: () async {
                     final result = Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder:
-                            (context) => FieldEdit(title: "Feld erstellen"),
+                            (context) => PersonEdit(title: "Person erstellen"),
                       ),
                     );
                     if(result == true){
-                      await Provider.of<FieldsViewModel>(context, listen: false).getFields();
+                      await Provider.of<PersonViewModel>(context, listen: false).getPerson();
                     }
                   },
                 ),

@@ -2,38 +2,39 @@ import 'package:dibano/ui/view_model/components/detail_card.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_title.dart';
 import 'package:dibano/ui/widgets/components/detail_card.dart';
-import 'package:dibano/ui/widgets/crops_edit.dart';
+import 'package:dibano/ui/widgets/activities_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
-import 'package:dibano/ui/view_model/crops.dart';
+import 'package:dibano/ui/view_model/activities.dart';
 import 'package:provider/provider.dart';
 
-class Crops extends StatefulWidget {
-  const Crops({super.key, required this.title});
+class Activities extends StatefulWidget {
+  const Activities({super.key, required this.title});
   final String title;
 
   @override
-  State<Crops> createState()=>_CropsState();
+  State<Activities> createState()=>_ActivitiesState();
 }
-class _CropsState extends State<Crops>{
+
+class _ActivitiesState extends State<Activities>{
   bool _initialized = false;
   @override
   void didChangeDependencies(){
     super.didChangeDependencies();
     if(!_initialized){
-      Provider.of<CropsViewModel>(context, listen: false).getCompleteCrops();
+      Provider.of<ActivitiesViewModel>(context, listen: false).getActivities();
       _initialized = true;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    CropsViewModel cropsViewModel = Provider.of<CropsViewModel>(context);
+    ActivitiesViewModel activitiesViewModel = Provider.of<ActivitiesViewModel>(context);
     return Scaffold(
       appBar: CustomAppBar(title: widget.title),
-      body: Consumer<CropsViewModel>(
-        builder: (context, cropsViewModel, child) {
-        Provider.of<CropsViewModel>(context, listen: false).getCompleteCrops();
+      body: Consumer<ActivitiesViewModel>(
+        builder: (context, activitiesViewModel, child) {
+          activitiesViewModel.getActivities();
         return Center(
         child: Column(
           children: <Widget>[
@@ -43,19 +44,15 @@ class _CropsState extends State<Crops>{
                 child: Column(
                   children: <Widget>[
                     SizedBox(height: 24),
-                    CustomTitle(text: 'Kulturen konfigurieren'),
-                    for (var crop in cropsViewModel.completeCrop)
+                    CustomTitle(text: 'Aktivitäten konfigurieren'),
+                    for (var activity in activitiesViewModel.activities)
                       DetailCard(
                         detail: Detail(
-                          name: crop.cropName,
-                          routeWidget: CropsEdit(
-                            cropId: crop.id,
-                            cropDateId: crop.cropDateId,
-                            title: "Kultur bearbeiten",
-                            cropName: crop.cropName,
-                            startDate: DateTime.tryParse(crop.startDate),
-                            endDate: DateTime.tryParse(crop.endDate),
-                            fieldId: crop.fieldId,
+                          name: activity.activityName,
+                          routeWidget: ActivitiesEdit(
+                            title: "Aktivitäten bearbeiten",
+                            activityName: activity.activityName,
+                            activityId:activity.id
                           ),
                         ),
                       ),
@@ -64,17 +61,17 @@ class _CropsState extends State<Crops>{
               ),
             ),
             CustomButtonLarge(
-              text: 'Kulturen hinzufügen',
+              text: 'Aktivitäten hinzufügen',
               onPressed: () async{
                 final result = Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CropsEdit(title: "Kultur erstellen"),
+                    builder: (context) => ActivitiesEdit(title: "Aktivitäten erstellen"),
                   ),
                 );
-              if(result == true){
-                Provider.of<CropsViewModel>(context, listen: false).getCompleteCrops();
-              }
+                if(result == true){
+                  await Provider.of<ActivitiesViewModel>(context, listen: false).getActivities();
+                }
               },
             ),
           ],

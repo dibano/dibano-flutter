@@ -3,18 +3,14 @@ import 'package:flutter/material.dart';
 /*
 * Dropdown Widget
 */
-class FormDropdown extends StatelessWidget{
+class FormTextfieldDisabled extends StatelessWidget{
   final String label;
-  final String value;
-  final List<DropdownMenuItem<String>> items;
-  final ValueChanged<String?> onChanged;
+  final TextEditingController textController;
 
-  const FormDropdown({
+  const FormTextfieldDisabled({
     super.key,
     required this.label,
-    required this.value,
-    required this.items,
-    required this.onChanged
+    required this.textController,
   });
 
   @override
@@ -32,13 +28,12 @@ class FormDropdown extends StatelessWidget{
         const SizedBox(
           height: 5
         ),
-        DropdownButtonFormField(
-          value: value, 
+        TextFormField(
+          controller: textController,
+          enabled: false,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
           ),
-          onChanged: onChanged,
-          items: items,
         ),
         const SizedBox(
           height: 15
