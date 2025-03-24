@@ -34,6 +34,7 @@ class _PeopleState extends State<People> {
       appBar: CustomAppBar(title: widget.title),
       body: Consumer<PersonViewModel>(
         builder: (context, peopleViewModel, child) {
+          peopleViewModel.getPerson();
           return Center(
             child: Column(
               children: <Widget>[

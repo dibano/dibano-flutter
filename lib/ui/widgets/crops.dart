@@ -34,6 +34,7 @@ class _CropsState extends State<Crops> {
       appBar: CustomAppBar(title: widget.title),
       body: Consumer<CropsViewModel>(
         builder: (context, cropsViewModel, child) {
+          cropsViewModel.getCompleteCrops();
           return Center(
             child: Column(
               children: <Widget>[

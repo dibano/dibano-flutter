@@ -36,6 +36,7 @@ class _ActivitiesState extends State<Activities> {
       appBar: CustomAppBar(title: widget.title),
       body: Consumer<ActivitiesViewModel>(
         builder: (context, activitiesViewModel, child) {
+          activitiesViewModel.getActivities();
           return Center(
             child: Column(
               children: <Widget>[
