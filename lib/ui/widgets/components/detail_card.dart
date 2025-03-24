@@ -38,7 +38,7 @@ class DetailCard extends StatelessWidget {
                   ),
                 ),
                 if (detail.routeWidget != null)
-                  Icon(detail.isInfo ? Icons.info : Icons.edit),
+                  Icon(detail.isInfo ? Icons.visibility : Icons.edit),
               ],
             ),
           ),

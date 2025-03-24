@@ -1,7 +1,6 @@
 import 'package:dibano/ui/view_model/components/detail_card.dart';
 import 'package:dibano/ui/widgets/acitivities.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
-import 'package:dibano/ui/widgets/components/custom_title.dart';
 import 'package:dibano/ui/widgets/components/detail_card.dart';
 import 'package:dibano/ui/widgets/people.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +21,10 @@ class MyFarm extends StatelessWidget {
           children: <Widget>[
             SizedBox(height: 24), // Abstand zwischen den Buttons
             Text(
-              "Auf dieser Seite können alle Daten des Bauenhofes konfiguriert werden. \nDie Daten bleiben lokal auf dem Gerät gespeichert und gelangen nicht an Drittpersonen.",
+              "Auf dieser Seite können alle Daten des Bauernhofes konfiguriert werden. \nDie Daten bleiben lokal auf dem Gerät gespeichert und gelangen nicht an Drittpersonen.",
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 8),
-            CustomTitle(text: 'Daten überarbeiten'),
             DetailCard(
               detail: Detail(
                 name: "Felder konfigurieren",
