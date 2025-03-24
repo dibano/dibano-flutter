@@ -10,20 +10,46 @@ class Info extends StatelessWidget {
 
   final String title;
 
+  void _showInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Icon(
+            Icons.info,
+            color: Colors.green, // Icon-Farbe auf Grün setzen
+          ),
+          content: const Text(
+            "Auf dieser Seite finden Sie allgemeine Informationen zum Bund, zu den Schnittstellen und zu Dibano.",
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Schließt den Dialog
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: title),
+      appBar: CustomAppBar(
+        title: title,
+        hasInfo: true,
+        onInfoPressed: () => _showInfoDialog(context), // Info-Dialog anzeigen
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            SizedBox(height: 24),
-            Text(
-              "Auf dieser Seite finden Sie allgemeine Informationen zum Bund, zu den Schnittestellen und zu Dibano",
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 16),
-            CustomTitle(text: 'Schnittstellen'),
+            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+            const CustomTitle(text: 'Schnittstellen'),
             DetailCard(
               detail: Detail(
                 name: "AGATE",
@@ -52,8 +78,8 @@ class Info extends StatelessWidget {
                 isInfo: true,
               ),
             ),
-            SizedBox(height: 16),
-            CustomTitle(text: 'Bund'),
+            const SizedBox(height: 16),
+            const CustomTitle(text: 'Bund'),
             DetailCard(
               detail: Detail(
                 name: "Informationen zum Bund",
@@ -61,8 +87,8 @@ class Info extends StatelessWidget {
                 isInfo: true,
               ),
             ),
-            SizedBox(height: 16),
-            CustomTitle(text: 'DIBANO'),
+            const SizedBox(height: 16),
+            const CustomTitle(text: 'DIBANO'),
             DetailCard(
               detail: Detail(
                 name: "Über uns",

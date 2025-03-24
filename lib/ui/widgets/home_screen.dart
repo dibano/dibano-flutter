@@ -12,7 +12,17 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: title),
-      body: _buildBody(context),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/background.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: _buildBody(context),
+      ),
     );
   }
 
@@ -36,7 +46,7 @@ class HomeScreen extends StatelessWidget {
 
   // Methode zum Erstellen der Scrollbaren Button Liste
   Widget _buildButtonList(double buttonSize) {
-    const padding = 10.0;
+    const padding = 16.0;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(padding),
       child: Center(
@@ -79,6 +89,7 @@ class HomeScreen extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
+              backgroundColor: buttonData.color,
               padding: const EdgeInsets.all(20.0),
             ),
             child: Column(

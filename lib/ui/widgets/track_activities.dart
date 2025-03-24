@@ -4,6 +4,7 @@ import 'package:dibano/ui/view_model/people.dart';
 import 'package:dibano/ui/view_model/activities.dart';
 import 'package:dibano/ui/view_model/track_activities.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
+import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:dibano/ui/widgets/components/custom_iconbutton_large.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/form_dropdown.dart';
@@ -277,6 +278,7 @@ class _TrackActivitiesState extends State<TrackActivities> {
                     );
                   },
                 ),
+
                 Consumer<CropsViewModel>(
                   builder: (context, cropsViewModel, child) {
                     return FormDate(
@@ -288,10 +290,39 @@ class _TrackActivitiesState extends State<TrackActivities> {
                         );
                   },
                 ),
-                CustomIconButtonLarge(
-                  onPressed: _addEntry,
-                  icon: Icon(Icons.save),
-                ),
+
+
+
+                /*if (_selectedActivity == "Aktivität 1") ...[
+                  FormDropdown(
+                    label: "Düngemittel",
+                    value: _selectedFertilizers,
+                    items: ["Düngemittel wählen", "Düngemittel 1", "Düngemittel 2", "Düngemittel 3"],
+                    onChanged: (value) {
+                      setState(() => _selectedFertilizers = value!);
+                    },
+                  ),
+
+                  FormTextfield(
+                    label: "Ausbringmenge (in kg)",
+                    controller: _fertilizerAmountController,
+                    keyboardType: TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    maxLine: 1,
+                  ),
+
+                  FormTextfield(
+                    label: "Ausbringmenge pro ha (in kg)",
+                    controller: _fertilizerAmountPerHaController,
+                    keyboardType: TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    maxLine: 1,
+                  ),
+                ],*/
+                CustomButtonLarge(onPressed: _addEntry, text: "Speichern"),
+
               ],
             ),
           ),

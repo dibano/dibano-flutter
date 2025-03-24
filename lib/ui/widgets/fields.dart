@@ -34,17 +34,14 @@ class _FieldsState extends State<Fields> {
       appBar: CustomAppBar(title: widget.title),
       body: Consumer<FieldsViewModel>(
         builder: (context, fieldsViewModel, child) {
-          Provider.of<FieldsViewModel>(context, listen: false).getFields();
           return Center(
             child: Column(
               children: <Widget>[
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
                       children: <Widget>[
-                        SizedBox(height: 24),
-                        CustomTitle(text: 'Felder konfigurieren'),
                         for (var field in fieldsViewModel.fields)
                           DetailCard(
                             detail: Detail(
@@ -60,32 +57,33 @@ class _FieldsState extends State<Fields> {
                     ),
                   ),
                 ),
-                CustomButtonLarge(
-                  text: 'Feld hinzufügen',
-                  onPressed: () async {
-                    final result = Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) => FieldEdit(
-                              title: "Feld erstellen",
-                              isCreate: true,
-                            ),
-                      ),
-                    );
-                    if (result == true) {
-                      await Provider.of<FieldsViewModel>(
-                        context,
-                        listen: false,
-                      ).getFields();
-                    }
-                  },
-                ),
               ],
             ),
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) =>
+                      FieldEdit(title: "Feld erstellen", isCreate: true),
+            ),
+          );
+          if (result == true) {
+            await Provider.of<FieldsViewModel>(
+              context,
+              listen: false,
+            ).getFields();
+          }
+        },
+        backgroundColor: Colors.green,
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
