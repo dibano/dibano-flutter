@@ -12,35 +12,22 @@ import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DatabaseModel.dbHandler = DatabaseHandler();
   //await deleteDatabase(join(await getDatabasesPath(), 'dibano_db'));
   runApp(
     MultiProvider(
-      providers:[
-        ChangeNotifierProvider(
-          create: (context) => FieldsViewModel()
-        ),
-        ChangeNotifierProvider(
-          create: (context) => CropsViewModel()
-        ),
-        ChangeNotifierProvider(
-          create: (context) => TrackActivetiesViewModel()
-        ),
-        ChangeNotifierProvider(
-          create: (context) => PersonViewModel()
-        ),
-        ChangeNotifierProvider(
-          create: (context) => ActivitiesViewModel()
-        ),
-        ChangeNotifierProvider(
-          create: (context) => ActivitySummaryViewModel()
-        ),
+      providers: [
+        ChangeNotifierProvider(create: (context) => FieldsViewModel()),
+        ChangeNotifierProvider(create: (context) => CropsViewModel()),
+        ChangeNotifierProvider(create: (context) => TrackActivetiesViewModel()),
+        ChangeNotifierProvider(create: (context) => PersonViewModel()),
+        ChangeNotifierProvider(create: (context) => ActivitiesViewModel()),
+        ChangeNotifierProvider(create: (context) => ActivitySummaryViewModel()),
       ],
-      child: Dibano()
-    )
+      child: Dibano(),
+    ),
   );
 }
 
@@ -53,7 +40,7 @@ class Dibano extends StatelessWidget {
       title: 'DIBANO',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 69, 132, 7),
+          seedColor: const Color.fromARGB(255, 66, 129, 4),
         ),
       ),
       home: HomeScreen(title: 'Home'),

@@ -61,119 +61,124 @@ class _CropsEditState extends State<CropsEdit> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: widget.title),
-      body: Consumer<CropsViewModel>(
-        builder: (context, cropsViewModel, child) {
-          return Center(
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: 24),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(height: 24),
-                        FormTextfield(
-                          label: "Kulturname",
-                          controller: _descriptionController,
-                          keyboardType: TextInputType.text,
-                          maxLine: 1,
-                        ),
-
-                        FormDate(
-                          label: "Startdatum",
-                          placeholderDate: _startDate ?? DateTime.now(),
-                          dateSelected: (date) {
-                            setState(() => _startDate = date!);
-                          },
-                        ),
-
-                        FormDate(
-                          label: "Enddatum",
-                          placeholderDate: _endDate ?? DateTime.now(),
-                          dateSelected: (date) {
-                            setState(() => _endDate = date!);
-                          },
-                        ),
-
-                        Consumer<FieldsViewModel>(
-                          builder: (context, fieldsViewModel, child) {
-                            return FormDropdown(
-                              label: "Feld",
-                              value: _selectedField!,
-                              items: [
-                                DropdownMenuItem(
-                                  value: "-1",
-                                  child: Text("Ort wählen"),
-                                ),
-                                ...fieldsViewModel.fields.map(
-                                  (field) => DropdownMenuItem(
-                                    value: field.id.toString(),
-                                    child: Text(field.fieldName),
-                                  ),
-                                ),
-                              ],
-                              onChanged: (value) {
-                                setState(() => _selectedField = value ?? "");
-                              },
-                            );
-                          },
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Consumer<CropsViewModel>(
+          builder: (context, cropsViewModel, child) {
+            return Center(
+              child: Column(
+                children: <Widget>[
+                  if (!widget.isCreate)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Flexible(
+                          child: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () async {
+                              cropsViewModel.remove(widget.cropId!);
+                              Navigator.pop(context);
+                            },
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Flexible(
-                      child: CustomIconButtonLarge(
-                        icon: Icon(Icons.save),
-                        onPressed: () async {
-                          if (widget.cropId == null) {
-                            int? fieldId = int.tryParse(
-                              _selectedField!,
-                            ); // Konvertiert String zu int
-                            cropsViewModel.add(
-                              _descriptionController.text,
-                              _startDate ?? DateTime.now(),
-                              _endDate ?? DateTime.now(),
-                              fieldId!,
-                            );
-                            print("crop added");
-                          } else {
-                            int? fieldId = int.tryParse(
-                              _selectedField!,
-                            ); // Konvertiert String zu int
-                            cropsViewModel.update(
-                              _descriptionController.text,
-                              _startDate!,
-                              _endDate!,
-                              fieldId!,
-                              widget.cropId!,
-                              widget.cropDateId!,
-                            );
-                            print("crop updated");
-                          }
-                          Navigator.pop(context);
-                        },
+                  const SizedBox(height: 24),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          const SizedBox(height: 24),
+                          FormTextfield(
+                            label: "Kulturname",
+                            controller: _descriptionController,
+                            keyboardType: TextInputType.text,
+                            maxLine: 1,
+                          ),
+                          FormDate(
+                            label: "Startdatum",
+                            placeholderDate: _startDate ?? DateTime.now(),
+                            dateSelected: (date) {
+                              setState(() => _startDate = date!);
+                            },
+                          ),
+                          FormDate(
+                            label: "Enddatum",
+                            placeholderDate: _endDate ?? DateTime.now(),
+                            dateSelected: (date) {
+                              setState(() => _endDate = date!);
+                            },
+                          ),
+                          Consumer<FieldsViewModel>(
+                            builder: (context, fieldsViewModel, child) {
+                              return FormDropdown(
+                                label: "Feld",
+                                value: _selectedField!,
+                                items: [
+                                  DropdownMenuItem(
+                                    value: "-1",
+                                    child: Text("Ort wählen"),
+                                  ),
+                                  ...fieldsViewModel.fields.map(
+                                    (field) => DropdownMenuItem(
+                                      value: field.id.toString(),
+                                      child: Text(field.fieldName),
+                                    ),
+                                  ),
+                                ],
+                                onChanged: (value) {
+                                  setState(() => _selectedField = value ?? "");
+                                },
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ),
-                    if (!widget.isCreate)
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
                       Flexible(
-                        child: CustomIconButtonLarge(
-                          icon: Icon(Icons.delete),
+                        child: CustomButtonLarge(
+                          text: "Speichern",
                           onPressed: () async {
-                            cropsViewModel.remove(widget.cropId!);
+                            if (widget.cropId == null) {
+                              int? fieldId = int.tryParse(
+                                _selectedField!,
+                              ); // Konvertiert String zu int
+                              cropsViewModel.add(
+                                _descriptionController.text,
+                                _startDate ?? DateTime.now(),
+                                _endDate ?? DateTime.now(),
+                                fieldId!,
+                              );
+                              print("crop added");
+                            } else {
+                              int? fieldId = int.tryParse(
+                                _selectedField!,
+                              ); // Konvertiert String zu int
+                              cropsViewModel.update(
+                                _descriptionController.text,
+                                _startDate!,
+                                _endDate!,
+                                fieldId!,
+                                widget.cropId!,
+                                widget.cropDateId!,
+                              );
+                              print("crop updated");
+                            }
                             Navigator.pop(context);
                           },
                         ),
                       ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

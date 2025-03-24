@@ -36,17 +36,14 @@ class _ActivitiesState extends State<Activities> {
       appBar: CustomAppBar(title: widget.title),
       body: Consumer<ActivitiesViewModel>(
         builder: (context, activitiesViewModel, child) {
-          activitiesViewModel.getActivities();
           return Center(
             child: Column(
               children: <Widget>[
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
                       children: <Widget>[
-                        SizedBox(height: 24),
-                        CustomTitle(text: 'Aktivitäten konfigurieren'),
                         for (var activity in activitiesViewModel.activities)
                           DetailCard(
                             detail: Detail(
@@ -62,32 +59,35 @@ class _ActivitiesState extends State<Activities> {
                     ),
                   ),
                 ),
-                CustomButtonLarge(
-                  text: 'Aktivitäten hinzufügen',
-                  onPressed: () async {
-                    final result = Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) => ActivitiesEdit(
-                              title: "Aktivitäten erstellen",
-                              isCreate: true,
-                            ),
-                      ),
-                    );
-                    if (result == true) {
-                      await Provider.of<ActivitiesViewModel>(
-                        context,
-                        listen: false,
-                      ).getActivities();
-                    }
-                  },
-                ),
               ],
             ),
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => ActivitiesEdit(
+                    title: "Aktivitäten erstellen",
+                    isCreate: true,
+                  ),
+            ),
+          );
+          if (result == true) {
+            await Provider.of<ActivitiesViewModel>(
+              context,
+              listen: false,
+            ).getActivities();
+          }
+        },
+        backgroundColor: Colors.green,
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

@@ -34,20 +34,14 @@ class _CropsState extends State<Crops> {
       appBar: CustomAppBar(title: widget.title),
       body: Consumer<CropsViewModel>(
         builder: (context, cropsViewModel, child) {
-          Provider.of<CropsViewModel>(
-            context,
-            listen: false,
-          ).getCompleteCrops();
           return Center(
             child: Column(
               children: <Widget>[
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
                       children: <Widget>[
-                        SizedBox(height: 24),
-                        CustomTitle(text: 'Kulturen konfigurieren'),
                         for (var crop in cropsViewModel.completeCrop)
                           DetailCard(
                             detail: Detail(
@@ -67,32 +61,33 @@ class _CropsState extends State<Crops> {
                     ),
                   ),
                 ),
-                CustomButtonLarge(
-                  text: 'Kulturen hinzufügen',
-                  onPressed: () async {
-                    final result = Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) => CropsEdit(
-                              title: "Kultur erstellen",
-                              isCreate: true,
-                            ),
-                      ),
-                    );
-                    if (result == true) {
-                      Provider.of<CropsViewModel>(
-                        context,
-                        listen: false,
-                      ).getCompleteCrops();
-                    }
-                  },
-                ),
               ],
             ),
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) =>
+                      CropsEdit(title: "Kultur erstellen", isCreate: true),
+            ),
+          );
+          if (result == true) {
+            await Provider.of<CropsViewModel>(
+              context,
+              listen: false,
+            ).getCompleteCrops();
+          }
+        },
+        backgroundColor: Colors.green,
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

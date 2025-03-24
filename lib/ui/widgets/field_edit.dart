@@ -28,66 +28,74 @@ class FieldEdit extends StatelessWidget {
 
     return Scaffold(
       appBar: CustomAppBar(title: title),
-      body: Consumer<FieldsViewModel>(
-        builder: (context, fieldsViewModel, child) {
-          return Center(
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: 24),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(height: 24),
-                        FormTextfield(
-                          label: "Feldname",
-                          controller: _descriptionController,
-                          keyboardType: TextInputType.text,
-                          maxLine: 1,
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Consumer<FieldsViewModel>(
+          builder: (context, fieldsViewModel, child) {
+            return Center(
+              child: Column(
+                children: <Widget>[
+                  if (!isCreate)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Flexible(
+                          child: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () async {
+                              fieldsViewModel.remove(fieldId!);
+                              Navigator.pop(context, true);
+                            },
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Flexible(
-                      child: CustomIconButtonLarge(
-                        icon: Icon(Icons.save),
-                        onPressed: () async {
-                          if (fieldId == null) {
-                            fieldsViewModel.addField(
-                              _descriptionController.text,
-                            );
-                            print("crop added");
-                          } else {
-                            fieldsViewModel.update(
-                              fieldId!,
-                              _descriptionController.text,
-                            );
-                            print("crop updated");
-                          }
-                          Navigator.pop(context, true);
-                        },
+                  const SizedBox(height: 24),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          const SizedBox(height: 24),
+                          FormTextfield(
+                            label: "Feldname",
+                            controller: _descriptionController,
+                            keyboardType: TextInputType.text,
+                            maxLine: 1,
+                          ),
+                        ],
                       ),
                     ),
-                    if (!isCreate)
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
                       Flexible(
-                        child: CustomIconButtonLarge(
-                          icon: Icon(Icons.delete),
+                        child: CustomButtonLarge(
+                          text: "Speichern",
                           onPressed: () async {
-                            fieldsViewModel.remove(fieldId!);
+                            if (fieldId == null) {
+                              fieldsViewModel.addField(
+                                _descriptionController.text,
+                              );
+                              print("field added");
+                            } else {
+                              fieldsViewModel.update(
+                                fieldId!,
+                                _descriptionController.text,
+                              );
+                              print("field updated");
+                            }
                             Navigator.pop(context, true);
                           },
                         ),
                       ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

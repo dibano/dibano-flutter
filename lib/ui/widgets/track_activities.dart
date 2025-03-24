@@ -4,6 +4,7 @@ import 'package:dibano/ui/view_model/people.dart';
 import 'package:dibano/ui/view_model/activities.dart';
 import 'package:dibano/ui/view_model/track_activities.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
+import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:dibano/ui/widgets/components/custom_iconbutton_large.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/form_dropdown.dart';
@@ -308,10 +309,7 @@ class _TrackActivitiesState extends State<TrackActivities> {
                     maxLine: 1,
                   ),
                 ],*/
-                CustomIconButtonLarge(
-                  onPressed: _addEntry,
-                  icon: Icon(Icons.save),
-                ),
+                CustomButtonLarge(onPressed: _addEntry, text: "Speichern"),
               ],
             ),
           ),

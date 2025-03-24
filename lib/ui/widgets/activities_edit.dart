@@ -28,64 +28,72 @@ class ActivitiesEdit extends StatelessWidget {
 
     return Scaffold(
       appBar: CustomAppBar(title: title),
-      body: Consumer<ActivitiesViewModel>(
-        builder: (context, activitiesViewModel, child) {
-          return Center(
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: 24),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(height: 24),
-                        FormTextfield(
-                          label: "Name der Aktivität",
-                          controller: _descriptionController,
-                          keyboardType: TextInputType.text,
-                          maxLine: 1,
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Consumer<ActivitiesViewModel>(
+          builder: (context, activitiesViewModel, child) {
+            return Center(
+              child: Column(
+                children: <Widget>[
+                  if (!isCreate)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Flexible(
+                          child: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () async {
+                              activitiesViewModel.remove(activityId!);
+                              Navigator.pop(context);
+                            },
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Flexible(
-                      child: CustomIconButtonLarge(
-                        icon: Icon(Icons.save),
-                        onPressed: () async {
-                          if (activityId == null) {
-                            activitiesViewModel.add(
-                              _descriptionController.text,
-                            );
-                          } else {
-                            activitiesViewModel.update(
-                              activityId!,
-                              _descriptionController.text,
-                            );
-                          }
-                          Navigator.pop(context);
-                        },
+                  const SizedBox(height: 24),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          const SizedBox(height: 24),
+                          FormTextfield(
+                            label: "Name der Aktivität",
+                            controller: _descriptionController,
+                            keyboardType: TextInputType.text,
+                            maxLine: 1,
+                          ),
+                        ],
                       ),
                     ),
-                    if (!isCreate)
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
                       Flexible(
-                        child: CustomIconButtonLarge(
-                          icon: Icon(Icons.delete),
+                        child: CustomButtonLarge(
+                          text: "Speichern",
                           onPressed: () async {
-                            activitiesViewModel.remove(activityId!);
+                            if (activityId == null) {
+                              activitiesViewModel.add(
+                                _descriptionController.text,
+                              );
+                            } else {
+                              activitiesViewModel.update(
+                                activityId!,
+                                _descriptionController.text,
+                              );
+                            }
                             Navigator.pop(context);
                           },
                         ),
                       ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
