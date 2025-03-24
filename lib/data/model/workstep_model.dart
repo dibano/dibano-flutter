@@ -7,6 +7,7 @@ class Workstep extends DatabaseModel{
   final String description;
   final int personId;
   final int cropDateId;
+  final String date;
   final dbHandler = DatabaseHandler();
   
   Workstep({
@@ -14,6 +15,7 @@ class Workstep extends DatabaseModel{
       required this.description,
       required this.personId,
       required this.cropDateId,
+      required this.date,
   });
 
   /*static Future<List<Workstep>> getAll() async{
@@ -34,6 +36,7 @@ class Workstep extends DatabaseModel{
       'description': description, 
       'personId': personId, 
       'cropDateId': cropDateId, 
+      'date': date, 
     };
   }
 
@@ -41,7 +44,7 @@ class Workstep extends DatabaseModel{
   // each dog when using the print statement.
   @override
   String toString() {
-    return 'workstep{id: $id, description: $description, personId: $personId, cropDateId: $cropDateId}';
+    return 'workstep{id: $id, description: $description, personId: $personId, cropDateId: $cropDateId, date: $date}';
   }
 
   @override

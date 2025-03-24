@@ -11,6 +11,8 @@ import 'package:dibano/ui/widgets/components/form_dropdown.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
 import 'package:dibano/ui/widgets/components/form_textfield_disabled.dart';
 import 'package:provider/provider.dart';
+import 'package:dibano/ui/widgets/components/form_date.dart';
+
 
 class TrackActivities extends StatefulWidget {
   const TrackActivities({
@@ -22,6 +24,7 @@ class TrackActivities extends StatefulWidget {
     this.description,
     this.workstepActivityId,
     this.workstepId,
+    this.activityDate,
   });
 
   final String title;
@@ -31,6 +34,7 @@ class TrackActivities extends StatefulWidget {
   final String? description;
   final int? workstepActivityId;
   final int? workstepId;
+  final DateTime? activityDate;
 
   @override
   State<TrackActivities> createState() => _TrackActivitiesState();
@@ -59,19 +63,8 @@ class _TrackActivitiesState extends State<TrackActivities> {
   //Person Dropdown
   String? _selectedPerson = "-1";
 
-  /*
-  Additional Fields
-  */
-  //Düngemittel Dropdown
-  //String _selectedFertilizers = 'Düngemittel wählen';
-
-  //Ausbringmenge Textfeld
-  //final TextEditingController _fertilizerAmountController =
-  //    TextEditingController();
-
-  //Ausbringmenge Textfeld
-  //final TextEditingController _fertilizerAmountPerHaController =
-  //    TextEditingController();
+  //Datum Feld
+  DateTime? _activityDate;
 
   final List<Map<String, String>> _entries = [];
 
@@ -93,6 +86,7 @@ class _TrackActivitiesState extends State<TrackActivities> {
             _descriptionController.text,
             int.parse(_selectedPerson.toString()),
             int.parse(_selectedActivity.toString()),
+            _activityDate ?? DateTime.now(),
           );
         } else {
           trackActivitiesViewModel.updateWorkStepActivity(
@@ -102,6 +96,7 @@ class _TrackActivitiesState extends State<TrackActivities> {
             int.parse(_selectedActivity.toString()),
             widget.workstepActivityId!,
             widget.workstepId!,
+            _activityDate ?? DateTime.now(),
           );
         }
 
@@ -153,6 +148,9 @@ class _TrackActivitiesState extends State<TrackActivities> {
   @override
   void initState() {
     super.initState();
+    if (widget.activityDate != null) {
+      _activityDate = widget.activityDate;
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<FieldsViewModel>(context, listen: false).getFields();
       Provider.of<PersonViewModel>(context, listen: false).getPerson();
@@ -160,19 +158,19 @@ class _TrackActivitiesState extends State<TrackActivities> {
       Provider.of<CropsViewModel>(context, listen: false).getCompleteCrops();
       Provider.of<ActivitiesViewModel>(context, listen: false).getActivities();
 
-      if (widget.selectedArea != null) {
-        _selectedArea = widget.selectedArea;
-        _loadCropsName();
-      }
-      if (widget.selectedActivity != null) {
-        _selectedActivity = widget.selectedActivity;
-      }
-      if (widget.selectedPerson != null) {
-        _selectedPerson = widget.selectedPerson;
-      }
-      if (widget.description != null) {
-        _descriptionController.text = widget.description.toString();
-      }
+        if (widget.selectedArea != null) {
+          _selectedArea = widget.selectedArea;
+          _loadCropsName();
+        }
+        if (widget.selectedActivity != null) {
+          _selectedActivity = widget.selectedActivity;
+        }
+        if (widget.selectedPerson != null) {
+          _selectedPerson = widget.selectedPerson;
+        }
+        if (widget.description != null) {
+          _descriptionController.text = widget.description.toString();
+        }
     });
   }
 
@@ -281,6 +279,20 @@ class _TrackActivitiesState extends State<TrackActivities> {
                   },
                 ),
 
+                Consumer<CropsViewModel>(
+                  builder: (context, cropsViewModel, child) {
+                    return FormDate(
+                          label: "Datum",
+                          placeholderDate: _activityDate ?? DateTime.now(),
+                          dateSelected: (date) {
+                            setState(() => _activityDate = date!);
+                          },
+                        );
+                  },
+                ),
+
+
+
                 /*if (_selectedActivity == "Aktivität 1") ...[
                   FormDropdown(
                     label: "Düngemittel",
@@ -310,6 +322,7 @@ class _TrackActivitiesState extends State<TrackActivities> {
                   ),
                 ],*/
                 CustomButtonLarge(onPressed: _addEntry, text: "Speichern"),
+
               ],
             ),
           ),

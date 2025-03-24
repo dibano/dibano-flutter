@@ -62,6 +62,7 @@ class DatabaseHandler{
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             cropdateId INTEGER NOT NULL,
             description VARCHAR(200) NOT NULL,
+            date DATE NOT NULL,
             personId INTEGER NOT NULL,
             FOREIGN KEY(cropdateId) REFERENCES CropDate(id)
             FOREIGN KEY(personId) REFERENCES Person(id)
@@ -112,6 +113,7 @@ class DatabaseHandler{
               ,fd.fieldName
               ,cp.cropName
               ,ws.description
+              ,ws.date
             FROM WorkstepActivity wa
             INNER JOIN Workstep ws
             on ws.id = wa.workstepId

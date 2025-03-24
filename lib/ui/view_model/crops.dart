@@ -1,6 +1,9 @@
+import 'dart:ffi';
+
 import 'package:dibano/data/database_handler.dart';
 import 'package:dibano/data/model/completeCrop_model.dart';
 import 'package:dibano/data/model/cropdate_model.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:dibano/data/model/crop_model.dart';
 
@@ -53,12 +56,10 @@ class CropsViewModel extends ChangeNotifier {
 
   Future<void> getCompleteCrops() async{
     _completeCrop = await CompleteCrop.getCompleteCrops();
-    print("Get:  $_completeCrop");
     notifyListeners();
   }
 
   String getCropName(int cropDateId){
-    print("Get2:  $_completeCrop");
     for (CompleteCrop crop in _completeCrop){
       if(crop.id == cropDateId){
         return crop.cropName;
