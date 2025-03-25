@@ -1,4 +1,5 @@
 import 'package:dibano/ui/view_model/activity_summary.dart';
+import 'package:dibano/ui/view_model/crops.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/activity_card.dart';
@@ -58,21 +59,22 @@ class _ActivitySummaryState extends State<ActivitySummary> {
                 PopupMenuButton<int>(
                   icon: Icon(Icons.sort),
                   onSelected: (value) {
-                    if (value == 1) {
-                      // Aktion für "Nach Feld filtern"
-                    } else if (value == 2) {
-                      // Aktion für "Nach Aktivität filtern"
-                    }
+                    ActivitySummaryViewModel activitySummaryViewModel = Provider.of<ActivitySummaryViewModel>(context,listen: false);
+                    activitySummaryViewModel.sortCompleteWorksteps(value);
                   },
                   itemBuilder:
                       (context) => [
                         PopupMenuItem(
                           value: 1,
-                          child: Text('Nach Feld filtern'),
+                          child: Text('Nach Feld sortieren'),
                         ),
                         PopupMenuItem(
                           value: 2,
-                          child: Text('Nach Aktivität filtern'),
+                          child: Text('Nach Aktivität sortieren'),
+                        ),
+                        PopupMenuItem(
+                          value: 3,
+                          child: Text('Nach Datum sortieren'),
                         ),
                       ],
                 ),
