@@ -15,7 +15,7 @@ import 'package:sqflite/sqflite.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DatabaseModel.dbHandler = DatabaseHandler();
-  await deleteDatabase(join(await getDatabasesPath(), 'dibano_db'));
+  //await deleteDatabase(join(await getDatabasesPath(), 'dibano_db'));
   runApp(
     MultiProvider(
       providers: [

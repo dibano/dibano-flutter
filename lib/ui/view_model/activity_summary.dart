@@ -9,7 +9,21 @@ class ActivitySummaryViewModel extends ChangeNotifier {
 
   Future<void> getCompleteWorksteps() async{
     _completeWorksteps = await CompleteWorkstep.getCompleteWorksteps();
-    print(_completeWorksteps);
+    notifyListeners();
+  }
+
+  void sortCompleteWorksteps(int sortType){
+    switch(sortType){
+      case 1:
+        _completeWorksteps.sort((a,b) => a.fieldName.compareTo(b.fieldName));
+        break;
+      case 2:
+        _completeWorksteps.sort((a,b) => a.activityName.compareTo(b.activityName));
+        break;
+      case 3:
+        _completeWorksteps.sort((a,b) => a.date.compareTo(b.date));
+        break;
+    }
     notifyListeners();
   }
 }
