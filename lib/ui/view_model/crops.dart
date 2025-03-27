@@ -23,7 +23,7 @@ class CropsViewModel extends ChangeNotifier {
 
   Future<void> add(String cropName, DateTime startDate, DateTime endDate, int fieldId) async{
     Crop crop = Crop(cropName: cropName);
-    int cropId = await crop.insertReturnId(crop);
+    int cropId = await crop.insertReturnId();
 
 
     CropDate cropDate = CropDate(startDate: startDate.toIso8601String(), endDate: endDate.toIso8601String(), cropId: cropId, fieldId: fieldId);

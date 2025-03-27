@@ -22,11 +22,6 @@ class Workstep extends DatabaseModel{
     return await DatabaseModel.dbHandler.worksteps();
   }*/
 
-  Future<int> insertReturnId(Workstep workstep) async{
-    int workstepId = await DatabaseModel.dbHandler.insertReturnId(this, tableName);
-    return workstepId;
-  }
-
   // Convert a Dog into a Map. The keys must correspond to the names of the
   // columns in the database.
   @override

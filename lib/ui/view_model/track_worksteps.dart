@@ -10,7 +10,7 @@ class TrackWorkstepsViewModel extends ChangeNotifier {
 
   Future<void> addWorkstepActivity(int cropDateId, String description, int personId, int activityId, DateTime activityDate) async{
     Workstep workstep = Workstep(description: description, personId: personId, cropDateId: cropDateId, date: activityDate.toIso8601String());
-    int workstepId = await workstep.insertReturnId(workstep);
+    int workstepId = await workstep.insertReturnId();
 
     WorkstepActivity workstepActivity = WorkstepActivity(workstepId: workstepId, activityId: activityId);
     workstepActivity.insert();
