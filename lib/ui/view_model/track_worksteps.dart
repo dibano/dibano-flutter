@@ -3,7 +3,7 @@ import 'package:dibano/data/model/workstep_model.dart';
 import 'package:flutter/widgets.dart';
 
 
-class TrackActivetiesViewModel extends ChangeNotifier {
+class TrackWorkstepsViewModel extends ChangeNotifier {
   List<Workstep> _worksteps = [];
   List<Workstep> get worksteps => _worksteps;
   String tableName = "Workstep";
@@ -12,14 +12,8 @@ class TrackActivetiesViewModel extends ChangeNotifier {
     Workstep workstep = Workstep(description: description, personId: personId, cropDateId: cropDateId, date: activityDate.toIso8601String());
     int workstepId = await workstep.insertReturnId(workstep);
 
-    print("Workstep wurde gespeichert: $workstep mit der ID $workstepId");
-
-
     WorkstepActivity workstepActivity = WorkstepActivity(workstepId: workstepId, activityId: activityId);
     workstepActivity.insert();
-
-    print("Workstepactivity wurde gespeichert: $workstepActivity");
-
     notifyListeners();
   }
 

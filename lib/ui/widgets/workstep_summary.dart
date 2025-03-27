@@ -1,24 +1,24 @@
-import 'package:dibano/ui/view_model/activity_summary.dart';
+import 'package:dibano/ui/view_model/workstep_summary.dart';
 import 'package:dibano/ui/view_model/crops.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/activity_card.dart';
 import 'package:provider/provider.dart';
 
-class ActivitySummary extends StatefulWidget {
-  const ActivitySummary({super.key, required this.title});
+class WorkstepSummary extends StatefulWidget {
+  const WorkstepSummary({super.key, required this.title});
 
   final String title;
 
   @override
-  State<ActivitySummary> createState() => _ActivitySummaryState();
+  State<WorkstepSummary> createState() => _WorkstepSummaryState();
 }
 
-class _ActivitySummaryState extends State<ActivitySummary> {
+class _WorkstepSummaryState extends State<WorkstepSummary> {
   @override
   void initState() {
     super.initState();
-    Provider.of<ActivitySummaryViewModel>(
+    Provider.of<WorkstepSummaryViewModel>(
       context,
       listen: false,
     ).getCompleteWorksteps();
@@ -59,8 +59,8 @@ class _ActivitySummaryState extends State<ActivitySummary> {
                 PopupMenuButton<int>(
                   icon: Icon(Icons.sort),
                   onSelected: (value) {
-                    ActivitySummaryViewModel activitySummaryViewModel = Provider.of<ActivitySummaryViewModel>(context,listen: false);
-                    activitySummaryViewModel.sortCompleteWorksteps(value);
+                    WorkstepSummaryViewModel workstepSummaryViewModel = Provider.of<WorkstepSummaryViewModel>(context,listen: false);
+                    workstepSummaryViewModel.sortCompleteWorksteps(value);
                   },
                   itemBuilder:
                       (context) => [
@@ -131,10 +131,10 @@ class _ActivitySummaryState extends State<ActivitySummary> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Consumer<ActivitySummaryViewModel>(
-                builder: (context, activitySummaryViewModel, child) {
+              child: Consumer<WorkstepSummaryViewModel>(
+                builder: (context, workstepSummaryViewModel, child) {
                   final workstepList =
-                      activitySummaryViewModel.completeWorksteps;
+                      workstepSummaryViewModel.completeWorksteps;
                   return ListView.builder(
                     itemCount: workstepList.length,
                     itemBuilder: (context, index) {

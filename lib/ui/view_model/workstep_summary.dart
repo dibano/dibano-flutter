@@ -2,7 +2,7 @@ import 'package:dibano/data/model/completeWorkstep_model.dart';
 import 'package:dibano/data/model/workstep_model.dart';
 import 'package:flutter/widgets.dart';
 
-class ActivitySummaryViewModel extends ChangeNotifier {
+class WorkstepSummaryViewModel extends ChangeNotifier {
   List<CompleteWorkstep> _completeWorksteps = [];
   List<CompleteWorkstep> get completeWorksteps => _completeWorksteps;
   String tableName = "CompleteWorkstep";

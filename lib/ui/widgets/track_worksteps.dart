@@ -3,7 +3,7 @@ import 'package:dibano/ui/view_model/crops.dart';
 import 'package:dibano/ui/view_model/fields.dart';
 import 'package:dibano/ui/view_model/people.dart';
 import 'package:dibano/ui/view_model/activities.dart';
-import 'package:dibano/ui/view_model/track_activities.dart';
+import 'package:dibano/ui/view_model/track_worksteps.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:dibano/ui/widgets/components/custom_iconbutton_large.dart';
@@ -16,8 +16,8 @@ import 'package:provider/provider.dart';
 import 'package:dibano/ui/widgets/components/form_date.dart';
 
 
-class TrackActivities extends StatefulWidget {
-  const TrackActivities({
+class TrackWorksteps extends StatefulWidget {
+  const TrackWorksteps({
     super.key,
     required this.title,
     this.selectedArea,
@@ -39,16 +39,16 @@ class TrackActivities extends StatefulWidget {
   final DateTime? activityDate;
 
   @override
-  State<TrackActivities> createState() => _TrackActivitiesState();
+  State<TrackWorksteps> createState() => _TrackWorkstepsState();
 }
 
-class _TrackActivitiesState extends State<TrackActivities> {
+class _TrackWorkstepsState extends State<TrackWorksteps> {
   bool _fieldSelected = false;
   bool _dateSelected = false;
 
 
-  TrackActivetiesViewModel trackActivitiesViewModel =
-      TrackActivetiesViewModel();
+  TrackWorkstepsViewModel trackWorkstepsViewModel =
+      TrackWorkstepsViewModel();
   FieldsViewModel fieldsViewModel = FieldsViewModel();
   //CropsViewModel cropsViewModel = CropsViewModel();
   PersonViewModel personViewModel = PersonViewModel();
@@ -87,7 +87,7 @@ class _TrackActivitiesState extends State<TrackActivities> {
             widget.selectedActivity == null ||
             widget.selectedPerson == null ||
             widget.description == null) {
-          trackActivitiesViewModel.addWorkstepActivity(
+          trackWorkstepsViewModel.addWorkstepActivity(
             int.parse(_selectedArea.toString()),
             _descriptionController.text,
             int.parse(_selectedPerson.toString()),
@@ -95,7 +95,7 @@ class _TrackActivitiesState extends State<TrackActivities> {
             _activityDate ?? DateTime.now(),
           );
         } else {
-          trackActivitiesViewModel.updateWorkStepActivity(
+          trackWorkstepsViewModel.updateWorkStepActivity(
             int.parse(_selectedArea.toString()),
             _descriptionController.text,
             int.parse(_selectedPerson.toString()),

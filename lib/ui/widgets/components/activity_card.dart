@@ -1,6 +1,6 @@
 import 'package:dibano/data/model/completeWorkstep_model.dart';
 import 'package:dibano/ui/view_model/components/activity_card.dart';
-import 'package:dibano/ui/widgets/track_activities.dart';
+import 'package:dibano/ui/widgets/track_worksteps.dart';
 import 'package:flutter/material.dart';
 
 class ActivityCard extends StatefulWidget {
@@ -47,7 +47,7 @@ class _ActivityCardState extends State<ActivityCard> {
                       context,
                       MaterialPageRoute(
                         builder:
-                            (context) => TrackActivities(
+                            (context) => TrackWorksteps(
                               title: "Aktivität bearbeiten", 
                               selectedArea: widget.workstep.id.toString(), 
                               selectedActivity: widget.workstep.activityId.toString(), 
