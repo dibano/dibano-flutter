@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:dibano/data/database_handler.dart';
 
 abstract class DatabaseModel {

@@ -1,10 +1,8 @@
 import 'package:dibano/ui/view_model/components/detail_card.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
-import 'package:dibano/ui/widgets/components/custom_title.dart';
 import 'package:dibano/ui/widgets/components/detail_card.dart';
 import 'package:dibano/ui/widgets/activities_edit.dart';
 import 'package:flutter/material.dart';
-import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:dibano/ui/view_model/activities.dart';
 import 'package:provider/provider.dart';
 

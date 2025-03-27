@@ -1,5 +1,4 @@
 import 'package:dibano/ui/view_model/workstep_summary.dart';
-import 'package:dibano/ui/view_model/crops.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/activity_card.dart';
@@ -84,22 +83,17 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                     switch (value) {
                       case 1:
                         // Aktion für "Per Email senden"
-                        print("Per Email senden ausgewählt");
                         break;
                       case 2:
                         // Aktion für "Als PDF speichern"
-                        print("Als PDF speichern ausgewählt");
                         break;
                       case 3:
                         // Aktion für "Cloud-Dienste"
-                        print("Cloud-Dienste ausgewählt");
                         break;
                       case 4:
                         // Aktion für "Per Schnittstelle weiterleiten"
-                        print("Per Schnittstelle weiterleiten ausgewählt");
                         break;
                       default:
-                        print("Keine Aktion ausgewählt");
                     }
                   },
                   itemBuilder:

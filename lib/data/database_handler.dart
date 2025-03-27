@@ -11,7 +11,6 @@ import 'package:dibano/data/model/field_model.dart';
 import 'package:dibano/data/model/crop_model.dart';
 import 'package:dibano/data/model/person_model.dart';
 import 'package:dibano/data/model/activity_model.dart';
-import 'package:dibano/data/model/workstep_model.dart';
 
 class DatabaseHandler{
   static Future<Database> get database async{

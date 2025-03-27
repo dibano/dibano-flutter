@@ -1,9 +1,7 @@
-import 'package:dibano/data/database_handler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:dibano/data/model/field_model.dart';
 
 class FieldsViewModel extends ChangeNotifier {
-  final DatabaseHandler _databaseHandler = DatabaseHandler();
   List<Field> _fields = [];
   List<Field> get fields => _fields;
   String tableName = "Field";

@@ -9,10 +9,10 @@ class ActivityCard extends StatefulWidget {
   final CompleteWorkstep workstep;
 
   @override
-  _ActivityCardState createState() => _ActivityCardState();
+  ActivityCardState createState() => ActivityCardState();
 }
 
-class _ActivityCardState extends State<ActivityCard> {
+class ActivityCardState extends State<ActivityCard> {
   bool checkboxState = false;
   @override
   Widget build(BuildContext context) {

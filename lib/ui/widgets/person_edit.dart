@@ -1,7 +1,6 @@
 import 'package:dibano/ui/view_model/people.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
-import 'package:dibano/ui/widgets/components/custom_iconbutton_large.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -78,13 +77,11 @@ class PersonEdit extends StatelessWidget {
                           onPressed: () async {
                             if (personId == null) {
                               personViewModel.add(_descriptionController.text);
-                              print("person added");
                             } else {
                               personViewModel.update(
                                 personId!,
                                 _descriptionController.text,
                               );
-                              print("person updated");
                             }
                             Navigator.pop(context);
                           },

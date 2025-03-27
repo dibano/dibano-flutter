@@ -1,5 +1,4 @@
 import 'package:dibano/data/model/completeWorkstep_model.dart';
-import 'package:dibano/data/model/workstep_model.dart';
 import 'package:flutter/widgets.dart';
 
 class WorkstepSummaryViewModel extends ChangeNotifier {

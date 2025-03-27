@@ -16,10 +16,10 @@ class FormDate extends StatefulWidget{
   });
 
   @override
-  _FormDateState createState() => _FormDateState();
+  FormDateState createState() => FormDateState();
 }
 
-class _FormDateState extends State<FormDate>{
+class FormDateState extends State<FormDate>{
   late DateTime? selectedDate;
 
   @override

@@ -1,9 +1,6 @@
-import 'package:dibano/ui/view_model/components/detail_card.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/view_model/components/farm_box.dart';
 import 'package:dibano/ui/widgets/acitivities.dart';
-import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
-import 'package:dibano/ui/widgets/components/detail_card.dart';
 import 'package:dibano/ui/widgets/components/farm_boxes.dart';
 import 'package:dibano/ui/widgets/people.dart';
 import 'package:flutter/material.dart';

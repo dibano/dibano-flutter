@@ -1,7 +1,6 @@
 import 'package:dibano/ui/view_model/crops.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
-import 'package:dibano/ui/widgets/components/custom_iconbutton_large.dart';
 import 'package:dibano/ui/widgets/components/form_date.dart';
 import 'package:dibano/ui/widgets/components/form_dropdown.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
@@ -153,7 +152,6 @@ class _CropsEditState extends State<CropsEdit> {
                                 _endDate ?? DateTime.now(),
                                 fieldId!,
                               );
-                              print("crop added");
                             } else {
                               int? fieldId = int.tryParse(
                                 _selectedField!,
@@ -166,7 +164,6 @@ class _CropsEditState extends State<CropsEdit> {
                                 widget.cropId!,
                                 widget.cropDateId!,
                               );
-                              print("crop updated");
                             }
                             Navigator.pop(context);
                           },
