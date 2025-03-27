@@ -1,3 +1,4 @@
+import 'package:dibano/data/model/field_model.dart';
 import 'package:dibano/ui/view_model/crops.dart';
 import 'package:dibano/ui/view_model/fields.dart';
 import 'package:dibano/ui/view_model/people.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/form_dropdown.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
 import 'package:dibano/ui/widgets/components/form_textfield_disabled.dart';
+import 'package:dibano/ui/widgets/components/warn_card.dart';
 import 'package:provider/provider.dart';
 import 'package:dibano/ui/widgets/components/form_date.dart';
 
@@ -41,10 +43,14 @@ class TrackActivities extends StatefulWidget {
 }
 
 class _TrackActivitiesState extends State<TrackActivities> {
+  bool _fieldSelected = false;
+  bool _dateSelected = false;
+
+
   TrackActivetiesViewModel trackActivitiesViewModel =
       TrackActivetiesViewModel();
   FieldsViewModel fieldsViewModel = FieldsViewModel();
-  CropsViewModel cropsViewModel = CropsViewModel();
+  //CropsViewModel cropsViewModel = CropsViewModel();
   PersonViewModel personViewModel = PersonViewModel();
 
   //Ort Dropdown
@@ -137,9 +143,11 @@ class _TrackActivitiesState extends State<TrackActivities> {
   }
 
   Future<void> _loadCropsName() async {
+    final cropsViewModel = Provider.of<CropsViewModel>(context, listen: false);
     await cropsViewModel.getCompleteCrops();
     selectedCropName = cropsViewModel.getCropName(
       int.parse(_selectedArea.toString()),
+      _activityDate!,
     );
     _cropController.text = selectedCropName.toString();
     setState(() {});
@@ -149,6 +157,7 @@ class _TrackActivitiesState extends State<TrackActivities> {
   void initState() {
     super.initState();
     if (widget.activityDate != null) {
+      _dateSelected = true;
       _activityDate = widget.activityDate;
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -159,6 +168,7 @@ class _TrackActivitiesState extends State<TrackActivities> {
       Provider.of<ActivitiesViewModel>(context, listen: false).getActivities();
 
         if (widget.selectedArea != null) {
+          _fieldSelected = true;
           _selectedArea = widget.selectedArea;
           _loadCropsName();
         }
@@ -186,8 +196,8 @@ class _TrackActivitiesState extends State<TrackActivities> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Consumer<CropsViewModel>(
-                  builder: (context, cropsViewModel, child) {
+                Consumer<FieldsViewModel>(
+                  builder: (context, fieldsViewModel, child) {
                     return FormDropdown(
                       label: "Feld",
                       value: _selectedArea!,
@@ -196,133 +206,125 @@ class _TrackActivitiesState extends State<TrackActivities> {
                           value: "-1",
                           child: Text("Ort wählen"),
                         ),
-                        ...cropsViewModel.completeCrop.map(
-                          (cropDate) => DropdownMenuItem(
-                            value: cropDate.id.toString(),
-                            child: Text(cropDate.fieldName),
+                        ...fieldsViewModel.fields.map(
+                          (fields) => DropdownMenuItem(
+                            value: fields.id.toString(),
+                            child: Text(fields.fieldName),
                           ),
                         ),
                       ],
                       onChanged: (value) {
                         setState(() {
+                          final cropsViewModel = Provider.of<CropsViewModel>(context, listen: false);
                           _selectedArea = value ?? "-1";
-                          selectedCropName = cropsViewModel.getCropName(
-                            int.parse(_selectedArea.toString()),
-                          );
-                          _cropController.text = selectedCropName.toString();
+                          if(_selectedArea != "-1"){
+                            _fieldSelected = true;
+                          }else{
+                            _fieldSelected = false;
+                          }
+                          if(_fieldSelected && _dateSelected){
+                            selectedCropName = cropsViewModel.getCropName(
+                              int.parse(_selectedArea.toString()),
+                              _activityDate!,
+                            );
+                            _cropController.text = selectedCropName.toString();
+                          } 
                         });
                       },
                     );
                   },
                 ),
-                FormTextfield(
-                  label: "Beschreibung",
-                  controller: _descriptionController,
-                  keyboardType: TextInputType.text,
-                  maxLine: 5,
-                ),
-
-                Consumer<CropsViewModel>(
-                  builder: (context, cropsViewModel, child) {
-                    return FormTextfieldDisabled(
-                      label: "Kultur",
-                      textController: _cropController,
-                    );
-                  },
-                ),
-
-                Consumer<ActivitiesViewModel>(
-                  builder: (context, activitiesViewModel, child) {
-                    return FormDropdown(
-                      label: "Aktivität",
-                      value: _selectedActivity!,
-                      items: [
-                        DropdownMenuItem(
-                          value: "-1",
-                          child: Text("Aktivität wählen"),
-                        ),
-                        ...activitiesViewModel.activities.map(
-                          (activity) => DropdownMenuItem(
-                            value: activity.id.toString(),
-                            child: Text(activity.activityName),
-                          ),
-                        ),
-                      ],
-                      onChanged: (value) {
-                        setState(() => _selectedActivity = value ?? "-1");
-                      },
-                    );
-                  },
-                ),
-
-                Consumer<PersonViewModel>(
-                  builder: (context, personViewModel, child) {
-                    return FormDropdown(
-                      label: "Person",
-                      value: _selectedPerson!,
-                      items: [
-                        DropdownMenuItem(
-                          value: "-1",
-                          child: Text("Person wählen"),
-                        ),
-                        ...personViewModel.personList.map(
-                          (person) => DropdownMenuItem(
-                            value: person.id.toString(),
-                            child: Text(person.personName),
-                          ),
-                        ),
-                      ],
-                      onChanged: (value) {
-                        setState(() => _selectedPerson = value ?? "-1");
-                      },
-                    );
-                  },
-                ),
-
                 Consumer<CropsViewModel>(
                   builder: (context, cropsViewModel, child) {
                     return FormDate(
                           label: "Datum",
-                          placeholderDate: _activityDate ?? DateTime.now(),
+                          placeholderDate: _activityDate,
                           dateSelected: (date) {
-                            setState(() => _activityDate = date!);
+                            setState((){
+                              _activityDate = date!;
+                              _dateSelected = true;
+                              if(_fieldSelected && _dateSelected){
+                                selectedCropName = cropsViewModel.getCropName(
+                                  int.parse(_selectedArea.toString()),
+                                  _activityDate!,
+                                );
+                                _cropController.text = selectedCropName.toString();
+                              }
+                            });
                           },
                         );
                   },
                 ),
+                if(_activityDate != null && _selectedArea != "-1" && _cropController.text == "unbekannt")...[
+                  Warn(warnText: "Keine Kultur zur Feldauswahl und Datumauswahl gefunden!"),
+                ],
 
+                if(_activityDate != null && _selectedArea != "-1" && _cropController.text != "unbekannt")...[
+                  FormTextfield(
+                    label: "Beschreibung",
+                    controller: _descriptionController,
+                    keyboardType: TextInputType.text,
+                    maxLine: 5,
+                  ),
 
-
-                /*if (_selectedActivity == "Aktivität 1") ...[
-                  FormDropdown(
-                    label: "Düngemittel",
-                    value: _selectedFertilizers,
-                    items: ["Düngemittel wählen", "Düngemittel 1", "Düngemittel 2", "Düngemittel 3"],
-                    onChanged: (value) {
-                      setState(() => _selectedFertilizers = value!);
+                  Consumer<CropsViewModel>(
+                    builder: (context, cropsViewModel, child) {
+                      return FormTextfieldDisabled(
+                        label: "Kultur",
+                        textController: _cropController,
+                      );
                     },
                   ),
 
-                  FormTextfield(
-                    label: "Ausbringmenge (in kg)",
-                    controller: _fertilizerAmountController,
-                    keyboardType: TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
-                    maxLine: 1,
+                  Consumer<ActivitiesViewModel>(
+                    builder: (context, activitiesViewModel, child) {
+                      return FormDropdown(
+                        label: "Aktivität",
+                        value: _selectedActivity!,
+                        items: [
+                          DropdownMenuItem(
+                            value: "-1",
+                            child: Text("Aktivität wählen"),
+                          ),
+                          ...activitiesViewModel.activities.map(
+                            (activity) => DropdownMenuItem(
+                              value: activity.id.toString(),
+                              child: Text(activity.activityName),
+                            ),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          setState(() => _selectedActivity = value ?? "-1");
+                        },
+                      );
+                    },
                   ),
 
-                  FormTextfield(
-                    label: "Ausbringmenge pro ha (in kg)",
-                    controller: _fertilizerAmountPerHaController,
-                    keyboardType: TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
-                    maxLine: 1,
+                  Consumer<PersonViewModel>(
+                    builder: (context, personViewModel, child) {
+                      return FormDropdown(
+                        label: "Person",
+                        value: _selectedPerson!,
+                        items: [
+                          DropdownMenuItem(
+                            value: "-1",
+                            child: Text("Person wählen"),
+                          ),
+                          ...personViewModel.personList.map(
+                            (person) => DropdownMenuItem(
+                              value: person.id.toString(),
+                              child: Text(person.personName),
+                            ),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          setState(() => _selectedPerson = value ?? "-1");
+                        },
+                      );
+                    },
                   ),
-                ],*/
-                CustomButtonLarge(onPressed: _addEntry, text: "Speichern"),
-
+                  CustomButtonLarge(onPressed: _addEntry, text: "Speichern"),
+                ],
               ],
             ),
           ),

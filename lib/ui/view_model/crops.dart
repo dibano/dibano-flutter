@@ -59,10 +59,21 @@ class CropsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  String getCropName(int cropDateId){
+  String getCropName(int fieldId, DateTime date){
+    print("get aufgerufen");
+    print(_completeCrop);
     for (CompleteCrop crop in _completeCrop){
-      if(crop.id == cropDateId){
-        return crop.cropName;
+      print("for aufgerufen");
+      if(fieldId == crop.fieldId){
+        print("if 1 aufgerufen");
+        DateTime startDate = DateTime.parse(crop.startDate);
+        DateTime endDate = DateTime.parse(crop.endDate);
+        if(date.isAtSameMomentAs(startDate) ||
+           date.isAtSameMomentAs(endDate)||
+           (date.isAfter(startDate) && date.isBefore(endDate))){
+            print("if 2 aufgerufen");
+            return crop.cropName;
+           }
       }
     }
     return "unbekannt";
