@@ -1,11 +1,9 @@
 import 'package:dibano/ui/view_model/activity_summary.dart';
+import 'package:dibano/ui/view_model/crops.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
-import 'package:dibano/ui/widgets/components/custom_title.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/activity_card.dart';
-import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:provider/provider.dart';
-
 
 class ActivitySummary extends StatefulWidget {
   const ActivitySummary({super.key, required this.title});
@@ -17,11 +15,13 @@ class ActivitySummary extends StatefulWidget {
 }
 
 class _ActivitySummaryState extends State<ActivitySummary> {
-
   @override
   void initState() {
     super.initState();
-    Provider.of<ActivitySummaryViewModel>(context,listen: false).getCompleteWorksteps();
+    Provider.of<ActivitySummaryViewModel>(
+      context,
+      listen: false,
+    ).getCompleteWorksteps();
   }
 
   @override
@@ -48,37 +48,82 @@ class _ActivitySummaryState extends State<ActivitySummary> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 IconButton(
                   onPressed: () {
                     // To do: Handle button press
                   },
+                  icon: Icon(Icons.check_box_rounded),
+                ),
+                PopupMenuButton<int>(
                   icon: Icon(Icons.sort),
+                  onSelected: (value) {
+                    ActivitySummaryViewModel activitySummaryViewModel = Provider.of<ActivitySummaryViewModel>(context,listen: false);
+                    activitySummaryViewModel.sortCompleteWorksteps(value);
+                  },
+                  itemBuilder:
+                      (context) => [
+                        PopupMenuItem(
+                          value: 1,
+                          child: Text('Nach Feld sortieren'),
+                        ),
+                        PopupMenuItem(
+                          value: 2,
+                          child: Text('Nach Aktivität sortieren'),
+                        ),
+                        PopupMenuItem(
+                          value: 3,
+                          child: Text('Nach Datum sortieren'),
+                        ),
+                      ],
                 ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // To do: Handle button press
-                    },
-                    child: Text(
-                      'Nach Feld filtern',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
+                PopupMenuButton<int>(
+                  icon: Icon(Icons.share),
+                  onSelected: (value) {
+                    switch (value) {
+                      case 1:
+                        // Aktion für "Per Email senden"
+                        print("Per Email senden ausgewählt");
+                        break;
+                      case 2:
+                        // Aktion für "Als PDF speichern"
+                        print("Als PDF speichern ausgewählt");
+                        break;
+                      case 3:
+                        // Aktion für "Cloud-Dienste"
+                        print("Cloud-Dienste ausgewählt");
+                        break;
+                      case 4:
+                        // Aktion für "Per Schnittstelle weiterleiten"
+                        print("Per Schnittstelle weiterleiten ausgewählt");
+                        break;
+                      default:
+                        print("Keine Aktion ausgewählt");
+                    }
+                  },
+                  itemBuilder:
+                      (context) => [
+                        PopupMenuItem(
+                          value: 1,
+                          child: Text('Per Email senden'),
+                        ),
+                        PopupMenuItem(
+                          value: 2,
+                          child: Text('Als PDF speichern'),
+                        ),
+                        PopupMenuItem(value: 3, child: Text('Cloud-Dienste')),
+                        PopupMenuItem(
+                          value: 4,
+                          child: Text('Per Schnittstelle weiterleiten'),
+                        ),
+                      ],
                 ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // To do: Handle button press
-                    },
-                    child: Text(
-                      'Nach Aktivität filtern',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
+                IconButton(
+                  onPressed: () {
+                    // To do: Handle button press
+                  },
+                  icon: Icon(Icons.delete),
                 ),
               ],
             ),
@@ -87,93 +132,18 @@ class _ActivitySummaryState extends State<ActivitySummary> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Consumer<ActivitySummaryViewModel>(
-                builder:(context,activitySummaryViewModel, child){
-                  final workstepList = activitySummaryViewModel.completeWorksteps;
+                builder: (context, activitySummaryViewModel, child) {
+                  final workstepList =
+                      activitySummaryViewModel.completeWorksteps;
                   return ListView.builder(
                     itemCount: workstepList.length,
-                    itemBuilder: (context, index){
-                      return ActivityCard(
-                            workstep: workstepList[index],
-                      );
+                    itemBuilder: (context, index) {
+                      return ActivityCard(workstep: workstepList[index]);
                     },
                   );
                 },
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // To do: Handle button press
-                  },
-                  child: Text('Alle auswählen', style: TextStyle(fontSize: 16)),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomTitle(text: 'Teilen'),
-                  SizedBox(height: 8),
-                  Text('PDF übertragen', style: TextStyle(fontSize: 16)),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // To do: Handle button press
-                    },
-                    child: Text('E-Mail', style: TextStyle(fontSize: 16)),
-                  ),
-                ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // To do: Handle button press
-                    },
-                    child: Text(
-                      'Herunterladen',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // To do: Handle button press
-                    },
-                    child: Text(
-                      'Cloud-Dienste',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          CustomButtonLarge(
-            text: 'Per Schnittstelle weiterleiten',
-            onPressed: () {
-              // To do: Handle button press
-            },
           ),
         ],
       ),

@@ -7,11 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ActivitiesEdit extends StatelessWidget {
-  ActivitiesEdit({super.key, required this.title, this.activityName = "", this.activityId});
+  ActivitiesEdit({
+    super.key,
+    required this.title,
+    this.activityName = "",
+    this.activityId,
+    this.isCreate = false,
+  });
 
   final String title;
   final String activityName;
   final int? activityId;
+  bool isCreate;
 
   final TextEditingController _descriptionController = TextEditingController();
 
@@ -21,60 +28,72 @@ class ActivitiesEdit extends StatelessWidget {
 
     return Scaffold(
       appBar: CustomAppBar(title: title),
-      body: Consumer<ActivitiesViewModel>(
-        builder: (context, activitiesViewModel, child) {
-          return Center(
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: 24),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(height: 24),
-                        FormTextfield(
-                          label: "Name der Aktivität",
-                          controller: _descriptionController,
-                          keyboardType: TextInputType.text,
-                          maxLine: 1,
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Consumer<ActivitiesViewModel>(
+          builder: (context, activitiesViewModel, child) {
+            return Center(
+              child: Column(
+                children: <Widget>[
+                  if (!isCreate)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Flexible(
+                          child: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () async {
+                              activitiesViewModel.remove(activityId!);
+                              Navigator.pop(context);
+                            },
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ),
-                Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,  
-                children: [
-                  Flexible(
-                    child:
-                      CustomButtonLarge(
-                        text: 'Speichern',
-                        onPressed: () async {
-                          if(activityId == null){
-                            activitiesViewModel.add(_descriptionController.text);
-                          }
-                          else{
-                            activitiesViewModel.update(activityId!, _descriptionController.text);
-                          }
-                          Navigator.pop(context);
-                        },
+                  const SizedBox(height: 24),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          const SizedBox(height: 24),
+                          FormTextfield(
+                            label: "Name der Aktivität",
+                            controller: _descriptionController,
+                            keyboardType: TextInputType.text,
+                            maxLine: 1,
+                          ),
+                        ],
                       ),
+                    ),
                   ),
-                  Flexible(
-                    child:
-                      CustomIconButtonLarge(
-                        icon: Icon(Icons.delete),
-                        onPressed: () async {
-                            activitiesViewModel.remove(activityId!);
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Flexible(
+                        child: CustomButtonLarge(
+                          text: "Speichern",
+                          onPressed: () async {
+                            if (activityId == null) {
+                              activitiesViewModel.add(
+                                _descriptionController.text,
+                              );
+                            } else {
+                              activitiesViewModel.update(
+                                activityId!,
+                                _descriptionController.text,
+                              );
+                            }
                             Navigator.pop(context);
-                        },
+                          },
+                        ),
                       ),
-                  )
-                ],)
-              ],
-            ),
-          );
-        },
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

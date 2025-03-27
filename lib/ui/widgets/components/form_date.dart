@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 */
 class FormDate extends StatefulWidget{
   final String label;
-  final DateTime placeholderDate;
+  final DateTime? placeholderDate;
   final Function(DateTime) dateSelected;
 
   const FormDate({
@@ -20,7 +20,7 @@ class FormDate extends StatefulWidget{
 }
 
 class _FormDateState extends State<FormDate>{
-  late DateTime selectedDate;
+  late DateTime? selectedDate;
 
   @override
   void initState(){
@@ -63,7 +63,9 @@ class _FormDateState extends State<FormDate>{
         TextFormField(
           readOnly: true, 
           controller: TextEditingController(
-            text: "${selectedDate.day}.${selectedDate.month}.${selectedDate.year}",
+            text: (selectedDate?.day == null||selectedDate?.month == null|| selectedDate?.year == null)
+            ? " "
+            : "${selectedDate?.day}.${selectedDate?.month}.${selectedDate?.year}",
           ),
           decoration: const InputDecoration(
             border: OutlineInputBorder(),

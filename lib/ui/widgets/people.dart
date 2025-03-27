@@ -13,15 +13,15 @@ class People extends StatefulWidget {
   final String title;
 
   @override
-  State<People> createState()=>_PeopleState();
+  State<People> createState() => _PeopleState();
 }
 
-class _PeopleState extends State<People>{
+class _PeopleState extends State<People> {
   bool _initialized = false;
   @override
-  void didChangeDependencies(){
+  void didChangeDependencies() {
     super.didChangeDependencies();
-    if(!_initialized){
+    if (!_initialized) {
       Provider.of<PersonViewModel>(context, listen: false).getPerson();
       _initialized = true;
     }
@@ -34,17 +34,15 @@ class _PeopleState extends State<People>{
       appBar: CustomAppBar(title: widget.title),
       body: Consumer<PersonViewModel>(
         builder: (context, peopleViewModel, child) {
-          Provider.of<PersonViewModel>(context, listen: false).getPerson();
+          peopleViewModel.getPerson();
           return Center(
             child: Column(
               children: <Widget>[
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
                       children: <Widget>[
-                        SizedBox(height: 24),
-                        CustomTitle(text: 'Personen konfigurieren'),
                         for (var person in peopleViewModel.personList)
                           DetailCard(
                             detail: Detail(
@@ -60,26 +58,38 @@ class _PeopleState extends State<People>{
                     ),
                   ),
                 ),
-                CustomButtonLarge(
-                  text: 'Person hinzufügen',
-                  onPressed: () async {
-                    final result = Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) => PersonEdit(title: "Person erstellen"),
-                      ),
-                    );
-                    if(result == true){
-                      await Provider.of<PersonViewModel>(context, listen: false).getPerson();
-                    }
-                  },
-                ),
               ],
             ),
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) =>
+                      PersonEdit(title: "Person erstellen", isCreate: true),
+            ),
+          );
+          if (result == true) {
+            await Provider.of<PersonViewModel>(
+              context,
+              listen: false,
+            ).getPerson();
+          }
+        },
+        backgroundColor: Colors.green, // Hintergrundfarbe des Kreises
+        shape: const CircleBorder(), // Stellt sicher, dass der Button rund ist
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ), // Pluszeichen in Weiß
+      ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation
+              .endFloat, // Position am unteren rechten Rand
     );
   }
 }

@@ -8,8 +8,8 @@ class TrackActivetiesViewModel extends ChangeNotifier {
   List<Workstep> get worksteps => _worksteps;
   String tableName = "Workstep";
 
-  Future<void> addWorkstepActivity(int cropDateId, String description, int personId, int activityId) async{
-    Workstep workstep = Workstep(description: description, personId: personId, cropDateId: cropDateId);
+  Future<void> addWorkstepActivity(int cropDateId, String description, int personId, int activityId, DateTime activityDate) async{
+    Workstep workstep = Workstep(description: description, personId: personId, cropDateId: cropDateId, date: activityDate.toIso8601String());
     int workstepId = await workstep.insertReturnId(workstep);
 
     print("Workstep wurde gespeichert: $workstep mit der ID $workstepId");
@@ -23,8 +23,8 @@ class TrackActivetiesViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateWorkStepActivity(int cropDateId, String description, int personId, int activityId, int workstepActivityId, int workstepId) async{
-    Workstep workstep = Workstep(id: workstepId, description: description, personId: personId, cropDateId: cropDateId);
+  Future<void> updateWorkStepActivity(int cropDateId, String description, int personId, int activityId, int workstepActivityId, int workstepId, DateTime activityDate) async{
+    Workstep workstep = Workstep(id: workstepId, description: description, personId: personId, cropDateId: cropDateId, date: activityDate.toIso8601String());
     await workstep.update();
 
     WorkstepActivity workstepActivity = WorkstepActivity(id: workstepActivityId, workstepId: workstepId, activityId: activityId);

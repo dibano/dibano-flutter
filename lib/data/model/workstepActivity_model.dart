@@ -5,7 +5,6 @@ class WorkstepActivity extends DatabaseModel{
   final int? id;
   final int workstepId;
   final int activityId;
-
   
   WorkstepActivity({
       this.id,

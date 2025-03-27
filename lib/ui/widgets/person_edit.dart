@@ -7,11 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PersonEdit extends StatelessWidget {
-  PersonEdit({super.key, required this.title, this.personName = "", this.personId});
+  PersonEdit({
+    super.key,
+    required this.title,
+    this.personName = "",
+    this.personId,
+    this.isCreate = false,
+  });
 
   final String title;
   final String personName;
   final int? personId;
+  bool isCreate;
 
   final TextEditingController _descriptionController = TextEditingController();
 
@@ -21,62 +28,75 @@ class PersonEdit extends StatelessWidget {
 
     return Scaffold(
       appBar: CustomAppBar(title: title),
-      body: Consumer<PersonViewModel>(
-        builder: (context, personViewModel, child) {
-          return Center(
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: 24),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(height: 24),
-                        FormTextfield(
-                          label: "Name der Person",
-                          controller: _descriptionController,
-                          keyboardType: TextInputType.text,
-                          maxLine: 1,
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Consumer<PersonViewModel>(
+          builder: (context, personViewModel, child) {
+            return Center(
+              child: Column(
+                children: <Widget>[
+                  if (!isCreate)
+                    Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment
+                              .end, // Positioniert das Icon ganz rechts
+                      children: [
+                        Flexible(
+                          child: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () async {
+                              personViewModel.remove(personId!);
+                              Navigator.pop(context);
+                            },
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ),
-                Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,  
-                children: [
-                  Flexible(
-                    child:
-                      CustomButtonLarge(
-                        text: 'Speichern',
-                        onPressed: () async {
-                          if(personId == null){
-                            personViewModel.add(_descriptionController.text);
-                            print("person added");
-                          }
-                          else{
-                            personViewModel.update(personId!, _descriptionController.text);
-                            print("person updated");
-                          }
-                          Navigator.pop(context);
-                        },
+
+                  const SizedBox(height: 24),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          const SizedBox(height: 24),
+                          FormTextfield(
+                            label: "Name der Person",
+                            controller: _descriptionController,
+                            keyboardType: TextInputType.text,
+                            maxLine: 1,
+                          ),
+                        ],
                       ),
+                    ),
                   ),
-                  Flexible(
-                    child:
-                      CustomIconButtonLarge(
-                        icon: Icon(Icons.delete),
-                        onPressed: () async {
-                            personViewModel.remove(personId!);
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Flexible(
+                        child: CustomButtonLarge(
+                          text: "Speichern",
+                          onPressed: () async {
+                            if (personId == null) {
+                              personViewModel.add(_descriptionController.text);
+                              print("person added");
+                            } else {
+                              personViewModel.update(
+                                personId!,
+                                _descriptionController.text,
+                              );
+                              print("person updated");
+                            }
                             Navigator.pop(context);
-                        },
+                          },
+                        ),
                       ),
-                  )
-                ],)
-              ],
-            ),
-          );
-        },
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

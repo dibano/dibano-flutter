@@ -4,7 +4,11 @@ class CustomButtonLarge extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
 
-  const CustomButtonLarge({super.key, required this.text, required this.onPressed});
+  const CustomButtonLarge({
+    super.key,
+    required this.text,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,13 +17,7 @@ class CustomButtonLarge extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         height: 60.0,
-        child: ElevatedButton(
-          onPressed: onPressed,
-          child: Text(
-            text,
-            style: TextStyle(fontSize: 24),
-          ),
-        ),
+        child: ElevatedButton(onPressed: onPressed, child: Text(text)),
       ),
     );
   }

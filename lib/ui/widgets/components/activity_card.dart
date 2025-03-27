@@ -16,7 +16,7 @@ class _ActivityCardState extends State<ActivityCard> {
   bool checkboxState = false;
   @override
   Widget build(BuildContext context) {
-    Activity activity = Activity(description: widget.workstep.description, fieldName: widget.workstep.fieldName, cropName: widget.workstep.cropName, activityName: widget.workstep.activityName);
+    Activity activity = Activity(description: widget.workstep.description, fieldName: widget.workstep.fieldName, cropName: widget.workstep.cropName, activityName: widget.workstep.activityName, date: DateTime.tryParse(widget.workstep.date)!);
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: SizedBox(
@@ -47,7 +47,15 @@ class _ActivityCardState extends State<ActivityCard> {
                       context,
                       MaterialPageRoute(
                         builder:
-                            (context) => TrackActivities(title: "Aktivität bearbeiten", selectedArea: widget.workstep.id.toString(), selectedActivity: widget.workstep.activityId.toString(), selectedPerson: widget.workstep.personId.toString(), description: widget.workstep.description, workstepActivityId: widget.workstep.workstepActivityId, workstepId: widget.workstep.workstepId),
+                            (context) => TrackActivities(
+                              title: "Aktivität bearbeiten", 
+                              selectedArea: widget.workstep.id.toString(), 
+                              selectedActivity: widget.workstep.activityId.toString(), 
+                              selectedPerson: widget.workstep.personId.toString(), 
+                              description: widget.workstep.description, 
+                              workstepActivityId: widget.workstep.workstepActivityId, 
+                              workstepId: widget.workstep.workstepId, 
+                              activityDate: DateTime.tryParse(widget.workstep.date)),
                       ),
                     );
                   },

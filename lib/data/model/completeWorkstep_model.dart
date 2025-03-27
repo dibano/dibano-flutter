@@ -10,6 +10,7 @@ class CompleteWorkstep{
   final String cropName;
   final String activityName;
   final String description;
+  final String date;
   
   CompleteWorkstep({
     required this.id,
@@ -21,6 +22,7 @@ class CompleteWorkstep{
     required this.cropName,
     required this.activityName,
     required this.description,
+    required this.date,
   });
 
   factory CompleteWorkstep.fromMap(Map<String, Object?> completeWorkstepMap) {
@@ -33,6 +35,7 @@ class CompleteWorkstep{
                         fieldName: completeWorkstepMap['fieldName'] as String, 
                         activityName: completeWorkstepMap['activityName'] as String,
                         description: completeWorkstepMap['description'] as String,
+                        date: completeWorkstepMap['date'] as String,
                       );
   }
 
