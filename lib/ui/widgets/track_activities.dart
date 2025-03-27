@@ -50,7 +50,7 @@ class _TrackActivitiesState extends State<TrackActivities> {
   TrackActivetiesViewModel trackActivitiesViewModel =
       TrackActivetiesViewModel();
   FieldsViewModel fieldsViewModel = FieldsViewModel();
-  CropsViewModel cropsViewModel = CropsViewModel();
+  //CropsViewModel cropsViewModel = CropsViewModel();
   PersonViewModel personViewModel = PersonViewModel();
 
   //Ort Dropdown
@@ -143,6 +143,7 @@ class _TrackActivitiesState extends State<TrackActivities> {
   }
 
   Future<void> _loadCropsName() async {
+    final cropsViewModel = Provider.of<CropsViewModel>(context, listen: false);
     await cropsViewModel.getCompleteCrops();
     selectedCropName = cropsViewModel.getCropName(
       int.parse(_selectedArea.toString()),
@@ -214,13 +215,13 @@ class _TrackActivitiesState extends State<TrackActivities> {
                       ],
                       onChanged: (value) {
                         setState(() {
+                          final cropsViewModel = Provider.of<CropsViewModel>(context, listen: false);
                           _selectedArea = value ?? "-1";
                           if(_selectedArea != "-1"){
                             _fieldSelected = true;
                           }else{
                             _fieldSelected = false;
                           }
-
                           if(_fieldSelected && _dateSelected){
                             selectedCropName = cropsViewModel.getCropName(
                               int.parse(_selectedArea.toString()),
