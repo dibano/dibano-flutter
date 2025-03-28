@@ -1,0 +1,5 @@
+Download the following llms and put them into the "llm-models" folder:
+
+https://www.kaggle.com/models/google/gemma/tfLite/
+- gemma-2b-it-cpu-int4.bin
+- gemma-2b-it-gpu-int4.bin

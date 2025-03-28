@@ -1,0 +1,129 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_gemma/core/chat.dart';
+import 'package:flutter_gemma/core/model.dart';
+import 'package:flutter_gemma/pigeon.g.dart';
+import 'package:dibano/ui/widgets/chatbot/chat_widget.dart';
+import 'package:flutter_gemma/flutter_gemma.dart';
+import 'package:dibano/ui/widgets/chatbot/loading_widget.dart';
+
+class ChatScreen extends StatefulWidget {
+  const ChatScreen({super.key, required this.title});
+
+  final String title;
+
+  @override
+  ChatScreenState createState() => ChatScreenState();
+}
+
+class ChatScreenState extends State<ChatScreen> {
+  final _gemma = FlutterGemmaPlugin.instance;
+  InferenceChat? chat;
+  final _messages = <Message>[];
+  bool _isModelInitialized = false;
+  int? _loadingProgress;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeModel();
+  }
+
+  Future<void> _initializeModel() async {
+    bool isLoaded = await _gemma.modelManager.isModelInstalled;
+    if (!isLoaded) {
+      await for (int progress in _gemma.modelManager
+          .installModelFromAssetWithProgress('llm-models/gemma-2b-it-cpu-int4.bin')) {
+        setState(() {
+          _loadingProgress = progress;
+        });
+      }
+    }
+    final model = await _gemma.createModel(
+      modelType: ModelType.gemmaIt,
+      preferredBackend: PreferredBackend.gpu,
+      maxTokens: 2048,
+    );
+    chat = await model.createChat(
+      temperature: 0.9,
+      randomSeed: 1,
+      topK: 56,
+      topP: 0.95,
+      tokenBuffer: 256,
+    );
+    setState(() {
+      _isModelInitialized = true;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF0b2351),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF0b2351),
+        title: const Text(
+          'Flutter Gemma Example',
+          style: TextStyle(fontSize: 20),
+          softWrap: true,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
+        ),
+      ),
+      body: Stack(children: [
+        Center(
+          child: Image.asset(
+            'assets/background.png',
+            width: 200,
+            height: 200,
+          ),
+        ),
+        _isModelInitialized
+            ? Column(children: [
+          if (_error != null) _buildErrorBanner(_error!),
+          Expanded(
+            child: ChatListWidget(
+              chat: chat,
+              gemmaHandler: (message) {
+                setState(() {
+                  _messages.add(message);
+                });
+              },
+              humanHandler: (text) {
+                setState(() {
+                  _error = null;
+                  _messages.add(Message(text: text, isUser: true));
+                });
+              },
+              errorHandler: (err) {
+                setState(() {
+                  _error = err;
+                });
+              },
+              messages: _messages,
+            ),
+          )
+        ])
+            : LoadingWidget(
+          message: _loadingProgress == null
+              ? 'Model is checking'
+              : 'Model loading progress:',
+          progress: _loadingProgress,
+        ),
+      ]),
+    );
+  }
+
+  Widget _buildErrorBanner(String errorMessage) {
+    return Container(
+      width: double.infinity,
+      color: Colors.red,
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        errorMessage,
+        style: const TextStyle(color: Colors.white),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+}

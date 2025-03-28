@@ -3,6 +3,7 @@ import 'package:dibano/ui/widgets/activity_summary.dart';
 import 'package:dibano/ui/widgets/info.dart';
 import 'package:dibano/ui/widgets/my_farm.dart';
 import 'package:dibano/ui/widgets/track_activities.dart';
+import 'package:dibano/ui/widgets/chatbot/chat_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreenViewModel extends ChangeNotifier {
@@ -27,6 +28,11 @@ class HomeScreenViewModel extends ChangeNotifier {
       title: 'Informationen',
       routeWidget: Info(title: "Informationen"),
     ),
+    ButtonData(
+      icon: Icons.chat_bubble,
+      title: 'Chat',
+      routeWidget: ChatScreen(title: "Chat"),
+    )
   ];
 
   List<ButtonData> getButtonDataList() {
