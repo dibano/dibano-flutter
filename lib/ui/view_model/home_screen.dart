@@ -37,21 +37,4 @@ class HomeScreenViewModel extends ChangeNotifier {
   List<ButtonData> getButtonDataList() {
     return _buttonDataList;
   }
-
-  void addButton(ButtonData button) {
-    _buttonDataList.add(button);
-    notifyListeners();
-  }
-
-  void removeButton(ButtonData button) {
-    _buttonDataList.remove(button);
-    notifyListeners();
-  }
-
-  void updateButton(int index, ButtonData button) {
-    if (index >= 0 && index < _buttonDataList.length) {
-      _buttonDataList[index] = button;
-      notifyListeners();
-    }
-  }
 }

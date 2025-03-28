@@ -4,7 +4,6 @@ import 'package:dibano/data/model/field_model.dart';
 class FieldsViewModel extends ChangeNotifier {
   List<Field> _fields = [];
   List<Field> get fields => _fields;
-  String tableName = "Field";
 
   Future<void> addField(String fieldName) async{
     Field field = Field(fieldName: fieldName);
@@ -27,7 +26,6 @@ class FieldsViewModel extends ChangeNotifier {
   Future<void> update(int id, String fieldName) async{
     Field field = Field(id:id, fieldName: fieldName);
     await field.update();
-    await getFields();
     notifyListeners();
   }
 }

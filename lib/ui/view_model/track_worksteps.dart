@@ -4,10 +4,6 @@ import 'package:flutter/widgets.dart';
 
 
 class TrackWorkstepsViewModel extends ChangeNotifier {
-  List<Workstep> _worksteps = [];
-  List<Workstep> get worksteps => _worksteps;
-  String tableName = "Workstep";
-
   Future<void> addWorkstepActivity(int cropDateId, String description, int personId, int activityId, DateTime activityDate) async{
     Workstep workstep = Workstep(description: description, personId: personId, cropDateId: cropDateId, date: activityDate.toIso8601String());
     int workstepId = await workstep.insertReturnId();

@@ -14,8 +14,6 @@ class CropsViewModel extends ChangeNotifier {
   List<Crop> _cropList = [];
   List<Crop> get cropList => _cropList;
 
-  String tableName = "Crop";
-
   Future<void> add(String cropName, DateTime startDate, DateTime endDate, int fieldId) async{
     Crop crop = Crop(cropName: cropName);
     int cropId = await crop.insertReturnId();
@@ -44,8 +42,6 @@ class CropsViewModel extends ChangeNotifier {
 
     CropDate cropDate = CropDate(id:cropDateId, startDate: startDate.toIso8601String(), endDate: endDate.toIso8601String(), cropId: cropId, fieldId: fieldId);
     cropDate.update();
-
-    await getCrops();
     notifyListeners();
   }
 

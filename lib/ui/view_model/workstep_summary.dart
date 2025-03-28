@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 class WorkstepSummaryViewModel extends ChangeNotifier {
   List<CompleteWorkstep> _completeWorksteps = [];
   List<CompleteWorkstep> get completeWorksteps => _completeWorksteps;
-  String tableName = "CompleteWorkstep";
 
   Future<void> getCompleteWorksteps() async{
     _completeWorksteps = await CompleteWorkstep.getCompleteWorksteps();

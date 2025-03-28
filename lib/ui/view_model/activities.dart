@@ -4,7 +4,6 @@ import 'package:dibano/data/model/activity_model.dart';
 class ActivitiesViewModel extends ChangeNotifier {
   List<Activity> _activities = [];
   List<Activity> get activities => _activities;
-  String tableName = "Activity";
 
   Future<void> add(String activityName) async{
     Activity activity = Activity(activityName: activityName);
@@ -27,7 +26,6 @@ class ActivitiesViewModel extends ChangeNotifier {
   Future<void> update(int id, String activityName) async{
     Activity activity = Activity(id:id, activityName: activityName);
     await activity.update();
-    await getActivities();
     notifyListeners();
   }
 }

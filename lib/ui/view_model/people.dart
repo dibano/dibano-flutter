@@ -27,7 +27,6 @@ class PersonViewModel extends ChangeNotifier {
   Future<void> update(int id, String personName) async{
     Person person = Person(id:id, personName: personName);
     await person.update();
-    await getPerson();
     notifyListeners();
   }
 }
