@@ -34,6 +34,7 @@ class CropsViewModel extends ChangeNotifier {
     CropDate removeCropDate = _cropDateList.firstWhere((crop) => crop.id == id);
     _cropDateList.removeWhere((crop)=>crop.id==id);
     await removeCropDate.delete();
+    notifyListeners();
   }
 
   Future<void> update(String cropName, DateTime startDate, DateTime endDate, int fieldId, int cropId, int cropDateId) async{

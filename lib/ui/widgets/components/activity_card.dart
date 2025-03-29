@@ -4,21 +4,24 @@ import 'package:dibano/ui/widgets/track_worksteps.dart';
 import 'package:flutter/material.dart';
 
 class ActivityCard extends StatefulWidget {
-  const ActivityCard({super.key, required this.workstep});
+  const ActivityCard({super.key, required this.workstep, this.onTap, this.onDelete});
 
   final CompleteWorkstep workstep;
+  final VoidCallback? onTap;
+  final VoidCallback? onDelete;
 
   @override
   ActivityCardState createState() => ActivityCardState();
 }
 
 class ActivityCardState extends State<ActivityCard> {
-  bool checkboxState = false;
   @override
   Widget build(BuildContext context) {
     Activity activity = Activity(description: widget.workstep.description, fieldName: widget.workstep.fieldName, cropName: widget.workstep.cropName, activityName: widget.workstep.activityName, date: DateTime.tryParse(widget.workstep.date)!);
     return Padding(
       padding: const EdgeInsets.all(2.0),
+      child: GestureDetector(
+        onTap: widget.onTap,
       child: SizedBox(
         width: double.infinity,
         child: Card(
@@ -33,38 +36,20 @@ class ActivityCardState extends State<ActivityCard> {
                     style: TextStyle(fontSize: 16),
                   ),
                 ),
-                Checkbox(
-                  value: checkboxState,
-                  onChanged: (bool? newValue) {
-                    setState(() {
-                      checkboxState = newValue ?? false;
-                    });
-                  },
-                ),
+                Icon(Icons.edit),
                 IconButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) => TrackWorksteps(
-                              title: "Aktivität bearbeiten", 
-                              selectedArea: widget.workstep.id.toString(), 
-                              selectedActivity: widget.workstep.activityId.toString(), 
-                              selectedPerson: widget.workstep.personId.toString(), 
-                              description: widget.workstep.description, 
-                              workstepActivityId: widget.workstep.workstepActivityId, 
-                              workstepId: widget.workstep.workstepId, 
-                              activityDate: DateTime.tryParse(widget.workstep.date)),
-                      ),
-                    );
+                    if(widget.onDelete != null){
+                      widget.onDelete!();
+                    }
                   },
-                  icon: Icon(Icons.edit),
+                  icon: Icon(Icons.delete),
                 ),
               ],
             ),
           ),
         ),
+      ),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:dibano/data/model/completeWorkstep_model.dart';
 import 'package:dibano/data/model/cropdate_model.dart';
 import 'package:dibano/data/model/database_model.dart';
 import 'package:dibano/data/model/workstepActivity_model.dart';
+import 'package:dibano/data/model/workstep_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:dibano/data/model/field_model.dart';
@@ -260,6 +261,16 @@ class DatabaseHandler{
       for (final {'id': id as int, 'activityId': activityId as int, 'workstepId': workstepId as int}
         in workstepActivities)
         WorkstepActivity(id: id, activityId: activityId, workstepId: workstepId),
+    ];  
+  }
+
+  Future<List<Workstep>> worksteps() async {
+    final db = await database;
+    final List<Map<String, Object?>> worksteps = await db.query('Workstep');
+    return [
+      for (final {'id': id as int, 'description': description as String, 'personId': personId as int, 'cropdateId': cropDateId as int, 'date': date as String}
+        in worksteps)
+        Workstep(id: id, description: description, personId: personId, cropdateId: cropDateId, date: date),
     ];  
   }
 }

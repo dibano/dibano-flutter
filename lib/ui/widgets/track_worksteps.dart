@@ -5,6 +5,7 @@ import 'package:dibano/ui/view_model/activities.dart';
 import 'package:dibano/ui/view_model/track_worksteps.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/form_dropdown.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
@@ -41,33 +42,24 @@ class TrackWorksteps extends StatefulWidget {
 }
 
 class _TrackWorkstepsState extends State<TrackWorksteps> {
+  late TrackWorkstepsViewModel _trackWorkstepsViewModel;
+
+
   bool _fieldSelected = false;
   bool _dateSelected = false;
 
-
-  TrackWorkstepsViewModel trackWorkstepsViewModel =
-      TrackWorkstepsViewModel();
-  FieldsViewModel fieldsViewModel = FieldsViewModel();
-  //CropsViewModel cropsViewModel = CropsViewModel();
-  PersonViewModel personViewModel = PersonViewModel();
-
-  //Ort Dropdown
   String? _selectedArea = "-1";
   String? selectedCropName;
-  //Beschreibung Textfeld
+
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _cropController = TextEditingController();
 
-  //Aktivität Dropdown
   String? _selectedActivity = "-1";
 
-  //Kultur Dropdown
   String? _selectedCulture = "-1";
 
-  //Person Dropdown
   String? _selectedPerson = "-1";
 
-  //Datum Feld
   DateTime? _activityDate;
 
   final List<Map<String, String>> _entries = [];
@@ -75,17 +67,14 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
   void _addEntry() {
     if (_descriptionController.text.isNotEmpty &&
         _selectedArea != "-1" &&
-        _selectedArea != 'Ort wählen' &&
         _selectedActivity != "-1" &&
-        _selectedActivity != 'Aktivität wählen' &&
-        _selectedPerson != "-1" &&
-        _selectedPerson != 'Person wählen') {
+        _selectedPerson != "-1" ) {
       setState(() {
         if (widget.selectedArea == null ||
             widget.selectedActivity == null ||
             widget.selectedPerson == null ||
             widget.description == null) {
-          trackWorkstepsViewModel.addWorkstepActivity(
+          _trackWorkstepsViewModel.addWorkstepActivity(
             int.parse(_selectedArea.toString()),
             _descriptionController.text,
             int.parse(_selectedPerson.toString()),
@@ -93,7 +82,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
             _activityDate ?? DateTime.now(),
           );
         } else {
-          trackWorkstepsViewModel.updateWorkStepActivity(
+          _trackWorkstepsViewModel.updateWorkStepActivity(
             int.parse(_selectedArea.toString()),
             _descriptionController.text,
             int.parse(_selectedPerson.toString()),
@@ -102,6 +91,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
             widget.workstepId!,
             _activityDate ?? DateTime.now(),
           );
+          Navigator.pop(context, true);
         }
 
         _descriptionController.clear();
@@ -140,32 +130,34 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
     }
   }
 
-  Future<void> _loadCropsName() async {
-    final cropsViewModel = Provider.of<CropsViewModel>(context, listen: false);
-    await cropsViewModel.getCompleteCrops();
-    selectedCropName = cropsViewModel.getCropName(
-      int.parse(_selectedArea.toString()),
-      _activityDate!,
-    );
-    _cropController.text = selectedCropName.toString();
-    setState(() {});
-  }
-
   @override
   void initState() {
     super.initState();
+    _trackWorkstepsViewModel = Provider.of<TrackWorkstepsViewModel>(context, listen: false);
     if (widget.activityDate != null) {
       _dateSelected = true;
       _activityDate = widget.activityDate;
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<FieldsViewModel>(context, listen: false).getFields();
-      Provider.of<PersonViewModel>(context, listen: false).getPerson();
-      Provider.of<CropsViewModel>(context, listen: false).getCrops();
-      Provider.of<CropsViewModel>(context, listen: false).getCompleteCrops();
-      Provider.of<ActivitiesViewModel>(context, listen: false).getActivities();
 
-        if (widget.selectedArea != null) {
+    _initData();
+  }
+
+  Future<void> _initData() async{
+      final fieldsViewModel = Provider.of<FieldsViewModel>(context, listen: false);
+      final personViewModel = Provider.of<PersonViewModel>(context, listen: false);
+      final cropsViewModel = Provider.of<CropsViewModel>(context, listen: false);
+      final activitiesViewModel = Provider.of<ActivitiesViewModel>(context, listen: false);
+
+      await Future.wait([
+        fieldsViewModel.getFields(),
+        personViewModel.getPerson(),
+        cropsViewModel.getCrops(),
+        cropsViewModel.getCompleteCrops(),
+        activitiesViewModel.getActivities(),
+      ]);
+
+      setState((){
+      if (widget.selectedArea != null) {
           _fieldSelected = true;
           _selectedArea = widget.selectedArea;
           _loadCropsName();
@@ -180,7 +172,22 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
           _descriptionController.text = widget.description.toString();
         }
     });
+    if(_fieldSelected && _activityDate != null){
+      await _loadCropsName();
+    }
   }
+
+  Future<void> _loadCropsName() async {
+    final cropsViewModel = Provider.of<CropsViewModel>(context, listen: false);
+    await cropsViewModel.getCompleteCrops();
+    selectedCropName = cropsViewModel.getCropName(
+      int.parse(_selectedArea.toString()),
+      _activityDate!,
+    );
+    _cropController.text = selectedCropName.toString();
+    setState(() {});
+  }
+  
 
   @override
   Widget build(BuildContext context) {

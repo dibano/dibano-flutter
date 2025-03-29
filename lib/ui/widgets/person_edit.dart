@@ -38,14 +38,14 @@ class PersonEdit extends StatelessWidget {
                     Row(
                       mainAxisAlignment:
                           MainAxisAlignment
-                              .end, // Positioniert das Icon ganz rechts
+                              .end,
                       children: [
                         Flexible(
                           child: IconButton(
                             icon: const Icon(Icons.delete),
                             onPressed: () async {
-                              personViewModel.remove(personId!);
-                              Navigator.pop(context);
+                              await personViewModel.remove(personId!);
+                              Navigator.pop(context, true);
                             },
                           ),
                         ),
@@ -76,14 +76,14 @@ class PersonEdit extends StatelessWidget {
                           text: "Speichern",
                           onPressed: () async {
                             if (personId == null) {
-                              personViewModel.add(_descriptionController.text);
+                              await personViewModel.add(_descriptionController.text);
                             } else {
-                              personViewModel.update(
+                              await personViewModel.update(
                                 personId!,
                                 _descriptionController.text,
                               );
                             }
-                            Navigator.pop(context);
+                            Navigator.pop(context, true);
                           },
                         ),
                       ),

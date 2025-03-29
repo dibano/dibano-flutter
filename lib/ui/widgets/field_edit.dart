@@ -42,7 +42,7 @@ class FieldEdit extends StatelessWidget {
                           child: IconButton(
                             icon: const Icon(Icons.delete),
                             onPressed: () async {
-                              fieldsViewModel.remove(fieldId!);
+                              await fieldsViewModel.remove(fieldId!);
                               Navigator.pop(context, true);
                             },
                           ),
@@ -73,11 +73,11 @@ class FieldEdit extends StatelessWidget {
                           text: "Speichern",
                           onPressed: () async {
                             if (fieldId == null) {
-                              fieldsViewModel.addField(
+                              await fieldsViewModel.addField(
                                 _descriptionController.text,
                               );
                             } else {
-                              fieldsViewModel.update(
+                              await fieldsViewModel.update(
                                 fieldId!,
                                 _descriptionController.text,
                               );

@@ -42,8 +42,9 @@ class ActivitiesEdit extends StatelessWidget {
                           child: IconButton(
                             icon: const Icon(Icons.delete),
                             onPressed: () async {
-                              activitiesViewModel.remove(activityId!);
-                              Navigator.pop(context);
+                              await activitiesViewModel.remove(activityId!);
+                              Navigator.pop(context, true);
+                              print("Navigator pop returns true");
                             },
                           ),
                         ),
@@ -73,16 +74,17 @@ class ActivitiesEdit extends StatelessWidget {
                           text: "Speichern",
                           onPressed: () async {
                             if (activityId == null) {
-                              activitiesViewModel.add(
+                              await activitiesViewModel.add(
                                 _descriptionController.text,
                               );
                             } else {
-                              activitiesViewModel.update(
+                              await activitiesViewModel.update(
                                 activityId!,
                                 _descriptionController.text,
                               );
                             }
-                            Navigator.pop(context);
+                            Navigator.pop(context, true);
+                            print("Navigator pop returns true");
                           },
                         ),
                       ),

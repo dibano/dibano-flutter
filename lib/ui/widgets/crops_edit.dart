@@ -75,8 +75,8 @@ class _CropsEditState extends State<CropsEdit> {
                           child: IconButton(
                             icon: const Icon(Icons.delete),
                             onPressed: () async {
-                              cropsViewModel.remove(widget.cropId!);
-                              Navigator.pop(context);
+                              await cropsViewModel.remove(widget.cropId!);
+                              Navigator.pop(context, true);
                             },
                           ),
                         ),
@@ -146,7 +146,7 @@ class _CropsEditState extends State<CropsEdit> {
                               int? fieldId = int.tryParse(
                                 _selectedField!,
                               ); // Konvertiert String zu int
-                              cropsViewModel.add(
+                              await cropsViewModel.add(
                                 _descriptionController.text,
                                 _startDate ?? DateTime.now(),
                                 _endDate ?? DateTime.now(),
@@ -156,7 +156,7 @@ class _CropsEditState extends State<CropsEdit> {
                               int? fieldId = int.tryParse(
                                 _selectedField!,
                               ); // Konvertiert String zu int
-                              cropsViewModel.update(
+                              await cropsViewModel.update(
                                 _descriptionController.text,
                                 _startDate!,
                                 _endDate!,
@@ -165,7 +165,7 @@ class _CropsEditState extends State<CropsEdit> {
                                 widget.cropDateId!,
                               );
                             }
-                            Navigator.pop(context);
+                            Navigator.pop(context, true);
                           },
                         ),
                       ),

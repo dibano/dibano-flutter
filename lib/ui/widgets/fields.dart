@@ -15,19 +15,16 @@ class Fields extends StatefulWidget {
 }
 
 class _FieldsState extends State<Fields> {
-  bool _initialized = false;
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_initialized) {
-      Provider.of<FieldsViewModel>(context, listen: false).getFields();
-      _initialized = true;
-    }
+  void initState(){
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      Provider.of<FieldsViewModel>(context,listen: false).getFields();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    FieldsViewModel fieldsViewModel = Provider.of<FieldsViewModel>(context);
     return Scaffold(
       appBar: CustomAppBar(title: widget.title),
       body: Consumer<FieldsViewModel>(
@@ -44,12 +41,24 @@ class _FieldsState extends State<Fields> {
                           DetailCard(
                             detail: Detail(
                               name: field.fieldName,
-                              routeWidget: FieldEdit(
-                                title: "Feld bearbeiten",
-                                fieldName: field.fieldName,
-                                fieldId: field.id,
-                              ),
+                              toEdit: true,
                             ),
+                          onTap: () async{
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => FieldEdit(
+                                      title: "Felder bearbeiten",
+                                      fieldId: field.id,
+                                      fieldName: field.fieldName,
+                                    ),
+                              ),
+                            );
+                            if (result == true) {
+                              await Provider.of<FieldsViewModel>(context,listen: false,).getFields();
+                            }
+                          },
                           ),
                       ],
                     ),
