@@ -42,7 +42,7 @@ class DatabaseHandler{
         await database.execute('''
           CREATE TABLE Crop(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            cropName VARCHAR(50) NOT NULL UNIQUE
+            cropName VARCHAR(50) NOT NULL
           )
         ''');
 

@@ -142,30 +142,176 @@ class _CropsEditState extends State<CropsEdit> {
                         child: CustomButtonLarge(
                           text: "Speichern",
                           onPressed: () async {
-                            if (widget.cropId == null) {
-                              int? fieldId = int.tryParse(
-                                _selectedField!,
-                              ); // Konvertiert String zu int
-                              await cropsViewModel.add(
-                                _descriptionController.text,
-                                _startDate ?? DateTime.now(),
-                                _endDate ?? DateTime.now(),
-                                fieldId!,
-                              );
-                            } else {
-                              int? fieldId = int.tryParse(
-                                _selectedField!,
-                              ); // Konvertiert String zu int
-                              await cropsViewModel.update(
-                                _descriptionController.text,
-                                _startDate!,
-                                _endDate!,
-                                fieldId!,
-                                widget.cropId!,
-                                widget.cropDateId!,
+                            if(_descriptionController.text != "" && _selectedField != null && _selectedField != "-1"){
+                              if (widget.cropId == null) {
+                                final inExistingDate = cropsViewModel.existingCropAtDateAndField(int.parse(_selectedField.toString()), _startDate??DateTime.now(), _endDate??DateTime.now(), widget.cropId);
+                                final endIsBeforeStart = cropsViewModel.endIsBeforeStart(_startDate??DateTime.now(), _endDate??DateTime.now());
+                                if(inExistingDate != true){
+                                  int? fieldId = int.tryParse(
+                                    _selectedField!,
+                                  ); // Konvertiert String zu int
+                                  await cropsViewModel.add(
+                                    _descriptionController.text,
+                                    _startDate ?? DateTime.now(),
+                                    _endDate ?? DateTime.now(),
+                                    fieldId!,
+                                  );
+                                  Navigator.pop(context, true);
+                                }else if (endIsBeforeStart == true){
+                                  await showDialog(
+                                    context:context,
+                                    builder:(BuildContext context){
+                                      return AlertDialog(
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
+                                            SizedBox(height: 16),
+                                            Text(
+                                              "Das Startdatum darf nicht nach dem Enddatum sein.",
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () { 
+                                              Navigator.of(context).pop();                                   
+                                            },
+                                            child: Text("OK"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }else{
+                                  await showDialog(
+                                    context:context,
+                                    builder:(BuildContext context){
+                                      return AlertDialog(
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
+                                            SizedBox(height: 16),
+                                            Text(
+                                              "Auf diesem Feld gibt es zu diesem Datum bereits eine Kultur. Wählen Sie ein anderes Feld oder ein anderes Datum",
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () { 
+                                              Navigator.of(context).pop();                                   
+                                            },
+                                            child: Text("OK"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              } else {
+                                final inExistingDate = cropsViewModel.existingCropAtDateAndField(int.parse(_selectedField.toString()), _startDate??DateTime.now(), _endDate??DateTime.now(), widget.cropId);
+                                final endIsBeforeStart = cropsViewModel.endIsBeforeStart(_startDate??DateTime.now(), _endDate??DateTime.now());
+                                if(inExistingDate != true){
+                                  int? fieldId = int.tryParse(
+                                    _selectedField!,
+                                  ); // Konvertiert String zu int
+                                  await cropsViewModel.update(
+                                    _descriptionController.text,
+                                    _startDate!,
+                                    _endDate!,
+                                    fieldId!,
+                                    widget.cropId!,
+                                    widget.cropDateId!,
+                                  );
+                                  Navigator.pop(context, true);
+                                }else if(endIsBeforeStart==true){
+                                  await showDialog(
+                                    context:context,
+                                    builder:(BuildContext context){
+                                      return AlertDialog(
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
+                                            SizedBox(height: 16),
+                                            Text(
+                                              "Das Startdatum darf nicht nach dem Enddatum sein.",
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () { 
+                                              Navigator.of(context).pop();                                   
+                                            },
+                                            child: Text("OK"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }else{
+                                  await showDialog(
+                                    context:context,
+                                    builder:(BuildContext context){
+                                      return AlertDialog(
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
+                                            SizedBox(height: 16),
+                                            Text(
+                                              "Auf diesem Feld gibt es zu diesem Datum bereits eine Kultur. Wählen Sie ein anderes Feld oder ein anderes Datum",
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () { 
+                                              Navigator.of(context).pop();                                   
+                                            },
+                                            child: Text("OK"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              }
+                            }else{
+                              await showDialog(
+                                context:context,
+                                builder:(BuildContext context){
+                                  return AlertDialog(
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
+                                        SizedBox(height: 16),
+                                        Text(
+                                          "Alle Felder müssen ausgefüllt sein!",
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () { 
+                                          Navigator.of(context).pop();                                   
+                                        },
+                                        child: Text("OK"),
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
                             }
-                            Navigator.pop(context, true);
                           },
                         ),
                       ),

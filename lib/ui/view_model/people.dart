@@ -29,4 +29,13 @@ class PersonViewModel extends ChangeNotifier {
     await person.update();
     notifyListeners();
   }
+
+  bool checkIfExisting(String personName){
+    for(Person person in _personList){
+      if(person.personName == personName){
+        return true;
+      }
+    }
+    return false;
+  }
 }

@@ -28,4 +28,13 @@ class ActivitiesViewModel extends ChangeNotifier {
     await activity.update();
     notifyListeners();
   }
+
+  bool checkIfExisting(String activityName){
+    for(Activity activity in _activities){
+      if(activity.activityName == activityName){
+        return true;
+      }
+    }
+    return false;
+  }
 }

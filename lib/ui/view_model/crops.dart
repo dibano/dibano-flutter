@@ -3,6 +3,7 @@ import 'package:dibano/data/model/cropdate_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:dibano/data/model/crop_model.dart';
+import 'package:provider/provider.dart';
 
 class CropsViewModel extends ChangeNotifier {
   List<CropDate> _cropDateList = [];
@@ -52,17 +53,60 @@ class CropsViewModel extends ChangeNotifier {
   }
 
   String getCropName(int fieldId, DateTime date){
+    final dateWithoutTime = DateTime(date.year, date.month, date.day);
     for (CompleteCrop crop in _completeCrop){
       if(fieldId == crop.fieldId){
-        DateTime startDate = DateTime.parse(crop.startDate);
-        DateTime endDate = DateTime.parse(crop.endDate);
-        if(date.isAtSameMomentAs(startDate) ||
-           date.isAtSameMomentAs(endDate)||
-           (date.isAfter(startDate) && date.isBefore(endDate))){
+        final startDate = DateTime.parse(crop.startDate);
+        final endDate = DateTime.parse(crop.endDate);
+
+        final start = DateTime(startDate.year, startDate.month, startDate.day);
+        final end = DateTime(endDate.year, endDate.month, endDate.day);
+
+        if(dateWithoutTime.isAtSameMomentAs(start) ||
+           dateWithoutTime.isAtSameMomentAs(end)||
+           (dateWithoutTime.isAfter(start) && dateWithoutTime.isBefore(end))){
             return crop.cropName;
            }
       }
     }
     return "unbekannt";
+  }
+
+  bool existingCropAtDateAndField(int fieldId, DateTime startDate, DateTime endDate, int? excludeCrop){
+    final startDateWithoutTime = DateTime(startDate.year, startDate.month, startDate.day);
+    final endDateWithoutTime = DateTime(endDate.year, endDate.month, endDate.day);
+
+    for (CompleteCrop crop in _completeCrop.where((existingCrop) => existingCrop.fieldId == fieldId)){
+      if(excludeCrop != null && crop.id == excludeCrop){
+        continue;
+      }
+      if(fieldId == crop.fieldId){
+        final startDate = DateTime.parse(crop.startDate);
+        final endDate = DateTime.parse(crop.endDate);
+
+        final start = DateTime(startDate.year, startDate.month, startDate.day);
+        final end = DateTime(endDate.year, endDate.month, endDate.day);
+
+        if((startDateWithoutTime.isAtSameMomentAs(start) ||
+           startDateWithoutTime.isAtSameMomentAs(end) ||
+           endDateWithoutTime.isAtSameMomentAs(start) ||
+           endDateWithoutTime.isAtSameMomentAs(end))||
+           ((startDateWithoutTime.isBefore(start) && endDateWithoutTime.isAfter(start))||
+           (startDateWithoutTime.isBefore(end) && endDateWithoutTime.isAfter(end))||
+           (startDateWithoutTime.isAfter(start) && endDateWithoutTime.isBefore(end)))){
+            return true;
+           }
+      }
+    }
+    return false;
+  }
+
+  bool endIsBeforeStart(DateTime startDate, DateTime endDate){
+    final startDateWithoutTime = DateTime(startDate.year, startDate.month, startDate.day);
+    final endDateWithoutTime = DateTime(endDate.year, endDate.month, endDate.day);
+    if(startDateWithoutTime.isAfter(endDateWithoutTime)){
+      return true;
+    }
+    return false;
   }
 }

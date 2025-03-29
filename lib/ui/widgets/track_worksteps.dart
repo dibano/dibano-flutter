@@ -5,7 +5,6 @@ import 'package:dibano/ui/view_model/activities.dart';
 import 'package:dibano/ui/view_model/track_worksteps.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/form_dropdown.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
@@ -46,7 +45,6 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
 
 
   bool _fieldSelected = false;
-  bool _dateSelected = false;
 
   String? _selectedArea = "-1";
   String? selectedCropName;
@@ -127,6 +125,33 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
           );
         },
       );
+    }else{
+      showDialog(
+        context:context,
+          builder:(BuildContext context){
+            return AlertDialog(
+              content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
+                  SizedBox(height: 16),
+                  Text(
+                    "Alle Felder müssen ausgefüllt sein!",
+                    style: TextStyle(fontSize: 16),
+                  ),
+              ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () { 
+                    Navigator.of(context).pop();                                   
+                  },
+                  child: Text("OK"),
+                  ),
+              ],
+          );
+        },
+      );
     }
   }
 
@@ -135,8 +160,9 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
     super.initState();
     _trackWorkstepsViewModel = Provider.of<TrackWorkstepsViewModel>(context, listen: false);
     if (widget.activityDate != null) {
-      _dateSelected = true;
       _activityDate = widget.activityDate;
+    }else{
+      _activityDate = DateTime.now();
     }
 
     _initData();
@@ -227,7 +253,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                           }else{
                             _fieldSelected = false;
                           }
-                          if(_fieldSelected && _dateSelected){
+                          if(_fieldSelected){
                             selectedCropName = cropsViewModel.getCropName(
                               int.parse(_selectedArea.toString()),
                               _activityDate!,
@@ -247,8 +273,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                           dateSelected: (date) {
                             setState((){
                               _activityDate = date!;
-                              _dateSelected = true;
-                              if(_fieldSelected && _dateSelected){
+                              if(_fieldSelected){
                                 selectedCropName = cropsViewModel.getCropName(
                                   int.parse(_selectedArea.toString()),
                                   _activityDate!,

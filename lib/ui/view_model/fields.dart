@@ -28,4 +28,14 @@ class FieldsViewModel extends ChangeNotifier {
     await field.update();
     notifyListeners();
   }
+
+  bool checkIfExisting(String fieldName){
+    for(Field field in _fields){
+      if(field.fieldName == fieldName){
+        return true;
+      }
+    }
+    return false;
+  }
+
 }

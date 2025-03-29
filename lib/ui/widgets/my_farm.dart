@@ -105,7 +105,7 @@ class MyFarm extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            /*const SizedBox(height: 16),
             Expanded(
               child: Row(
                 children: [
@@ -120,7 +120,7 @@ class MyFarm extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
+            ),*/
           ],
         ),
       ),

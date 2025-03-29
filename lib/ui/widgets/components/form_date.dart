@@ -64,7 +64,7 @@ class FormDateState extends State<FormDate>{
           readOnly: true, 
           controller: TextEditingController(
             text: (selectedDate?.day == null||selectedDate?.month == null|| selectedDate?.year == null)
-            ? " "
+            ? "${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}"
             : "${selectedDate?.day}.${selectedDate?.month}.${selectedDate?.year}",
           ),
           decoration: const InputDecoration(
