@@ -1,12 +1,9 @@
-import 'package:dibano/data/database_handler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:dibano/data/model/field_model.dart';
 
 class FieldsViewModel extends ChangeNotifier {
-  final DatabaseHandler _databaseHandler = DatabaseHandler();
   List<Field> _fields = [];
   List<Field> get fields => _fields;
-  String tableName = "Field";
 
   Future<void> addField(String fieldName) async{
     Field field = Field(fieldName: fieldName);
@@ -29,7 +26,16 @@ class FieldsViewModel extends ChangeNotifier {
   Future<void> update(int id, String fieldName) async{
     Field field = Field(id:id, fieldName: fieldName);
     await field.update();
-    await getFields();
     notifyListeners();
   }
+
+  bool checkIfExisting(String fieldName){
+    for(Field field in _fields){
+      if(field.fieldName == fieldName){
+        return true;
+      }
+    }
+    return false;
+  }
+
 }

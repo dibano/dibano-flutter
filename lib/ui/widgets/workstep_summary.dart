@@ -1,27 +1,26 @@
-import 'package:dibano/ui/view_model/activity_summary.dart';
-import 'package:dibano/ui/view_model/crops.dart';
+import 'package:dibano/ui/view_model/workstep_summary.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
+import 'package:dibano/ui/widgets/track_worksteps.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/activity_card.dart';
 import 'package:provider/provider.dart';
 
-class ActivitySummary extends StatefulWidget {
-  const ActivitySummary({super.key, required this.title});
+class WorkstepSummary extends StatefulWidget {
+  const WorkstepSummary({super.key, required this.title});
 
   final String title;
 
   @override
-  State<ActivitySummary> createState() => _ActivitySummaryState();
+  State<WorkstepSummary> createState() => _WorkstepSummaryState();
 }
 
-class _ActivitySummaryState extends State<ActivitySummary> {
+class _WorkstepSummaryState extends State<WorkstepSummary> {
   @override
   void initState() {
     super.initState();
-    Provider.of<ActivitySummaryViewModel>(
-      context,
-      listen: false,
-    ).getCompleteWorksteps();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      Provider.of<WorkstepSummaryViewModel>(context,listen: false).getCompleteWorksteps();
+    });
   }
 
   @override
@@ -50,17 +49,11 @@ class _ActivitySummaryState extends State<ActivitySummary> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                IconButton(
-                  onPressed: () {
-                    // To do: Handle button press
-                  },
-                  icon: Icon(Icons.check_box_rounded),
-                ),
                 PopupMenuButton<int>(
                   icon: Icon(Icons.sort),
                   onSelected: (value) {
-                    ActivitySummaryViewModel activitySummaryViewModel = Provider.of<ActivitySummaryViewModel>(context,listen: false);
-                    activitySummaryViewModel.sortCompleteWorksteps(value);
+                    WorkstepSummaryViewModel workstepSummaryViewModel = Provider.of<WorkstepSummaryViewModel>(context,listen: false);
+                    workstepSummaryViewModel.sortCompleteWorksteps(value);
                   },
                   itemBuilder:
                       (context) => [
@@ -84,22 +77,17 @@ class _ActivitySummaryState extends State<ActivitySummary> {
                     switch (value) {
                       case 1:
                         // Aktion für "Per Email senden"
-                        print("Per Email senden ausgewählt");
                         break;
                       case 2:
                         // Aktion für "Als PDF speichern"
-                        print("Als PDF speichern ausgewählt");
                         break;
                       case 3:
                         // Aktion für "Cloud-Dienste"
-                        print("Cloud-Dienste ausgewählt");
                         break;
                       case 4:
                         // Aktion für "Per Schnittstelle weiterleiten"
-                        print("Per Schnittstelle weiterleiten ausgewählt");
                         break;
                       default:
-                        print("Keine Aktion ausgewählt");
                     }
                   },
                   itemBuilder:
@@ -119,27 +107,58 @@ class _ActivitySummaryState extends State<ActivitySummary> {
                         ),
                       ],
                 ),
-                IconButton(
-                  onPressed: () {
-                    // To do: Handle button press
-                  },
-                  icon: Icon(Icons.delete),
-                ),
               ],
             ),
           ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Consumer<ActivitySummaryViewModel>(
-                builder: (context, activitySummaryViewModel, child) {
-                  final workstepList =
-                      activitySummaryViewModel.completeWorksteps;
-                  return ListView.builder(
-                    itemCount: workstepList.length,
-                    itemBuilder: (context, index) {
-                      return ActivityCard(workstep: workstepList[index]);
-                    },
+              child: Consumer<WorkstepSummaryViewModel>(
+                builder: (context, workstepSummaryViewModel, child) {
+                  return Center(
+                    child: Column(
+                      children: <Widget>[
+                        const SizedBox(height: 24),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: <Widget>[
+                                for (var workstep in workstepSummaryViewModel.completeWorksteps)
+                                  ActivityCard(
+                                    workstep: workstep,
+                                    onTap: () async{
+                                        final result = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) => TrackWorksteps(
+                                                  title: "Kultur bearbeiten",
+                                                  selectedArea: workstep.id.toString(),
+                                                  selectedPerson: workstep.personId.toString(),
+                                                  selectedActivity: workstep.activityId.toString(),
+                                                  description: workstep.description.toString(),
+                                                  workstepActivityId: workstep.workstepActivityId,
+                                                  workstepId: workstep.workstepId, 
+                                                  activityDate: DateTime.tryParse(workstep.date)
+                                                ),
+                                          ),
+                                        );
+                                      if (result == true) {
+                                        await Provider.of<WorkstepSummaryViewModel>(context,listen: false,).getCompleteWorksteps();
+                                      }
+                                    },
+                                    onDelete: (){
+                                      setState(() {
+                                        workstepSummaryViewModel.remove(workstep.workstepId);
+                                      });
+                                    },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 },
               ),

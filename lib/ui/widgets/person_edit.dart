@@ -1,7 +1,6 @@
 import 'package:dibano/ui/view_model/people.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
-import 'package:dibano/ui/widgets/components/custom_iconbutton_large.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -39,14 +38,14 @@ class PersonEdit extends StatelessWidget {
                     Row(
                       mainAxisAlignment:
                           MainAxisAlignment
-                              .end, // Positioniert das Icon ganz rechts
+                              .end,
                       children: [
                         Flexible(
                           child: IconButton(
                             icon: const Icon(Icons.delete),
                             onPressed: () async {
-                              personViewModel.remove(personId!);
-                              Navigator.pop(context);
+                              await personViewModel.remove(personId!);
+                              Navigator.pop(context, true);
                             },
                           ),
                         ),
@@ -76,17 +75,73 @@ class PersonEdit extends StatelessWidget {
                         child: CustomButtonLarge(
                           text: "Speichern",
                           onPressed: () async {
-                            if (personId == null) {
-                              personViewModel.add(_descriptionController.text);
-                              print("person added");
-                            } else {
-                              personViewModel.update(
-                                personId!,
-                                _descriptionController.text,
+                            final personExisting = personViewModel.checkIfExisting(_descriptionController.text);
+                            if(_descriptionController.text != "" && personExisting == false){
+                              if (personId == null) {
+                                await personViewModel.add(_descriptionController.text);
+                                Navigator.pop(context, true);
+                              } else {
+                                await personViewModel.update(
+                                  personId!,
+                                  _descriptionController.text,
+                                );
+                                Navigator.pop(context, true);
+                              }
+                            }else if(_descriptionController.text != "" && personExisting == true){
+                              await showDialog(
+                                context:context,
+                                builder:(BuildContext context){
+                                  return AlertDialog(
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
+                                        SizedBox(height: 16),
+                                        Text(
+                                          "Du hast diese Person bereits erfasst",
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () { 
+                                          Navigator.of(context).pop();                                   
+                                        },
+                                        child: Text("OK"),
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
-                              print("person updated");
+                            }else{
+                              await showDialog(
+                                context:context,
+                                builder:(BuildContext context){
+                                  return AlertDialog(
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
+                                        SizedBox(height: 16),
+                                        Text(
+                                          "Der Personenname muss ausgefüllt sein!",
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () { 
+                                          Navigator.of(context).pop();                                   
+                                        },
+                                        child: Text("OK"),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             }
-                            Navigator.pop(context);
                           },
                         ),
                       ),

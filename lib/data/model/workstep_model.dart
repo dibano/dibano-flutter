@@ -6,7 +6,7 @@ class Workstep extends DatabaseModel{
   final int? id;
   final String description;
   final int personId;
-  final int cropDateId;
+  final int cropdateId;
   final String date;
   final dbHandler = DatabaseHandler();
   
@@ -14,17 +14,12 @@ class Workstep extends DatabaseModel{
       this.id,
       required this.description,
       required this.personId,
-      required this.cropDateId,
+      required this.cropdateId,
       required this.date,
   });
 
-  /*static Future<List<Workstep>> getAll() async{
+  static Future<List<Workstep>> getAll() async{
     return await DatabaseModel.dbHandler.worksteps();
-  }*/
-
-  Future<int> insertReturnId(Workstep workstep) async{
-    int workstepId = await DatabaseModel.dbHandler.insertReturnId(this, tableName);
-    return workstepId;
   }
 
   // Convert a Dog into a Map. The keys must correspond to the names of the
@@ -35,7 +30,7 @@ class Workstep extends DatabaseModel{
       'id': id, 
       'description': description, 
       'personId': personId, 
-      'cropDateId': cropDateId, 
+      'cropDateId': cropdateId, 
       'date': date, 
     };
   }
@@ -44,7 +39,7 @@ class Workstep extends DatabaseModel{
   // each dog when using the print statement.
   @override
   String toString() {
-    return 'workstep{id: $id, description: $description, personId: $personId, cropDateId: $cropDateId, date: $date}';
+    return 'workstep{id: $id, description: $description, personId: $personId, cropDateId: $cropdateId, date: $date}';
   }
 
   @override

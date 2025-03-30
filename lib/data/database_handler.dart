@@ -5,21 +5,22 @@ import 'package:dibano/data/model/completeWorkstep_model.dart';
 import 'package:dibano/data/model/cropdate_model.dart';
 import 'package:dibano/data/model/database_model.dart';
 import 'package:dibano/data/model/workstepActivity_model.dart';
+import 'package:dibano/data/model/workstep_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:dibano/data/model/field_model.dart';
 import 'package:dibano/data/model/crop_model.dart';
 import 'package:dibano/data/model/person_model.dart';
 import 'package:dibano/data/model/activity_model.dart';
-import 'package:dibano/data/model/workstep_model.dart';
-
-
 
 class DatabaseHandler{
   static Future<Database> get database async{
     final databasePath = await getDatabasesPath();
     final path = join(databasePath, 'dibano_db');
 
+  /// *************************************************************************
+  /// Setup for the Database Tables and Views
+  ///**************************************************************************
     return openDatabase(
       path,
       version: 1,
@@ -41,7 +42,7 @@ class DatabaseHandler{
         await database.execute('''
           CREATE TABLE Crop(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            cropName VARCHAR(50) NOT NULL UNIQUE
+            cropName VARCHAR(50) NOT NULL
           )
         ''');
 
@@ -130,6 +131,10 @@ class DatabaseHandler{
     );
   }
 
+  /// *************************************************************************
+  /// insert, update and remove functions to insert, update and remove records
+  ///**************************************************************************
+
   // Define a function that inserts fields into the database
   Future<void> insert(DatabaseModel databaseModel, String tableName) async {
     // Get a reference to the database.
@@ -142,16 +147,6 @@ class DatabaseHandler{
       databaseModel.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,  
     );
-  }
-
-  Future<int> insertReturnId(DatabaseModel databaseModel, String tableName) async {
-    final db = await database;
-    int id = await db.insert(
-      tableName,
-      databaseModel.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,  
-    );
-    return id;
   }
 
   Future<void> remove(int id, String tableName) async {
@@ -181,6 +176,20 @@ class DatabaseHandler{
     );
   }
 
+  Future<int> insertReturnId(DatabaseModel databaseModel, String tableName) async {
+    final db = await database;
+    int id = await db.insert(
+      tableName,
+      databaseModel.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,  
+    );
+    return id;
+  }
+
+  /// *************************************************************************
+  /// getters for every modelclass to return records from database
+  ///**************************************************************************
+   
   // A method that retrieves all the Fields from the fields table.
   Future<List<Field>> fields() async {
     final db = await database;
@@ -222,7 +231,6 @@ class DatabaseHandler{
   Future<List<CompleteWorkstep>> completeWorksteps() async {
     final db = await database;
     final List<Map<String, Object?>> completeWorkstepMap = await db.query('CompleteWorkstep');
-    print("workstepsliste: $completeWorkstepMap");
     return completeWorkstepMap.map((map) => CompleteWorkstep.fromMap(map)).toList();
   }
 
@@ -246,23 +254,23 @@ class DatabaseHandler{
     ];
   }
 
-   Future<List<WorkstepActivity>> workstepActivities() async {
+  Future<List<WorkstepActivity>> workstepActivities() async {
     final db = await database;
     final List<Map<String, Object?>> workstepActivities = await db.query('WorkstepActivity');
     return [
       for (final {'id': id as int, 'activityId': activityId as int, 'workstepId': workstepId as int}
         in workstepActivities)
         WorkstepActivity(id: id, activityId: activityId, workstepId: workstepId),
-      ];  
-    }
+    ];  
+  }
 
-  /*Future<List<Workstep>> worksteps() async {
+  Future<List<Workstep>> worksteps() async {
     final db = await database;
     final List<Map<String, Object?>> worksteps = await db.query('Workstep');
     return [
-      for (final {'id': id as int, 'description': description as String, 'personId': personId as int, 'cropDateId': cropDateId as int}
+      for (final {'id': id as int, 'description': description as String, 'personId': personId as int, 'cropdateId': cropDateId as int, 'date': date as String}
         in worksteps)
-        Workstep(id: id, description:description, personId: personId, cropDateId: cropDateId)
-      ];  
-    }*/
+        Workstep(id: id, description: description, personId: personId, cropdateId: cropDateId, date: date),
+    ];  
+  }
 }

@@ -17,4 +17,9 @@ abstract class DatabaseModel {
   Future<void> update() async{
     dbHandler.update(this, tableName);
   }
+
+  Future<int> insertReturnId() async{
+    int id = await dbHandler.insertReturnId(this, tableName);
+    return id;
+  }
 }

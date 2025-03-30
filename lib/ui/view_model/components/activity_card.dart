@@ -9,6 +9,6 @@ class Activity {
 
   @override
   String toString() {
-    return '$description\n$fieldName, $cropName, $activityName, $date';
+    return '$description\n Feld: $fieldName, \n Kultur: $cropName,\n Aktivität: $activityName, \n Datum: $date';
   }
 }

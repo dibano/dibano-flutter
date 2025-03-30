@@ -53,48 +53,108 @@ class Info extends StatelessWidget {
             DetailCard(
               detail: Detail(
                 name: "AGATE",
-                routeWidget: InfoDetail(title: title),
                 isInfo: true,
               ),
+              onTap: () async{
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                      (context) => InfoDetail(
+                        title: "AGATE",
+                      ),
+                  ),
+                );
+              },  
             ),
             DetailCard(
               detail: Detail(
                 name: "Bundesamt für Landwirtschaft",
-                routeWidget: InfoDetail(title: title),
                 isInfo: true,
               ),
+              onTap: () async{
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                      (context) => InfoDetail(
+                        title: "Bundesamt für Landwirtschaft",
+                      ),
+                  ),
+                );
+              },  
             ),
             DetailCard(
               detail: Detail(
                 name: "GIS",
-                routeWidget: InfoDetail(title: title),
                 isInfo: true,
               ),
+              onTap: () async{
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                      (context) => InfoDetail(
+                        title: "GIS",
+                      ),
+                  ),
+                );
+              },  
             ),
             DetailCard(
               detail: Detail(
                 name: "HODUFLU",
-                routeWidget: InfoDetail(title: title),
                 isInfo: true,
               ),
+              onTap: () async{
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                      (context) => InfoDetail(
+                        title: "HODUFLU",
+                      ),
+                  ),
+                );
+              },  
             ),
             const SizedBox(height: 16),
             const CustomTitle(text: 'Bund'),
             DetailCard(
               detail: Detail(
                 name: "Informationen zum Bund",
-                routeWidget: InfoDetail(title: title),
                 isInfo: true,
               ),
+              onTap: () async{
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                      (context) => InfoDetail(
+                        title: "Informationen zum Bund",
+                      ),
+                  ),
+                );
+              },  
             ),
             const SizedBox(height: 16),
             const CustomTitle(text: 'DIBANO'),
             DetailCard(
               detail: Detail(
                 name: "Über uns",
-                routeWidget: InfoDetail(title: title),
                 isInfo: true,
               ),
+              onTap: () async{
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                      (context) => InfoDetail(
+                        title: "Über uns",
+                      ),
+                  ),
+                );
+              },  
             ),
           ],
         ),

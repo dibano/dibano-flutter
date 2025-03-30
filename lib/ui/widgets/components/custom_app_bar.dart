@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  bool hasInfo = false;
-  Function()? onInfoPressed;
+  final bool hasInfo;
+  final Function()? onInfoPressed;
 
-  CustomAppBar({
+  const CustomAppBar({
     super.key,
     required this.title,
     this.hasInfo = false,

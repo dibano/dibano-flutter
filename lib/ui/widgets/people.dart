@@ -1,11 +1,9 @@
 import 'package:dibano/ui/view_model/people.dart';
 import 'package:dibano/ui/view_model/components/detail_card.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
-import 'package:dibano/ui/widgets/components/custom_title.dart';
 import 'package:dibano/ui/widgets/components/detail_card.dart';
 import 'package:dibano/ui/widgets/person_edit.dart';
 import 'package:flutter/material.dart';
-import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:provider/provider.dart';
 
 class People extends StatefulWidget {
@@ -19,22 +17,19 @@ class People extends StatefulWidget {
 class _PeopleState extends State<People> {
   bool _initialized = false;
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_initialized) {
-      Provider.of<PersonViewModel>(context, listen: false).getPerson();
-      _initialized = true;
-    }
+  void initState(){
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      Provider.of<PersonViewModel>(context,listen: false).getPerson();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    PersonViewModel peopleViewModel = Provider.of<PersonViewModel>(context);
     return Scaffold(
       appBar: CustomAppBar(title: widget.title),
       body: Consumer<PersonViewModel>(
         builder: (context, peopleViewModel, child) {
-          peopleViewModel.getPerson();
           return Center(
             child: Column(
               children: <Widget>[
@@ -47,13 +42,25 @@ class _PeopleState extends State<People> {
                           DetailCard(
                             detail: Detail(
                               name: person.personName,
-                              routeWidget: PersonEdit(
-                                title: "Person bearbeiten",
-                                personName: person.personName,
-                                personId: person.id,
-                              ),
+                              toEdit: true,
                             ),
-                          ),
+                            onTap: () async{
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => PersonEdit(
+                                       title: "Person bearbeiten",
+                                        personName: person.personName,
+                                        personId: person.id,
+                                    ),
+                              ),
+                            );
+                            if (result == true) {
+                              await Provider.of<PersonViewModel>(context,listen: false,).getPerson();
+                            }
+                          },
+                        ),
                       ],
                     ),
                   ),

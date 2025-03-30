@@ -2,23 +2,17 @@ import 'package:dibano/ui/view_model/components/detail_card.dart';
 import 'package:flutter/material.dart';
 
 class DetailCard extends StatelessWidget {
-  const DetailCard({super.key, required this.detail});
+  const DetailCard({super.key, required this.detail, this.onTap});
 
   final Detail detail;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: GestureDetector(
-        onTap: () {
-          if (detail.routeWidget != null) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => detail.routeWidget!),
-            );
-          }
-        },
+        onTap: onTap,
         child: Card(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -37,13 +31,15 @@ class DetailCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (detail.routeWidget != null)
-                  Icon(detail.isInfo ? Icons.visibility : Icons.edit),
+                Icon(detail.isInfo ? Icons.visibility : 
+                     detail.toEdit ? Icons.edit : 
+                     null
+                    ),
               ],
             ),
           ),
         ),
       ),
-    );
+      );
   }
 }

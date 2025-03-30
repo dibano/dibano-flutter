@@ -1,10 +1,9 @@
 import 'package:dibano/ui/view_model/components/detail_card.dart';
+import 'package:dibano/ui/view_model/fields.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
-import 'package:dibano/ui/widgets/components/custom_title.dart';
 import 'package:dibano/ui/widgets/components/detail_card.dart';
 import 'package:dibano/ui/widgets/crops_edit.dart';
 import 'package:flutter/material.dart';
-import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:dibano/ui/view_model/crops.dart';
 import 'package:provider/provider.dart';
 
@@ -17,24 +16,22 @@ class Crops extends StatefulWidget {
 }
 
 class _CropsState extends State<Crops> {
-  bool _initialized = false;
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_initialized) {
-      Provider.of<CropsViewModel>(context, listen: false).getCompleteCrops();
-      _initialized = true;
-    }
+  void initState(){
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      Provider.of<CropsViewModel>(context,listen: false).getCompleteCrops();
+      Provider.of<CropsViewModel>(context,listen: false).getCrops();
+      Provider.of<FieldsViewModel>(context,listen: false).getFields();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    CropsViewModel cropsViewModel = Provider.of<CropsViewModel>(context);
     return Scaffold(
       appBar: CustomAppBar(title: widget.title),
       body: Consumer<CropsViewModel>(
         builder: (context, cropsViewModel, child) {
-          cropsViewModel.getCompleteCrops();
           return Center(
             child: Column(
               children: <Widget>[
@@ -47,16 +44,29 @@ class _CropsState extends State<Crops> {
                           DetailCard(
                             detail: Detail(
                               name: crop.cropName,
-                              routeWidget: CropsEdit(
-                                cropId: crop.id,
-                                cropDateId: crop.cropDateId,
-                                title: "Kultur bearbeiten",
-                                cropName: crop.cropName,
-                                startDate: DateTime.tryParse(crop.startDate),
-                                endDate: DateTime.tryParse(crop.endDate),
-                                fieldId: crop.fieldId,
-                              ),
+                              toEdit: true,
                             ),
+                            onTap: () async{
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => CropsEdit(
+                                        title: "Kultur bearbeiten",
+                                        cropId: crop.id,
+                                        cropDateId: crop.cropDateId,
+                                        cropName: crop.cropName,
+                                        startDate: DateTime.tryParse(crop.startDate),
+                                        endDate: DateTime.tryParse(crop.endDate),
+                                        fieldId: crop.fieldId,
+                                      ),
+                                ),
+                              );
+                              if (result == true) {
+                                await Provider.of<CropsViewModel>(context,listen: false,).getCompleteCrops();
+                                await Provider.of<CropsViewModel>(context,listen: false,).getCrops();
+                              }
+                            },  
                           ),
                       ],
                     ),
@@ -78,10 +88,8 @@ class _CropsState extends State<Crops> {
             ),
           );
           if (result == true) {
-            await Provider.of<CropsViewModel>(
-              context,
-              listen: false,
-            ).getCompleteCrops();
+            await Provider.of<CropsViewModel>(context,listen: false,).getCompleteCrops();
+            await Provider.of<CropsViewModel>(context,listen: false,).getCrops();
           }
         },
         backgroundColor: Colors.green,

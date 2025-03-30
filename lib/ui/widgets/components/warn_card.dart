@@ -1,4 +1,3 @@
-import 'package:dibano/ui/view_model/components/detail_card.dart';
 import 'package:flutter/material.dart';
 
 class Warn extends StatelessWidget {
