@@ -1,4 +1,3 @@
-import 'package:dibano/ui/view_model/components/filter_dialog.dart';
 import 'package:dibano/ui/view_model/workstep_summary.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/track_worksteps.dart';
@@ -6,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/activity_card.dart';
 import 'package:provider/provider.dart';
 
-class WorkstepSummary extends StatefulWidget {
-  const WorkstepSummary({super.key, required this.title});
+class WorkstepFiltered extends StatefulWidget {
+  const WorkstepFiltered({super.key, required this.title});
 
   final String title;
 
   @override
-  State<WorkstepSummary> createState() => _WorkstepSummaryState();
+  State<WorkstepFiltered> createState() => _WorkstepFilteredState();
 }
 
-class _WorkstepSummaryState extends State<WorkstepSummary> {
+class _WorkstepFilteredState extends State<WorkstepFiltered> {
   @override
   void initState() {
     super.initState();
@@ -79,17 +78,41 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                         ),
                       ],
                 ),
-                IconButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return FilterDialog();
-                      },
-                    );
+                PopupMenuButton<int>(
+                  icon: Icon(Icons.share),
+                  onSelected: (value) {
+                    switch (value) {
+                      case 1:
+                        // Aktion für "Per Email senden"
+                        break;
+                      case 2:
+                        // Aktion für "Als PDF speichern"
+                        break;
+                      case 3:
+                        // Aktion für "Cloud-Dienste"
+                        break;
+                      case 4:
+                        // Aktion für "Per Schnittstelle weiterleiten"
+                        break;
+                      default:
+                    }
                   },
-
-                  icon: Icon(Icons.filter_alt),
+                  itemBuilder:
+                      (context) => [
+                        PopupMenuItem(
+                          value: 1,
+                          child: Text('Per Email senden'),
+                        ),
+                        PopupMenuItem(
+                          value: 2,
+                          child: Text('Als PDF speichern'),
+                        ),
+                        PopupMenuItem(value: 3, child: Text('Cloud-Dienste')),
+                        PopupMenuItem(
+                          value: 4,
+                          child: Text('Per Schnittstelle weiterleiten'),
+                        ),
+                      ],
                 ),
               ],
             ),
@@ -111,7 +134,7 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                                     in workstepSummaryViewModel
                                         .completeWorksteps)
                                   ActivityCard(
-                                    isDeletable: true,
+                                    isCheckable: true,
                                     workstep: workstep,
                                     onTap: () async {
                                       final result = await Navigator.push(

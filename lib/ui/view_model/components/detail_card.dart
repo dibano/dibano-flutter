@@ -1,5 +1,3 @@
-import 'package:flutter/widgets.dart';
-
 class Detail {
   final String name;
   final String? description;
@@ -10,6 +8,6 @@ class Detail {
     required this.name,
     this.description,
     this.isInfo = false,
-    this.toEdit = false
+    this.toEdit = false,
   });
 }

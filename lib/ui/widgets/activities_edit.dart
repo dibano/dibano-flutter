@@ -1,4 +1,5 @@
 import 'package:dibano/ui/view_model/activities.dart';
+import 'package:dibano/ui/widgets/components/custom_alert_dialog.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
@@ -42,9 +43,26 @@ class ActivitiesEdit extends StatelessWidget {
                           child: IconButton(
                             icon: const Icon(Icons.delete),
                             onPressed: () async {
-                              await activitiesViewModel.remove(activityId!);
-                              Navigator.pop(context, true);
-                              print("Navigator pop returns true");
+                              bool? confirmDelete = await showDialog<bool>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomAlertDialog(
+                                    alertText:
+                                        "Möchtest du diese Aktivität wirklich löschen?",
+                                    alertType: AlertType.delete,
+                                    onDelete: () async {
+                                      await activitiesViewModel.remove(
+                                        activityId!,
+                                      );
+
+                                      Navigator.pop(context, true);
+                                    },
+                                  );
+                                },
+                              );
+                              if (confirmDelete == true) {
+                                Navigator.pop(context, true);
+                              }
                             },
                           ),
                         ),
@@ -73,8 +91,10 @@ class ActivitiesEdit extends StatelessWidget {
                         child: CustomButtonLarge(
                           text: "Speichern",
                           onPressed: () async {
-                            final activityExisting = activitiesViewModel.checkIfExisting(_descriptionController.text);
-                            if(_descriptionController.text != "" && activityExisting == false){
+                            final activityExisting = activitiesViewModel
+                                .checkIfExisting(_descriptionController.text);
+                            if (_descriptionController.text != "" &&
+                                activityExisting == false) {
                               if (activityId == null) {
                                 await activitiesViewModel.add(
                                   _descriptionController.text,
@@ -87,57 +107,26 @@ class ActivitiesEdit extends StatelessWidget {
                                 );
                                 Navigator.pop(context, true);
                               }
-                            }else if(_descriptionController.text != "" && activityExisting == true){
+                            } else if (_descriptionController.text != "" &&
+                                activityExisting == true) {
                               await showDialog(
-                                context:context,
-                                builder:(BuildContext context){
-                                  return AlertDialog(
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
-                                        SizedBox(height: 16),
-                                        Text(
-                                          "Du hast diese Aktivität bereits erfasst",
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () { 
-                                          Navigator.of(context).pop();                                   
-                                        },
-                                        child: Text("OK"),
-                                      ),
-                                    ],
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomAlertDialog(
+                                    alertText:
+                                        "Du hast diese Aktivität bereits erfasst",
+                                    alertType: AlertType.error,
                                   );
                                 },
                               );
-                              }else{
+                            } else {
                               await showDialog(
-                                context:context,
-                                builder:(BuildContext context){
-                                  return AlertDialog(
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
-                                        SizedBox(height: 16),
-                                        Text(
-                                          "Der Aktivitätenname muss ausgefüllt sein!",
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () { 
-                                          Navigator.of(context).pop();                                   
-                                        },
-                                        child: Text("OK"),
-                                      ),
-                                    ],
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomAlertDialog(
+                                    alertText:
+                                        "Der Aktivitätenname muss ausgefüllt sein!",
+                                    alertType: AlertType.error,
                                   );
                                 },
                               );

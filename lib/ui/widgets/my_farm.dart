@@ -1,7 +1,9 @@
+import 'package:dibano/ui/widgets/components/custom_alert_dialog.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/view_model/components/farm_box.dart';
 import 'package:dibano/ui/widgets/acitivities.dart';
 import 'package:dibano/ui/widgets/components/farm_boxes.dart';
+import 'package:dibano/ui/widgets/components/farm_colors.dart';
 import 'package:dibano/ui/widgets/people.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/fields.dart';
@@ -16,23 +18,10 @@ class MyFarm extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Icon(
-            Icons.info,
-            color: Colors.green, // Icon-Farbe auf Grün setzen
-          ),
-          content: const Text(
-            "Auf dieser Seite können alle Daten des Bauernhofes konfiguriert werden. \nDie Daten bleiben lokal auf dem Gerät gespeichert und gelangen nicht an Drittpersonen.",
-            textAlign: TextAlign.center,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("OK"),
-            ),
-          ],
+        return CustomAlertDialog(
+          alertText:
+              "Auf dieser Seite können alle Daten des Bauernhofes konfiguriert werden. \nDie Daten bleiben lokal auf dem Gerät gespeichert und gelangen nicht an Drittpersonen.",
+          alertType: AlertType.info,
         );
       },
     );
@@ -59,7 +48,7 @@ class MyFarm extends StatelessWidget {
                         icon: Icons.grass,
                         title: "Meine Felder",
                         routeWidget: Fields(title: "Meine Felder"),
-                        color: const Color.fromARGB(255, 205, 231, 176),
+                        color: FarmColors.lightGreen,
                       ),
                     ),
                   ),
@@ -70,7 +59,7 @@ class MyFarm extends StatelessWidget {
                         icon: Icons.person,
                         title: "Meine Mitarbeiter",
                         routeWidget: People(title: "Meine Mitarbeiter"),
-                        color: const Color.fromARGB(255, 230, 214, 187),
+                        color: FarmColors.earthBrown,
                       ),
                     ),
                   ),
@@ -87,7 +76,7 @@ class MyFarm extends StatelessWidget {
                         icon: Icons.eco,
                         title: "Meine Kulturen",
                         routeWidget: Crops(title: "Meine Kulturen"),
-                        color: const Color.fromARGB(255, 198, 229, 255),
+                        color: FarmColors.skyBlue,
                       ),
                     ),
                   ),
@@ -98,7 +87,7 @@ class MyFarm extends StatelessWidget {
                         icon: Icons.agriculture,
                         title: "Meine Aktivitäten",
                         routeWidget: Activities(title: "Meine Aktivitäten"),
-                        color: const Color.fromARGB(255, 255, 245, 200),
+                        color: FarmColors.softYellow,
                       ),
                     ),
                   ),

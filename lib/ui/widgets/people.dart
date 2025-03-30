@@ -15,12 +15,12 @@ class People extends StatefulWidget {
 }
 
 class _PeopleState extends State<People> {
-  bool _initialized = false;
+  final bool _initialized = false;
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_){
-      Provider.of<PersonViewModel>(context,listen: false).getPerson();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<PersonViewModel>(context, listen: false).getPerson();
     });
   }
 
@@ -44,23 +44,26 @@ class _PeopleState extends State<People> {
                               name: person.personName,
                               toEdit: true,
                             ),
-                            onTap: () async{
-                            final result = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => PersonEdit(
-                                       title: "Person bearbeiten",
+                            onTap: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => PersonEdit(
+                                        title: "Person bearbeiten",
                                         personName: person.personName,
                                         personId: person.id,
-                                    ),
-                              ),
-                            );
-                            if (result == true) {
-                              await Provider.of<PersonViewModel>(context,listen: false,).getPerson();
-                            }
-                          },
-                        ),
+                                      ),
+                                ),
+                              );
+                              if (result == true) {
+                                await Provider.of<PersonViewModel>(
+                                  context,
+                                  listen: false,
+                                ).getPerson();
+                              }
+                            },
+                          ),
                       ],
                     ),
                   ),

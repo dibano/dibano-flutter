@@ -1,4 +1,5 @@
 import 'package:dibano/ui/view_model/fields.dart';
+import 'package:dibano/ui/widgets/components/custom_alert_dialog.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
@@ -42,8 +43,23 @@ class FieldEdit extends StatelessWidget {
                           child: IconButton(
                             icon: const Icon(Icons.delete),
                             onPressed: () async {
-                              await fieldsViewModel.remove(fieldId!);
-                              Navigator.pop(context, true);
+                              bool? confirmDelete = await showDialog<bool>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomAlertDialog(
+                                    alertText:
+                                        "Möchtest du dieses Feld wirklich löschen?",
+                                    alertType: AlertType.delete,
+                                    onDelete: () async {
+                                      await fieldsViewModel.remove(fieldId!);
+                                      Navigator.pop(context, true);
+                                    },
+                                  );
+                                },
+                              );
+                              if (confirmDelete == true) {
+                                Navigator.pop(context, true);
+                              }
                             },
                           ),
                         ),
@@ -72,8 +88,10 @@ class FieldEdit extends StatelessWidget {
                         child: CustomButtonLarge(
                           text: "Speichern",
                           onPressed: () async {
-                            final fieldExisting = fieldsViewModel.checkIfExisting(_descriptionController.text);
-                            if(_descriptionController.text != "" && fieldExisting == false){
+                            final fieldExisting = fieldsViewModel
+                                .checkIfExisting(_descriptionController.text);
+                            if (_descriptionController.text != "" &&
+                                fieldExisting == false) {
                               if (fieldId == null) {
                                 await fieldsViewModel.addField(
                                   _descriptionController.text,
@@ -86,57 +104,26 @@ class FieldEdit extends StatelessWidget {
                                 );
                                 Navigator.pop(context, true);
                               }
-                            }else if(_descriptionController.text != "" && fieldExisting == true){
+                            } else if (_descriptionController.text != "" &&
+                                fieldExisting == true) {
                               await showDialog(
-                                context:context,
-                                builder:(BuildContext context){
-                                  return AlertDialog(
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
-                                        SizedBox(height: 16),
-                                        Text(
-                                          "Du hast dieses Feld bereits erfasst",
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () { 
-                                          Navigator.of(context).pop();                                   
-                                        },
-                                        child: Text("OK"),
-                                      ),
-                                    ],
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomAlertDialog(
+                                    alertText:
+                                        "Du hast dieses Feld bereits erfasst",
+                                    alertType: AlertType.error,
                                   );
                                 },
                               );
-                            }else{
+                            } else {
                               await showDialog(
-                                context:context,
-                                builder:(BuildContext context){
-                                  return AlertDialog(
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
-                                        SizedBox(height: 16),
-                                        Text(
-                                          "Der Feldname muss ausgefüllt sein!",
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () { 
-                                          Navigator.of(context).pop();                                   
-                                        },
-                                        child: Text("OK"),
-                                      ),
-                                    ],
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomAlertDialog(
+                                    alertText:
+                                        "Der Feldname muss ausgefüllt sein!",
+                                    alertType: AlertType.error,
                                   );
                                 },
                               );
