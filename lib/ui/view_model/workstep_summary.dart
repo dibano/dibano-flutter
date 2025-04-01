@@ -7,6 +7,9 @@ class WorkstepSummaryViewModel extends ChangeNotifier {
   List<CompleteWorkstep> _completeWorksteps = [];
   List<CompleteWorkstep> get completeWorksteps => _completeWorksteps;
 
+  List<CompleteWorkstep> _filteredWorksteps = [];
+  List<CompleteWorkstep> get filteredWorksteps => _filteredWorksteps;
+
   List<WorkstepActivity> _workstepActivList = [];
   List<WorkstepActivity> get workstepActivList => _workstepActivList;
 
@@ -18,8 +21,7 @@ class WorkstepSummaryViewModel extends ChangeNotifier {
     _workstepActivList = await WorkstepActivity.getAll();
 
     _completeWorksteps = await CompleteWorkstep.getCompleteWorksteps();
-
-    _completeWorksteps = await CompleteWorkstep.getCompleteWorksteps();
+    _filteredWorksteps = _completeWorksteps;
     notifyListeners();
   }
 
@@ -55,5 +57,46 @@ class WorkstepSummaryViewModel extends ChangeNotifier {
 
     await getCompleteWorksteps();
     notifyListeners();
+  }
+
+  List<CompleteWorkstep> filterCompleteWorkstepsByIds({
+    String? selectedFieldName,
+    String? selectedActivityName,
+    String? selectedPersonId,
+    DateTime? selectedStartDate,
+    DateTime? selectedEndDate,
+  }) {
+    return _completeWorksteps.where((workstep) {
+      final matchesField =
+          selectedFieldName == null ||
+          selectedFieldName == "-1" ||
+          workstep.fieldName.toString() == selectedFieldName;
+      final matchesActivity =
+          selectedActivityName == null ||
+          selectedActivityName == "-1" ||
+          workstep.activityName.toString() == selectedActivityName;
+      final matchesPerson =
+          selectedPersonId == null ||
+          selectedPersonId == "-1" ||
+          workstep.personId.toString() == selectedPersonId;
+
+      final workstepDate = DateTime.parse(workstep.date);
+
+      final matchesStartDate =
+          selectedStartDate == null ||
+          workstepDate.isAfter(selectedStartDate) ||
+          workstepDate.isAtSameMomentAs(selectedStartDate);
+
+      final matchesEndDate =
+          selectedEndDate == null ||
+          workstepDate.isBefore(selectedEndDate) ||
+          workstepDate.isAtSameMomentAs(selectedEndDate);
+
+      return matchesField &&
+          matchesActivity &&
+          matchesPerson &&
+          matchesStartDate &&
+          matchesEndDate;
+    }).toList();
   }
 }

@@ -1,4 +1,4 @@
-import 'package:dibano/ui/view_model/components/filter_dialog.dart';
+import 'package:dibano/ui/widgets/components/filter_dialog.dart';
 import 'package:dibano/ui/view_model/workstep_summary.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/track_worksteps.dart';

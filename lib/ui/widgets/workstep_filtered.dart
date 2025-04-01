@@ -6,9 +6,22 @@ import 'package:dibano/ui/widgets/components/activity_card.dart';
 import 'package:provider/provider.dart';
 
 class WorkstepFiltered extends StatefulWidget {
-  const WorkstepFiltered({super.key, required this.title});
-
   final String title;
+  final String? selectedField;
+  final String? selectedActivity;
+  final String? selectedPerson;
+  final DateTime? startDate;
+  final DateTime? endDate;
+
+  const WorkstepFiltered({
+    super.key,
+    required this.title,
+    this.selectedField,
+    this.selectedActivity,
+    this.selectedPerson,
+    this.startDate,
+    this.endDate,
+  });
 
   @override
   State<WorkstepFiltered> createState() => _WorkstepFilteredState();
@@ -22,7 +35,13 @@ class _WorkstepFilteredState extends State<WorkstepFiltered> {
       Provider.of<WorkstepSummaryViewModel>(
         context,
         listen: false,
-      ).getCompleteWorksteps();
+      ).filterCompleteWorkstepsByIds(
+        selectedFieldName: widget.selectedField,
+        selectedActivityName: widget.selectedActivity,
+        selectedPersonId: widget.selectedPerson,
+        selectedStartDate: widget.startDate,
+        selectedEndDate: widget.endDate,
+      );
     });
   }
 
@@ -132,7 +151,7 @@ class _WorkstepFilteredState extends State<WorkstepFiltered> {
                               children: <Widget>[
                                 for (var workstep
                                     in workstepSummaryViewModel
-                                        .completeWorksteps)
+                                        .filteredWorksteps)
                                   ActivityCard(
                                     isCheckable: true,
                                     workstep: workstep,
