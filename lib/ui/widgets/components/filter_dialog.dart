@@ -1,4 +1,4 @@
-import 'package:dibano/ui/widgets/workstep_filtered.dart';
+import 'package:dibano/ui/widgets/workstep_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dibano/ui/view_model/fields.dart';
@@ -132,17 +132,51 @@ class _FilterDialogState extends State<FilterDialog> {
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
+                // Extrahiere die Namen für Field und Activity basierend auf den ausgewählten IDs
+                final selectedFieldName =
+                    _selectedField != "-1"
+                        ? Provider.of<FieldsViewModel>(context, listen: false)
+                            .fields
+                            .firstWhere(
+                              (field) => field.id.toString() == _selectedField,
+                            )
+                            .fieldName
+                        : null;
+
+                final selectedActivityName =
+                    _selectedActivity != "-1"
+                        ? Provider.of<ActivitiesViewModel>(
+                              context,
+                              listen: false,
+                            ).activities
+                            .firstWhere(
+                              (activity) =>
+                                  activity.id.toString() == _selectedActivity,
+                            )
+                            .activityName
+                        : null;
+
+                // Logge die ausgewählten Werte in der Konsole
+                print("Filterwerte:");
+                print("Feld: $selectedFieldName");
+                print("Aktivität: $selectedActivityName");
+                print("Mitarbeiter: $_selectedPerson");
+                print("Startdatum: $_startDate");
+                print("Enddatum: $_endDate");
+
+                // Navigiere zur WorkstepSummary-View mit den Namen für Field und Activity
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder:
-                        (context) => WorkstepFiltered(
+                        (context) => WorkstepSummary(
                           title: "Gefilterte Übersicht",
-                          selectedField: _selectedField,
-                          selectedActivity: _selectedActivity,
-                          selectedPerson: _selectedPerson,
+                          selectedField: selectedFieldName,
+                          selectedActivity: selectedActivityName,
+                          selectedPerson: _selectedPerson, // ID bleibt erhalten
                           startDate: _startDate,
                           endDate: _endDate,
+                          isFiltered: true,
                         ),
                   ),
                 );

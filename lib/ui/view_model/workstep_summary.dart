@@ -59,44 +59,49 @@ class WorkstepSummaryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<CompleteWorkstep> filterCompleteWorkstepsByIds({
+  void filterCompleteWorkstepsByIds({
     String? selectedFieldName,
     String? selectedActivityName,
     String? selectedPersonId,
     DateTime? selectedStartDate,
     DateTime? selectedEndDate,
   }) {
-    return _completeWorksteps.where((workstep) {
-      final matchesField =
-          selectedFieldName == null ||
-          selectedFieldName == "-1" ||
-          workstep.fieldName.toString() == selectedFieldName;
-      final matchesActivity =
-          selectedActivityName == null ||
-          selectedActivityName == "-1" ||
-          workstep.activityName.toString() == selectedActivityName;
-      final matchesPerson =
-          selectedPersonId == null ||
-          selectedPersonId == "-1" ||
-          workstep.personId.toString() == selectedPersonId;
+    _filteredWorksteps =
+        _completeWorksteps.where((workstep) {
+          final matchesField =
+              selectedFieldName == null ||
+              selectedFieldName == "-1" ||
+              workstep.fieldName.toString() == selectedFieldName;
 
-      final workstepDate = DateTime.parse(workstep.date);
+          final matchesActivity =
+              selectedActivityName == null ||
+              selectedActivityName == "-1" ||
+              workstep.activityName.toString() == selectedActivityName;
 
-      final matchesStartDate =
-          selectedStartDate == null ||
-          workstepDate.isAfter(selectedStartDate) ||
-          workstepDate.isAtSameMomentAs(selectedStartDate);
+          final matchesPerson =
+              selectedPersonId == null ||
+              selectedPersonId == "-1" ||
+              workstep.personId.toString() == selectedPersonId;
 
-      final matchesEndDate =
-          selectedEndDate == null ||
-          workstepDate.isBefore(selectedEndDate) ||
-          workstepDate.isAtSameMomentAs(selectedEndDate);
+          final workstepDate = DateTime.parse(workstep.date);
 
-      return matchesField &&
-          matchesActivity &&
-          matchesPerson &&
-          matchesStartDate &&
-          matchesEndDate;
-    }).toList();
+          final matchesStartDate =
+              selectedStartDate == null ||
+              workstepDate.isAfter(selectedStartDate) ||
+              workstepDate.isAtSameMomentAs(selectedStartDate);
+
+          final matchesEndDate =
+              selectedEndDate == null ||
+              workstepDate.isBefore(selectedEndDate) ||
+              workstepDate.isAtSameMomentAs(selectedEndDate);
+
+          return matchesField &&
+              matchesActivity &&
+              matchesPerson &&
+              matchesStartDate &&
+              matchesEndDate;
+        }).toList();
+
+    notifyListeners();
   }
 }

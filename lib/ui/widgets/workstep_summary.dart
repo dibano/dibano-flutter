@@ -7,10 +7,24 @@ import 'package:dibano/ui/widgets/components/activity_card.dart';
 import 'package:provider/provider.dart';
 
 class WorkstepSummary extends StatefulWidget {
-  const WorkstepSummary({super.key, required this.title});
-
   final String title;
+  final String? selectedField;
+  final String? selectedActivity;
+  final String? selectedPerson;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final bool isFiltered;
 
+  const WorkstepSummary({
+    super.key,
+    required this.title,
+    this.selectedField,
+    this.selectedActivity,
+    this.selectedPerson,
+    this.startDate,
+    this.endDate,
+    this.isFiltered = false,
+  });
   @override
   State<WorkstepSummary> createState() => _WorkstepSummaryState();
 }
@@ -20,10 +34,23 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<WorkstepSummaryViewModel>(
-        context,
-        listen: false,
-      ).getCompleteWorksteps();
+      if (widget.isFiltered == true) {
+        Provider.of<WorkstepSummaryViewModel>(
+          context,
+          listen: false,
+        ).filterCompleteWorkstepsByIds(
+          selectedFieldName: widget.selectedField,
+          selectedActivityName: widget.selectedActivity,
+          selectedPersonId: widget.selectedPerson,
+          selectedStartDate: widget.startDate,
+          selectedEndDate: widget.endDate,
+        );
+      } else {
+        Provider.of<WorkstepSummaryViewModel>(
+          context,
+          listen: false,
+        ).getCompleteWorksteps();
+      }
     });
   }
 
@@ -79,18 +106,56 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                         ),
                       ],
                 ),
-                IconButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return FilterDialog();
-                      },
-                    );
-                  },
+                if (!widget.isFiltered)
+                  IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return FilterDialog();
+                        },
+                      );
+                    },
 
-                  icon: Icon(Icons.filter_alt),
-                ),
+                    icon: Icon(Icons.filter_alt),
+                  ),
+                if (widget.isFiltered)
+                  PopupMenuButton<int>(
+                    icon: Icon(Icons.share),
+                    onSelected: (value) {
+                      switch (value) {
+                        case 1:
+                          // Aktion für "Per Email senden"
+                          break;
+                        case 2:
+                          // Aktion für "Als PDF speichern"
+                          break;
+                        case 3:
+                          // Aktion für "Cloud-Dienste"
+                          break;
+                        case 4:
+                          // Aktion für "Per Schnittstelle weiterleiten"
+                          break;
+                        default:
+                      }
+                    },
+                    itemBuilder:
+                        (context) => [
+                          PopupMenuItem(
+                            value: 1,
+                            child: Text('Per Email senden'),
+                          ),
+                          PopupMenuItem(
+                            value: 2,
+                            child: Text('Als PDF speichern'),
+                          ),
+                          PopupMenuItem(value: 3, child: Text('Cloud-Dienste')),
+                          PopupMenuItem(
+                            value: 4,
+                            child: Text('Per Schnittstelle weiterleiten'),
+                          ),
+                        ],
+                  ),
               ],
             ),
           ),
@@ -99,6 +164,11 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
               padding: const EdgeInsets.all(8.0),
               child: Consumer<WorkstepSummaryViewModel>(
                 builder: (context, workstepSummaryViewModel, child) {
+                  final worksteps =
+                      widget.isFiltered == true
+                          ? workstepSummaryViewModel.filteredWorksteps
+                          : workstepSummaryViewModel.completeWorksteps;
+
                   return Center(
                     child: Column(
                       children: <Widget>[
@@ -107,11 +177,10 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                           child: SingleChildScrollView(
                             child: Column(
                               children: <Widget>[
-                                for (var workstep
-                                    in workstepSummaryViewModel
-                                        .completeWorksteps)
+                                for (var workstep in worksteps)
                                   ActivityCard(
-                                    isDeletable: true,
+                                    isDeletable: !widget.isFiltered,
+                                    isCheckable: widget.isFiltered,
                                     workstep: workstep,
                                     onTap: () async {
                                       final result = await Navigator.push(

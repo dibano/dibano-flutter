@@ -24,7 +24,7 @@ class ActivityCard extends StatefulWidget {
 }
 
 class ActivityCardState extends State<ActivityCard> {
-  bool checkboxState = false;
+  bool checkboxState = true;
   @override
   Widget build(BuildContext context) {
     Activity activity = Activity(
@@ -57,7 +57,7 @@ class ActivityCardState extends State<ActivityCard> {
                       value: checkboxState,
                       onChanged: (bool? newValue) {
                         setState(() {
-                          checkboxState = newValue ?? false;
+                          checkboxState = newValue ?? true;
                         });
                       },
                     ),
