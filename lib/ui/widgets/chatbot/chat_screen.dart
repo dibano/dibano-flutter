@@ -5,6 +5,8 @@ import 'package:flutter_gemma/pigeon.g.dart';
 import 'package:dibano/ui/widgets/chatbot/chat_widget.dart';
 import 'package:flutter_gemma/flutter_gemma.dart';
 import 'package:dibano/ui/widgets/chatbot/loading_widget.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key, required this.title});
@@ -31,13 +33,18 @@ class ChatScreenState extends State<ChatScreen> {
 
   Future<void> _initializeModel() async {
     bool isLoaded = await _gemma.modelManager.isModelInstalled;
+    final directory = await getApplicationDocumentsDirectory();
+    final path = Directory(directory.path);
+    final List<FileSystemEntity> entities = path.listSync(recursive: false);
+
+    // Print each entity's path
+    for (final entity in entities) {
+      print('Entity: ${entity.path}');
+    }
+
     if (!isLoaded) {
-      await for (int progress in _gemma.modelManager
-          .installModelFromAssetWithProgress('llm-models/gemma-2b-it-cpu-int4.bin')) {
-        setState(() {
-          _loadingProgress = progress;
-        });
-      }
+      final path = '${(await getApplicationDocumentsDirectory()).path}/gemma-2b-it-gpu-int4.bin';
+      await _gemma.modelManager.setModelPath(path);
     }
     final model = await _gemma.createModel(
       modelType: ModelType.gemmaIt,
