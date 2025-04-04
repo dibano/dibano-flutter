@@ -1,3 +1,4 @@
+import 'package:dibano/ui/view_model/crops.dart';
 import 'package:dibano/ui/widgets/workstep_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,36 @@ class _FilterDialogState extends State<FilterDialog> {
   String? _selectedPerson = "-1";
   DateTime? _startDate;
   DateTime? _endDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _initData();
+  }
+
+  Future<void> _initData() async {
+    final fieldsViewModel = Provider.of<FieldsViewModel>(
+      context,
+      listen: false,
+    );
+    final personViewModel = Provider.of<PersonViewModel>(
+      context,
+      listen: false,
+    );
+    final cropsViewModel = Provider.of<CropsViewModel>(context, listen: false);
+    final activitiesViewModel = Provider.of<ActivitiesViewModel>(
+      context,
+      listen: false,
+    );
+
+    await Future.wait([
+      fieldsViewModel.getFields(),
+      personViewModel.getPerson(),
+      cropsViewModel.getCrops(),
+      cropsViewModel.getCompleteCrops(),
+      activitiesViewModel.getActivities(),
+    ]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +78,7 @@ class _FilterDialogState extends State<FilterDialog> {
             ),
             FormDate(
               label: 'Datum von',
-              placeholderDate: DateTime.now(),
+              placeholderDate: null,
               dateSelected: (selectedDate) {
                 setState(() {
                   _startDate = selectedDate;
@@ -56,7 +87,7 @@ class _FilterDialogState extends State<FilterDialog> {
             ),
             FormDate(
               label: 'Datum bis',
-              placeholderDate: DateTime.now(),
+              placeholderDate: null,
               dateSelected: (selectedDate) {
                 setState(() {
                   _endDate = selectedDate;
@@ -69,7 +100,7 @@ class _FilterDialogState extends State<FilterDialog> {
                   label: "Feld",
                   value: _selectedField!,
                   items: [
-                    DropdownMenuItem(value: "-1", child: Text("Feld wählen")),
+                    DropdownMenuItem(value: "-1", child: Text("Alle Felder")),
                     ...fieldsViewModel.fields.map(
                       (field) => DropdownMenuItem(
                         value: field.id.toString(),
@@ -91,7 +122,7 @@ class _FilterDialogState extends State<FilterDialog> {
                   items: [
                     DropdownMenuItem(
                       value: "-1",
-                      child: Text("Aktivität wählen"),
+                      child: Text("Alle Aktivitäten"),
                     ),
                     ...activitiesViewModel.activities.map(
                       (activity) => DropdownMenuItem(
@@ -114,7 +145,7 @@ class _FilterDialogState extends State<FilterDialog> {
                   items: [
                     DropdownMenuItem(
                       value: "-1",
-                      child: Text("Mitarbeiter wählen"),
+                      child: Text("Alle Mitarbeiter"),
                     ),
                     ...personViewModel.personList.map(
                       (person) => DropdownMenuItem(
@@ -132,7 +163,6 @@ class _FilterDialogState extends State<FilterDialog> {
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                // Extrahiere die Namen für Field und Activity basierend auf den ausgewählten IDs
                 final selectedFieldName =
                     _selectedField != "-1"
                         ? Provider.of<FieldsViewModel>(context, listen: false)
@@ -156,15 +186,6 @@ class _FilterDialogState extends State<FilterDialog> {
                             .activityName
                         : null;
 
-                // Logge die ausgewählten Werte in der Konsole
-                print("Filterwerte:");
-                print("Feld: $selectedFieldName");
-                print("Aktivität: $selectedActivityName");
-                print("Mitarbeiter: $_selectedPerson");
-                print("Startdatum: $_startDate");
-                print("Enddatum: $_endDate");
-
-                // Navigiere zur WorkstepSummary-View mit den Namen für Field und Activity
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -173,7 +194,7 @@ class _FilterDialogState extends State<FilterDialog> {
                           title: "Gefilterte Übersicht",
                           selectedField: selectedFieldName,
                           selectedActivity: selectedActivityName,
-                          selectedPerson: _selectedPerson, // ID bleibt erhalten
+                          selectedPerson: _selectedPerson,
                           startDate: _startDate,
                           endDate: _endDate,
                           isFiltered: true,
