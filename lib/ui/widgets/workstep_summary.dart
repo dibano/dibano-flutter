@@ -1,6 +1,7 @@
 import 'package:dibano/ui/widgets/components/filter_dialog.dart';
 import 'package:dibano/ui/view_model/workstep_summary.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
+import 'package:dibano/ui/widgets/components/warn_card.dart';
 import 'package:dibano/ui/widgets/track_worksteps.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/activity_card.dart';
@@ -8,9 +9,10 @@ import 'package:provider/provider.dart';
 
 class WorkstepSummary extends StatefulWidget {
   final String title;
-  final String? selectedField;
-  final String? selectedActivity;
-  final String? selectedPerson;
+  final List<String>? selectedFields;
+  final List<String>? selectedActivities;
+  final List<String>? selectedPersons;
+  final List<String>? selectedCrops;
   final DateTime? startDate;
   final DateTime? endDate;
   final bool isFiltered;
@@ -18,9 +20,10 @@ class WorkstepSummary extends StatefulWidget {
   const WorkstepSummary({
     super.key,
     required this.title,
-    this.selectedField,
-    this.selectedActivity,
-    this.selectedPerson,
+    this.selectedFields,
+    this.selectedActivities,
+    this.selectedPersons,
+    this.selectedCrops,
     this.startDate,
     this.endDate,
     this.isFiltered = false,
@@ -39,9 +42,10 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
           context,
           listen: false,
         ).filterCompleteWorkstepsByIds(
-          selectedFieldName: widget.selectedField,
-          selectedActivityName: widget.selectedActivity,
-          selectedPersonId: widget.selectedPerson,
+          selectedFields: widget.selectedFields,
+          selectedCrops: widget.selectedCrops,
+          selectedActivities: widget.selectedActivities,
+          selectedPersonIds: widget.selectedPersons,
           selectedStartDate: widget.startDate,
           selectedEndDate: widget.endDate,
         );
@@ -76,7 +80,12 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(
+              top: 8.0,
+              left: 8.0,
+              right: 8.0,
+              bottom: 0.0,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -107,7 +116,7 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                       ],
                 ),
                 if (!widget.isFiltered)
-                  IconButton(
+                  ElevatedButton(
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -116,8 +125,7 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                         },
                       );
                     },
-
-                    icon: Icon(Icons.filter_alt),
+                    child: Text("Filtern und Teilen"),
                   ),
                 if (widget.isFiltered)
                   PopupMenuButton<int>(
@@ -177,6 +185,12 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                           child: SingleChildScrollView(
                             child: Column(
                               children: <Widget>[
+                                if (worksteps.isEmpty && widget.isFiltered) ...[
+                                  Warn(
+                                    warnText:
+                                        "Keine Einträge für die aktuelle Filterung gefunden",
+                                  ),
+                                ],
                                 for (var workstep in worksteps)
                                   ActivityCard(
                                     isDeletable: !widget.isFiltered,

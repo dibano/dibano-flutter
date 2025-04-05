@@ -1,12 +1,10 @@
-import 'package:dibano/ui/view_model/crops.dart';
-import 'package:dibano/ui/widgets/workstep_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dibano/ui/view_model/fields.dart';
 import 'package:dibano/ui/view_model/activities.dart';
 import 'package:dibano/ui/view_model/people.dart';
-import 'package:dibano/ui/widgets/components/form_date.dart';
-import 'package:dibano/ui/widgets/components/form_dropdown.dart';
+import 'package:dibano/ui/view_model/crops.dart';
+import 'package:dibano/ui/widgets/workstep_summary.dart';
 
 class FilterDialog extends StatefulWidget {
   const FilterDialog({super.key});
@@ -16,11 +14,13 @@ class FilterDialog extends StatefulWidget {
 }
 
 class _FilterDialogState extends State<FilterDialog> {
-  String? _selectedField = "-1";
-  String? _selectedActivity = "-1";
-  String? _selectedPerson = "-1";
   DateTime? _startDate;
   DateTime? _endDate;
+
+  List<String> _selectedFields = [];
+  List<String> _selectedActivities = [];
+  List<String> _selectedPersons = [];
+  List<String> _selectedCrops = [];
 
   @override
   void initState() {
@@ -56,135 +56,96 @@ class _FilterDialogState extends State<FilterDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+      child: DefaultTabController(
+        length: 4,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Filter',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
+            TabBar(
+              tabs: [
+                Tab(icon: Icon(Icons.grass)), // Felder
+                Tab(icon: Icon(Icons.eco)), // Kulturen
+                Tab(icon: Icon(Icons.agriculture)), // Aktivitäten
+                Tab(icon: Icon(Icons.person)), // Mitarbeiter
               ],
             ),
-            FormDate(
-              label: 'Datum von',
-              placeholderDate: null,
-              dateSelected: (selectedDate) {
-                setState(() {
-                  _startDate = selectedDate;
-                });
-              },
+            SizedBox(
+              height: 300,
+              child: TabBarView(
+                children: [
+                  _buildCheckboxList<FieldsViewModel>(
+                    (viewModel) => viewModel.fields,
+                    _selectedFields,
+                    (item) => item.fieldName,
+                  ),
+                  _buildCheckboxList<CropsViewModel>(
+                    (viewModel) => viewModel.cropList,
+                    _selectedCrops,
+                    (item) => item.cropName,
+                  ),
+                  _buildCheckboxList<ActivitiesViewModel>(
+                    (viewModel) => viewModel.activities,
+                    _selectedActivities,
+                    (item) => item.activityName,
+                  ),
+                  _buildCheckboxList<PersonViewModel>(
+                    (viewModel) => viewModel.personList,
+                    _selectedPersons,
+                    (item) => item.personName,
+                  ),
+                ],
+              ),
             ),
-            FormDate(
-              label: 'Datum bis',
-              placeholderDate: null,
-              dateSelected: (selectedDate) {
-                setState(() {
-                  _endDate = selectedDate;
-                });
-              },
-            ),
-            Consumer<FieldsViewModel>(
-              builder: (context, fieldsViewModel, child) {
-                return FormDropdown(
-                  label: "Feld",
-                  value: _selectedField!,
-                  items: [
-                    DropdownMenuItem(value: "-1", child: Text("Alle Felder")),
-                    ...fieldsViewModel.fields.map(
-                      (field) => DropdownMenuItem(
-                        value: field.id.toString(),
-                        child: Text(field.fieldName),
-                      ),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() => _selectedField = value ?? "-1");
-                  },
-                );
-              },
-            ),
-            Consumer<ActivitiesViewModel>(
-              builder: (context, activitiesViewModel, child) {
-                return FormDropdown(
-                  label: "Aktivität",
-                  value: _selectedActivity!,
-                  items: [
-                    DropdownMenuItem(
-                      value: "-1",
-                      child: Text("Alle Aktivitäten"),
-                    ),
-                    ...activitiesViewModel.activities.map(
-                      (activity) => DropdownMenuItem(
-                        value: activity.id.toString(),
-                        child: Text(activity.activityName),
-                      ),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() => _selectedActivity = value ?? "-1");
-                  },
-                );
-              },
-            ),
-            Consumer<PersonViewModel>(
-              builder: (context, personViewModel, child) {
-                return FormDropdown(
-                  label: "Mitarbeiter",
-                  value: _selectedPerson!,
-                  items: [
-                    DropdownMenuItem(
-                      value: "-1",
-                      child: Text("Alle Mitarbeiter"),
-                    ),
-                    ...personViewModel.personList.map(
-                      (person) => DropdownMenuItem(
-                        value: person.id.toString(),
-                        child: Text(person.personName),
-                      ),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() => _selectedPerson = value ?? "-1");
-                  },
-                );
-              },
-            ),
-            SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                final selectedFieldName =
-                    _selectedField != "-1"
-                        ? Provider.of<FieldsViewModel>(context, listen: false)
-                            .fields
-                            .firstWhere(
-                              (field) => field.id.toString() == _selectedField,
-                            )
-                            .fieldName
-                        : null;
+                final fieldsViewModel = Provider.of<FieldsViewModel>(
+                  context,
+                  listen: false,
+                );
+                final activitiesViewModel = Provider.of<ActivitiesViewModel>(
+                  context,
+                  listen: false,
+                );
+                final cropsViewModel = Provider.of<CropsViewModel>(
+                  context,
+                  listen: false,
+                );
 
-                final selectedActivityName =
-                    _selectedActivity != "-1"
-                        ? Provider.of<ActivitiesViewModel>(
-                              context,
-                              listen: false,
-                            ).activities
-                            .firstWhere(
-                              (activity) =>
-                                  activity.id.toString() == _selectedActivity,
-                            )
-                            .activityName
-                        : null;
+                final selectedFieldNames =
+                    _selectedFields
+                        .map(
+                          (id) =>
+                              fieldsViewModel.fields
+                                  .firstWhere(
+                                    (field) => field.id.toString() == id,
+                                  )
+                                  .fieldName,
+                        )
+                        .toList();
+
+                final selectedActivityNames =
+                    _selectedActivities
+                        .map(
+                          (id) =>
+                              activitiesViewModel.activities
+                                  .firstWhere(
+                                    (activity) => activity.id.toString() == id,
+                                  )
+                                  .activityName,
+                        )
+                        .toList();
+
+                final selectedCropNames =
+                    _selectedCrops
+                        .map(
+                          (id) =>
+                              cropsViewModel.cropList
+                                  .firstWhere(
+                                    (crop) => crop.id.toString() == id,
+                                  )
+                                  .cropName,
+                        )
+                        .toList();
 
                 Navigator.push(
                   context,
@@ -192,9 +153,22 @@ class _FilterDialogState extends State<FilterDialog> {
                     builder:
                         (context) => WorkstepSummary(
                           title: "Gefilterte Übersicht",
-                          selectedField: selectedFieldName,
-                          selectedActivity: selectedActivityName,
-                          selectedPerson: _selectedPerson,
+                          selectedFields:
+                              selectedFieldNames.isEmpty
+                                  ? null
+                                  : selectedFieldNames,
+                          selectedActivities:
+                              selectedActivityNames.isEmpty
+                                  ? null
+                                  : selectedActivityNames,
+                          selectedPersons:
+                              _selectedPersons.isEmpty
+                                  ? null
+                                  : _selectedPersons,
+                          selectedCrops:
+                              selectedCropNames.isEmpty
+                                  ? null
+                                  : selectedCropNames,
                           startDate: _startDate,
                           endDate: _endDate,
                           isFiltered: true,
@@ -202,11 +176,44 @@ class _FilterDialogState extends State<FilterDialog> {
                   ),
                 );
               },
-              child: Text("Anwenden"),
+              child: Text("Filter anwenden"),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildCheckboxList<T>(
+    List<dynamic> Function(T viewModel) getItems,
+    List<String> selectedItems,
+    String Function(dynamic item) getName,
+  ) {
+    return Consumer<T>(
+      builder: (context, viewModel, child) {
+        final items = getItems(viewModel);
+        return ListView.builder(
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+            final item = items[index];
+            final id = item.id.toString();
+            final name = getName(item);
+            return CheckboxListTile(
+              title: Text(name),
+              value: selectedItems.contains(id),
+              onChanged: (isSelected) {
+                setState(() {
+                  if (isSelected == true) {
+                    selectedItems.add(id);
+                  } else {
+                    selectedItems.remove(id);
+                  }
+                });
+              },
+            );
+          },
+        );
+      },
     );
   }
 }

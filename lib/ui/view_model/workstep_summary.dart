@@ -59,29 +59,38 @@ class WorkstepSummaryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool _matchesFilter<T>(List<T>? selectedValues, T value) {
+    return selectedValues == null ||
+        selectedValues.isEmpty ||
+        selectedValues.contains(value);
+  }
+
   void filterCompleteWorkstepsByIds({
-    String? selectedFieldName,
-    String? selectedActivityName,
-    String? selectedPersonId,
+    List<String>? selectedFields,
+    List<String>? selectedActivities,
+    List<String>? selectedCrops,
+    List<String>? selectedPersonIds,
     DateTime? selectedStartDate,
     DateTime? selectedEndDate,
   }) {
     _filteredWorksteps =
         _completeWorksteps.where((workstep) {
-          final matchesField =
-              selectedFieldName == null ||
-              selectedFieldName == "-1" ||
-              workstep.fieldName.toString() == selectedFieldName;
-
-          final matchesActivity =
-              selectedActivityName == null ||
-              selectedActivityName == "-1" ||
-              workstep.activityName.toString() == selectedActivityName;
-
-          final matchesPerson =
-              selectedPersonId == null ||
-              selectedPersonId == "-1" ||
-              workstep.personId.toString() == selectedPersonId;
+          final matchesField = _matchesFilter(
+            selectedFields,
+            workstep.fieldName.toString(),
+          );
+          final matchesCrop = _matchesFilter(
+            selectedCrops,
+            workstep.cropName.toString(),
+          );
+          final matchesActivity = _matchesFilter(
+            selectedActivities,
+            workstep.activityName.toString(),
+          );
+          final matchesPerson = _matchesFilter(
+            selectedPersonIds,
+            workstep.personId.toString(),
+          );
 
           final workstepDate = DateTime.parse(workstep.date);
 
@@ -96,6 +105,7 @@ class WorkstepSummaryViewModel extends ChangeNotifier {
               workstepDate.isAtSameMomentAs(selectedEndDate);
 
           return matchesField &&
+              matchesCrop &&
               matchesActivity &&
               matchesPerson &&
               matchesStartDate &&
