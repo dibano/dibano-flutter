@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /*
 * Dropdown Widget
 */
-class FormTextfield extends StatelessWidget{
+class FormTextfield extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final TextInputType keyboardType;
@@ -14,7 +14,7 @@ class FormTextfield extends StatelessWidget{
     required this.label,
     required this.controller,
     required this.keyboardType,
-    required this.maxLine
+    required this.maxLine,
   });
 
   @override
@@ -23,26 +23,18 @@ class FormTextfield extends StatelessWidget{
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label, 
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold
-          )
+          label,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(
-          height: 5
-        ),
+        const SizedBox(height: 5),
         TextField(
           controller: controller,
           keyboardType: keyboardType,
           maxLines: maxLine,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-          ),
+          textCapitalization: TextCapitalization.sentences,
+          decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
-        const SizedBox(
-          height: 15
-        )
+        const SizedBox(height: 15),
       ],
     );
   }

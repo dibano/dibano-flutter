@@ -1,4 +1,5 @@
 import 'package:dibano/ui/view_model/people.dart';
+import 'package:dibano/ui/widgets/components/custom_alert_dialog.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
@@ -36,16 +37,29 @@ class PersonEdit extends StatelessWidget {
                 children: <Widget>[
                   if (!isCreate)
                     Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment
-                              .end,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Flexible(
                           child: IconButton(
                             icon: const Icon(Icons.delete),
                             onPressed: () async {
-                              await personViewModel.remove(personId!);
-                              Navigator.pop(context, true);
+                              bool? confirmDelete = await showDialog<bool>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomAlertDialog(
+                                    alertText:
+                                        "Möchtest du diesen Mitarbeiter wirklich löschen?",
+                                    alertType: AlertType.delete,
+                                    onDelete: () async {
+                                      await personViewModel.remove(personId!);
+                                      Navigator.pop(context, true);
+                                    },
+                                  );
+                                },
+                              );
+                              if (confirmDelete == true) {
+                                Navigator.pop(context, true);
+                              }
                             },
                           ),
                         ),
@@ -59,7 +73,7 @@ class PersonEdit extends StatelessWidget {
                         children: <Widget>[
                           const SizedBox(height: 24),
                           FormTextfield(
-                            label: "Name der Person",
+                            label: "Name des Mitarbeiters",
                             controller: _descriptionController,
                             keyboardType: TextInputType.text,
                             maxLine: 1,
@@ -75,10 +89,14 @@ class PersonEdit extends StatelessWidget {
                         child: CustomButtonLarge(
                           text: "Speichern",
                           onPressed: () async {
-                            final personExisting = personViewModel.checkIfExisting(_descriptionController.text);
-                            if(_descriptionController.text != "" && personExisting == false){
+                            final personExisting = personViewModel
+                                .checkIfExisting(_descriptionController.text);
+                            if (_descriptionController.text != "" &&
+                                personExisting == false) {
                               if (personId == null) {
-                                await personViewModel.add(_descriptionController.text);
+                                await personViewModel.add(
+                                  _descriptionController.text,
+                                );
                                 Navigator.pop(context, true);
                               } else {
                                 await personViewModel.update(
@@ -87,57 +105,26 @@ class PersonEdit extends StatelessWidget {
                                 );
                                 Navigator.pop(context, true);
                               }
-                            }else if(_descriptionController.text != "" && personExisting == true){
+                            } else if (_descriptionController.text != "" &&
+                                personExisting == true) {
                               await showDialog(
-                                context:context,
-                                builder:(BuildContext context){
-                                  return AlertDialog(
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
-                                        SizedBox(height: 16),
-                                        Text(
-                                          "Du hast diese Person bereits erfasst",
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () { 
-                                          Navigator.of(context).pop();                                   
-                                        },
-                                        child: Text("OK"),
-                                      ),
-                                    ],
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomAlertDialog(
+                                    alertText:
+                                        "Du hast diese Person bereits erfasst",
+                                    alertType: AlertType.error,
                                   );
                                 },
                               );
-                            }else{
+                            } else {
                               await showDialog(
-                                context:context,
-                                builder:(BuildContext context){
-                                  return AlertDialog(
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
-                                        SizedBox(height: 16),
-                                        Text(
-                                          "Der Personenname muss ausgefüllt sein!",
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () { 
-                                          Navigator.of(context).pop();                                   
-                                        },
-                                        child: Text("OK"),
-                                      ),
-                                    ],
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomAlertDialog(
+                                    alertText:
+                                        "Der Personenname muss ausgefüllt sein!",
+                                    alertType: AlertType.error,
                                   );
                                 },
                               );

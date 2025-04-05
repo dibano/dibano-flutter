@@ -3,6 +3,7 @@ import 'package:dibano/ui/view_model/fields.dart';
 import 'package:dibano/ui/view_model/people.dart';
 import 'package:dibano/ui/view_model/activities.dart';
 import 'package:dibano/ui/view_model/track_worksteps.dart';
+import 'package:dibano/ui/widgets/components/custom_alert_dialog.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,6 @@ import 'package:dibano/ui/widgets/components/form_textfield_disabled.dart';
 import 'package:dibano/ui/widgets/components/warn_card.dart';
 import 'package:provider/provider.dart';
 import 'package:dibano/ui/widgets/components/form_date.dart';
-
 
 class TrackWorksteps extends StatefulWidget {
   const TrackWorksteps({
@@ -43,7 +43,6 @@ class TrackWorksteps extends StatefulWidget {
 class _TrackWorkstepsState extends State<TrackWorksteps> {
   late TrackWorkstepsViewModel _trackWorkstepsViewModel;
 
-
   bool _fieldSelected = false;
 
   String? _selectedArea = "-1";
@@ -66,7 +65,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
     if (_descriptionController.text.isNotEmpty &&
         _selectedArea != "-1" &&
         _selectedActivity != "-1" &&
-        _selectedPerson != "-1" ) {
+        _selectedPerson != "-1") {
       setState(() {
         if (widget.selectedArea == null ||
             widget.selectedActivity == null ||
@@ -102,53 +101,19 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
       showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.check_circle, color: Colors.green, size: 48),
-                SizedBox(height: 16),
-                Text(
-                  "Erfolgreich gespeichert!",
-                  style: TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("OK"),
-              ),
-            ],
+          return CustomAlertDialog(
+            alertText: "Erfolgreich gespeichert!",
+            alertType: AlertType.success,
           );
         },
       );
-    }else{
+    } else {
       showDialog(
-        context:context,
-          builder:(BuildContext context){
-            return AlertDialog(
-              content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
-                  SizedBox(height: 16),
-                  Text(
-                    "Alle Felder müssen ausgefüllt sein!",
-                    style: TextStyle(fontSize: 16),
-                  ),
-              ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () { 
-                    Navigator.of(context).pop();                                   
-                  },
-                  child: Text("OK"),
-                  ),
-              ],
+        context: context,
+        builder: (BuildContext context) {
+          return CustomAlertDialog(
+            alertText: "Alle Felder müssen ausgefüllt sein!",
+            alertType: AlertType.error,
           );
         },
       );
@@ -158,47 +123,59 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
   @override
   void initState() {
     super.initState();
-    _trackWorkstepsViewModel = Provider.of<TrackWorkstepsViewModel>(context, listen: false);
+    _trackWorkstepsViewModel = Provider.of<TrackWorkstepsViewModel>(
+      context,
+      listen: false,
+    );
     if (widget.activityDate != null) {
       _activityDate = widget.activityDate;
-    }else{
+    } else {
       _activityDate = DateTime.now();
     }
 
     _initData();
   }
 
-  Future<void> _initData() async{
-      final fieldsViewModel = Provider.of<FieldsViewModel>(context, listen: false);
-      final personViewModel = Provider.of<PersonViewModel>(context, listen: false);
-      final cropsViewModel = Provider.of<CropsViewModel>(context, listen: false);
-      final activitiesViewModel = Provider.of<ActivitiesViewModel>(context, listen: false);
+  Future<void> _initData() async {
+    final fieldsViewModel = Provider.of<FieldsViewModel>(
+      context,
+      listen: false,
+    );
+    final personViewModel = Provider.of<PersonViewModel>(
+      context,
+      listen: false,
+    );
+    final cropsViewModel = Provider.of<CropsViewModel>(context, listen: false);
+    final activitiesViewModel = Provider.of<ActivitiesViewModel>(
+      context,
+      listen: false,
+    );
 
-      await Future.wait([
-        fieldsViewModel.getFields(),
-        personViewModel.getPerson(),
-        cropsViewModel.getCrops(),
-        cropsViewModel.getCompleteCrops(),
-        activitiesViewModel.getActivities(),
-      ]);
+    await Future.wait([
+      fieldsViewModel.getFields(),
+      personViewModel.getPerson(),
+      cropsViewModel.getCrops(),
+      cropsViewModel.getCompleteCrops(),
+      activitiesViewModel.getActivities(),
+    ]);
 
-      setState((){
+    setState(() {
       if (widget.selectedArea != null) {
-          _fieldSelected = true;
-          _selectedArea = widget.selectedArea;
-          _loadCropsName();
-        }
-        if (widget.selectedActivity != null) {
-          _selectedActivity = widget.selectedActivity;
-        }
-        if (widget.selectedPerson != null) {
-          _selectedPerson = widget.selectedPerson;
-        }
-        if (widget.description != null) {
-          _descriptionController.text = widget.description.toString();
-        }
+        _fieldSelected = true;
+        _selectedArea = widget.selectedArea;
+        _loadCropsName();
+      }
+      if (widget.selectedActivity != null) {
+        _selectedActivity = widget.selectedActivity;
+      }
+      if (widget.selectedPerson != null) {
+        _selectedPerson = widget.selectedPerson;
+      }
+      if (widget.description != null) {
+        _descriptionController.text = widget.description.toString();
+      }
     });
-    if(_fieldSelected && _activityDate != null){
+    if (_fieldSelected && _activityDate != null) {
       await _loadCropsName();
     }
   }
@@ -213,7 +190,6 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
     _cropController.text = selectedCropName.toString();
     setState(() {});
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -246,20 +222,23 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                       ],
                       onChanged: (value) {
                         setState(() {
-                          final cropsViewModel = Provider.of<CropsViewModel>(context, listen: false);
+                          final cropsViewModel = Provider.of<CropsViewModel>(
+                            context,
+                            listen: false,
+                          );
                           _selectedArea = value ?? "-1";
-                          if(_selectedArea != "-1"){
+                          if (_selectedArea != "-1") {
                             _fieldSelected = true;
-                          }else{
+                          } else {
                             _fieldSelected = false;
                           }
-                          if(_fieldSelected){
+                          if (_fieldSelected) {
                             selectedCropName = cropsViewModel.getCropName(
                               int.parse(_selectedArea.toString()),
                               _activityDate!,
                             );
                             _cropController.text = selectedCropName.toString();
-                          } 
+                          }
                         });
                       },
                     );
@@ -268,28 +247,35 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                 Consumer<CropsViewModel>(
                   builder: (context, cropsViewModel, child) {
                     return FormDate(
-                          label: "Datum",
-                          placeholderDate: _activityDate,
-                          dateSelected: (date) {
-                            setState((){
-                              _activityDate = date!;
-                              if(_fieldSelected){
-                                selectedCropName = cropsViewModel.getCropName(
-                                  int.parse(_selectedArea.toString()),
-                                  _activityDate!,
-                                );
-                                _cropController.text = selectedCropName.toString();
-                              }
-                            });
-                          },
-                        );
+                      label: "Datum",
+                      placeholderDate: _activityDate,
+                      dateSelected: (date) {
+                        setState(() {
+                          _activityDate = date;
+                          if (_fieldSelected) {
+                            selectedCropName = cropsViewModel.getCropName(
+                              int.parse(_selectedArea.toString()),
+                              _activityDate!,
+                            );
+                            _cropController.text = selectedCropName.toString();
+                          }
+                        });
+                      },
+                    );
                   },
                 ),
-                if(_activityDate != null && _selectedArea != "-1" && _cropController.text == "unbekannt")...[
-                  Warn(warnText: "Keine Kultur zur Feldauswahl und Datumauswahl gefunden!"),
+                if (_activityDate != null &&
+                    _selectedArea != "-1" &&
+                    _cropController.text == "unbekannt") ...[
+                  Warn(
+                    warnText:
+                        "Keine Kultur zur Feldauswahl und Datumauswahl gefunden!",
+                  ),
                 ],
 
-                if(_activityDate != null && _selectedArea != "-1" && _cropController.text != "unbekannt")...[
+                if (_activityDate != null &&
+                    _selectedArea != "-1" &&
+                    _cropController.text != "unbekannt") ...[
                   FormTextfield(
                     label: "Beschreibung",
                     controller: _descriptionController,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /*
 * Dropdown Widget
 */
-class FormDropdown extends StatelessWidget{
+class FormDropdown extends StatelessWidget {
   final String label;
   final String value;
   final List<DropdownMenuItem<String>> items;
@@ -14,7 +14,7 @@ class FormDropdown extends StatelessWidget{
     required this.label,
     required this.value,
     required this.items,
-    required this.onChanged
+    required this.onChanged,
   });
 
   @override
@@ -23,26 +23,17 @@ class FormDropdown extends StatelessWidget{
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label, 
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold
-          )
+          label,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(
-          height: 5
-        ),
+        const SizedBox(height: 5),
         DropdownButtonFormField(
-          value: value, 
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-          ),
+          value: value,
+          decoration: const InputDecoration(border: OutlineInputBorder()),
           onChanged: onChanged,
           items: items,
         ),
-        const SizedBox(
-          height: 15
-        )
+        const SizedBox(height: 15),
       ],
     );
   }

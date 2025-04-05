@@ -1,4 +1,5 @@
 import 'package:dibano/ui/view_model/crops.dart';
+import 'package:dibano/ui/widgets/components/custom_alert_dialog.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:dibano/ui/widgets/components/form_date.dart';
@@ -75,8 +76,25 @@ class _CropsEditState extends State<CropsEdit> {
                           child: IconButton(
                             icon: const Icon(Icons.delete),
                             onPressed: () async {
-                              await cropsViewModel.remove(widget.cropId!);
-                              Navigator.pop(context, true);
+                              bool? confirmDelete = await showDialog<bool>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomAlertDialog(
+                                    alertText:
+                                        "Möchtest du diese Kultur wirklich löschen?",
+                                    alertType: AlertType.delete,
+                                    onDelete: () async {
+                                      await cropsViewModel.remove(
+                                        widget.cropId!,
+                                      );
+                                      Navigator.pop(context, true);
+                                    },
+                                  );
+                                },
+                              );
+                              if (confirmDelete == true) {
+                                Navigator.pop(context, true);
+                              }
                             },
                           ),
                         ),
@@ -98,14 +116,14 @@ class _CropsEditState extends State<CropsEdit> {
                             label: "Startdatum",
                             placeholderDate: _startDate ?? DateTime.now(),
                             dateSelected: (date) {
-                              setState(() => _startDate = date!);
+                              setState(() => _startDate = date);
                             },
                           ),
                           FormDate(
                             label: "Enddatum",
                             placeholderDate: _endDate ?? DateTime.now(),
                             dateSelected: (date) {
-                              setState(() => _endDate = date!);
+                              setState(() => _endDate = date);
                             },
                           ),
                           Consumer<FieldsViewModel>(
@@ -142,11 +160,23 @@ class _CropsEditState extends State<CropsEdit> {
                         child: CustomButtonLarge(
                           text: "Speichern",
                           onPressed: () async {
-                            if(_descriptionController.text != "" && _selectedField != null && _selectedField != "-1"){
+                            if (_descriptionController.text != "" &&
+                                _selectedField != null &&
+                                _selectedField != "-1") {
                               if (widget.cropId == null) {
-                                final inExistingDate = cropsViewModel.existingCropAtDateAndField(int.parse(_selectedField.toString()), _startDate??DateTime.now(), _endDate??DateTime.now(), widget.cropId);
-                                final endIsBeforeStart = cropsViewModel.endIsBeforeStart(_startDate??DateTime.now(), _endDate??DateTime.now());
-                                if(inExistingDate != true){
+                                final inExistingDate = cropsViewModel
+                                    .existingCropAtDateAndField(
+                                      int.parse(_selectedField.toString()),
+                                      _startDate ?? DateTime.now(),
+                                      _endDate ?? DateTime.now(),
+                                      widget.cropId,
+                                    );
+                                final endIsBeforeStart = cropsViewModel
+                                    .endIsBeforeStart(
+                                      _startDate ?? DateTime.now(),
+                                      _endDate ?? DateTime.now(),
+                                    );
+                                if (inExistingDate != true) {
                                   int? fieldId = int.tryParse(
                                     _selectedField!,
                                   ); // Konvertiert String zu int
@@ -157,65 +187,43 @@ class _CropsEditState extends State<CropsEdit> {
                                     fieldId!,
                                   );
                                   Navigator.pop(context, true);
-                                }else if (endIsBeforeStart == true){
+                                } else if (endIsBeforeStart == true) {
                                   await showDialog(
-                                    context:context,
-                                    builder:(BuildContext context){
-                                      return AlertDialog(
-                                        content: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
-                                            SizedBox(height: 16),
-                                            Text(
-                                              "Das Startdatum darf nicht nach dem Enddatum sein.",
-                                              style: TextStyle(fontSize: 16),
-                                            ),
-                                          ],
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () { 
-                                              Navigator.of(context).pop();                                   
-                                            },
-                                            child: Text("OK"),
-                                          ),
-                                        ],
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return CustomAlertDialog(
+                                        alertText:
+                                            "Das Startdatum darf nicht nach dem Enddatum sein.",
+                                        alertType: AlertType.error,
                                       );
                                     },
                                   );
-                                }else{
+                                } else {
                                   await showDialog(
-                                    context:context,
-                                    builder:(BuildContext context){
-                                      return AlertDialog(
-                                        content: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
-                                            SizedBox(height: 16),
-                                            Text(
-                                              "Auf diesem Feld gibt es zu diesem Datum bereits eine Kultur. Wählen Sie ein anderes Feld oder ein anderes Datum",
-                                              style: TextStyle(fontSize: 16),
-                                            ),
-                                          ],
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () { 
-                                              Navigator.of(context).pop();                                   
-                                            },
-                                            child: Text("OK"),
-                                          ),
-                                        ],
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return CustomAlertDialog(
+                                        alertText:
+                                            "Auf diesem Feld gibt es zu diesem Datum bereits eine Kultur. Wählen Sie ein anderes Feld oder ein anderes Datum",
+                                        alertType: AlertType.error,
                                       );
                                     },
                                   );
                                 }
                               } else {
-                                final inExistingDate = cropsViewModel.existingCropAtDateAndField(int.parse(_selectedField.toString()), _startDate??DateTime.now(), _endDate??DateTime.now(), widget.cropId);
-                                final endIsBeforeStart = cropsViewModel.endIsBeforeStart(_startDate??DateTime.now(), _endDate??DateTime.now());
-                                if(inExistingDate != true){
+                                final inExistingDate = cropsViewModel
+                                    .existingCropAtDateAndField(
+                                      int.parse(_selectedField.toString()),
+                                      _startDate ?? DateTime.now(),
+                                      _endDate ?? DateTime.now(),
+                                      widget.cropId,
+                                    );
+                                final endIsBeforeStart = cropsViewModel
+                                    .endIsBeforeStart(
+                                      _startDate ?? DateTime.now(),
+                                      _endDate ?? DateTime.now(),
+                                    );
+                                if (inExistingDate != true) {
                                   int? fieldId = int.tryParse(
                                     _selectedField!,
                                   ); // Konvertiert String zu int
@@ -228,86 +236,38 @@ class _CropsEditState extends State<CropsEdit> {
                                     widget.cropDateId!,
                                   );
                                   Navigator.pop(context, true);
-                                }else if(endIsBeforeStart==true){
+                                } else if (endIsBeforeStart == true) {
                                   await showDialog(
-                                    context:context,
-                                    builder:(BuildContext context){
-                                      return AlertDialog(
-                                        content: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
-                                            SizedBox(height: 16),
-                                            Text(
-                                              "Das Startdatum darf nicht nach dem Enddatum sein.",
-                                              style: TextStyle(fontSize: 16),
-                                            ),
-                                          ],
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () { 
-                                              Navigator.of(context).pop();                                   
-                                            },
-                                            child: Text("OK"),
-                                          ),
-                                        ],
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return CustomAlertDialog(
+                                        alertText:
+                                            "Das Startdatum darf nicht nach dem Enddatum sein.",
+                                        alertType: AlertType.error,
                                       );
                                     },
                                   );
-                                }else{
+                                } else {
                                   await showDialog(
-                                    context:context,
-                                    builder:(BuildContext context){
-                                      return AlertDialog(
-                                        content: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
-                                            SizedBox(height: 16),
-                                            Text(
-                                              "Auf diesem Feld gibt es zu diesem Datum bereits eine Kultur. Wählen Sie ein anderes Feld oder ein anderes Datum",
-                                              style: TextStyle(fontSize: 16),
-                                            ),
-                                          ],
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () { 
-                                              Navigator.of(context).pop();                                   
-                                            },
-                                            child: Text("OK"),
-                                          ),
-                                        ],
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return CustomAlertDialog(
+                                        alertText:
+                                            "Auf diesem Feld gibt es zu diesem Datum bereits eine Kultur. Wählen Sie ein anderes Feld oder ein anderes Datum",
+                                        alertType: AlertType.error,
                                       );
                                     },
                                   );
                                 }
                               }
-                            }else{
+                            } else {
                               await showDialog(
-                                context:context,
-                                builder:(BuildContext context){
-                                  return AlertDialog(
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(Icons.error, color: const Color.fromARGB(255, 175, 76, 76), size: 48),
-                                        SizedBox(height: 16),
-                                        Text(
-                                          "Alle Felder müssen ausgefüllt sein!",
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () { 
-                                          Navigator.of(context).pop();                                   
-                                        },
-                                        child: Text("OK"),
-                                      ),
-                                    ],
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomAlertDialog(
+                                    alertText:
+                                        "Alle Felder müssen ausgefüllt sein!",
+                                    alertType: AlertType.error,
                                   );
                                 },
                               );

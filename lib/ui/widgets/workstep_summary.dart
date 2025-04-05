@@ -1,15 +1,33 @@
+import 'package:dibano/ui/widgets/components/filter_dialog.dart';
 import 'package:dibano/ui/view_model/workstep_summary.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
+import 'package:dibano/ui/widgets/components/warn_card.dart';
 import 'package:dibano/ui/widgets/track_worksteps.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/activity_card.dart';
 import 'package:provider/provider.dart';
 
 class WorkstepSummary extends StatefulWidget {
-  const WorkstepSummary({super.key, required this.title});
-
   final String title;
+  final List<String>? selectedFields;
+  final List<String>? selectedActivities;
+  final List<String>? selectedPersons;
+  final List<String>? selectedCrops;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final bool isFiltered;
 
+  const WorkstepSummary({
+    super.key,
+    required this.title,
+    this.selectedFields,
+    this.selectedActivities,
+    this.selectedPersons,
+    this.selectedCrops,
+    this.startDate,
+    this.endDate,
+    this.isFiltered = false,
+  });
   @override
   State<WorkstepSummary> createState() => _WorkstepSummaryState();
 }
@@ -18,8 +36,25 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_){
-      Provider.of<WorkstepSummaryViewModel>(context,listen: false).getCompleteWorksteps();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.isFiltered == true) {
+        Provider.of<WorkstepSummaryViewModel>(
+          context,
+          listen: false,
+        ).filterCompleteWorkstepsByIds(
+          selectedFields: widget.selectedFields,
+          selectedCrops: widget.selectedCrops,
+          selectedActivities: widget.selectedActivities,
+          selectedPersonIds: widget.selectedPersons,
+          selectedStartDate: widget.startDate,
+          selectedEndDate: widget.endDate,
+        );
+      } else {
+        Provider.of<WorkstepSummaryViewModel>(
+          context,
+          listen: false,
+        ).getCompleteWorksteps();
+      }
     });
   }
 
@@ -45,14 +80,23 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(
+              top: 8.0,
+              left: 8.0,
+              right: 8.0,
+              bottom: 0.0,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 PopupMenuButton<int>(
                   icon: Icon(Icons.sort),
                   onSelected: (value) {
-                    WorkstepSummaryViewModel workstepSummaryViewModel = Provider.of<WorkstepSummaryViewModel>(context,listen: false);
+                    WorkstepSummaryViewModel workstepSummaryViewModel =
+                        Provider.of<WorkstepSummaryViewModel>(
+                          context,
+                          listen: false,
+                        );
                     workstepSummaryViewModel.sortCompleteWorksteps(value);
                   },
                   itemBuilder:
@@ -71,42 +115,55 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                         ),
                       ],
                 ),
-                PopupMenuButton<int>(
-                  icon: Icon(Icons.share),
-                  onSelected: (value) {
-                    switch (value) {
-                      case 1:
-                        // Aktion für "Per Email senden"
-                        break;
-                      case 2:
-                        // Aktion für "Als PDF speichern"
-                        break;
-                      case 3:
-                        // Aktion für "Cloud-Dienste"
-                        break;
-                      case 4:
-                        // Aktion für "Per Schnittstelle weiterleiten"
-                        break;
-                      default:
-                    }
-                  },
-                  itemBuilder:
-                      (context) => [
-                        PopupMenuItem(
-                          value: 1,
-                          child: Text('Per Email senden'),
-                        ),
-                        PopupMenuItem(
-                          value: 2,
-                          child: Text('Als PDF speichern'),
-                        ),
-                        PopupMenuItem(value: 3, child: Text('Cloud-Dienste')),
-                        PopupMenuItem(
-                          value: 4,
-                          child: Text('Per Schnittstelle weiterleiten'),
-                        ),
-                      ],
-                ),
+                if (!widget.isFiltered)
+                  ElevatedButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return FilterDialog();
+                        },
+                      );
+                    },
+                    child: Text("Filtern und Teilen"),
+                  ),
+                if (widget.isFiltered)
+                  PopupMenuButton<int>(
+                    icon: Icon(Icons.share),
+                    onSelected: (value) {
+                      switch (value) {
+                        case 1:
+                          // Aktion für "Per Email senden"
+                          break;
+                        case 2:
+                          // Aktion für "Als PDF speichern"
+                          break;
+                        case 3:
+                          // Aktion für "Cloud-Dienste"
+                          break;
+                        case 4:
+                          // Aktion für "Per Schnittstelle weiterleiten"
+                          break;
+                        default:
+                      }
+                    },
+                    itemBuilder:
+                        (context) => [
+                          PopupMenuItem(
+                            value: 1,
+                            child: Text('Per Email senden'),
+                          ),
+                          PopupMenuItem(
+                            value: 2,
+                            child: Text('Als PDF speichern'),
+                          ),
+                          PopupMenuItem(value: 3, child: Text('Cloud-Dienste')),
+                          PopupMenuItem(
+                            value: 4,
+                            child: Text('Per Schnittstelle weiterleiten'),
+                          ),
+                        ],
+                  ),
               ],
             ),
           ),
@@ -115,6 +172,11 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
               padding: const EdgeInsets.all(8.0),
               child: Consumer<WorkstepSummaryViewModel>(
                 builder: (context, workstepSummaryViewModel, child) {
+                  final worksteps =
+                      widget.isFiltered == true
+                          ? workstepSummaryViewModel.filteredWorksteps
+                          : workstepSummaryViewModel.completeWorksteps;
+
                   return Center(
                     child: Column(
                       children: <Widget>[
@@ -123,36 +185,61 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                           child: SingleChildScrollView(
                             child: Column(
                               children: <Widget>[
-                                for (var workstep in workstepSummaryViewModel.completeWorksteps)
+                                if (worksteps.isEmpty && widget.isFiltered) ...[
+                                  Warn(
+                                    warnText:
+                                        "Keine Einträge für die aktuelle Filterung gefunden",
+                                  ),
+                                ],
+                                for (var workstep in worksteps)
                                   ActivityCard(
+                                    isDeletable: !widget.isFiltered,
+                                    isCheckable: widget.isFiltered,
                                     workstep: workstep,
-                                    onTap: () async{
-                                        final result = await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (context) => TrackWorksteps(
-                                                  title: "Kultur bearbeiten",
-                                                  selectedArea: workstep.id.toString(),
-                                                  selectedPerson: workstep.personId.toString(),
-                                                  selectedActivity: workstep.activityId.toString(),
-                                                  description: workstep.description.toString(),
-                                                  workstepActivityId: workstep.workstepActivityId,
-                                                  workstepId: workstep.workstepId, 
-                                                  activityDate: DateTime.tryParse(workstep.date)
+                                    onTap: () async {
+                                      final result = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => TrackWorksteps(
+                                                title: "Kultur bearbeiten",
+                                                selectedArea:
+                                                    workstep.id.toString(),
+                                                selectedPerson:
+                                                    workstep.personId
+                                                        .toString(),
+                                                selectedActivity:
+                                                    workstep.activityId
+                                                        .toString(),
+                                                description:
+                                                    workstep.description
+                                                        .toString(),
+                                                workstepActivityId:
+                                                    workstep.workstepActivityId,
+                                                workstepId: workstep.workstepId,
+                                                activityDate: DateTime.tryParse(
+                                                  workstep.date,
                                                 ),
-                                          ),
-                                        );
+                                              ),
+                                        ),
+                                      );
                                       if (result == true) {
-                                        await Provider.of<WorkstepSummaryViewModel>(context,listen: false,).getCompleteWorksteps();
+                                        await Provider.of<
+                                          WorkstepSummaryViewModel
+                                        >(
+                                          context,
+                                          listen: false,
+                                        ).getCompleteWorksteps();
                                       }
                                     },
-                                    onDelete: (){
+                                    onDelete: () {
                                       setState(() {
-                                        workstepSummaryViewModel.remove(workstep.workstepId);
+                                        workstepSummaryViewModel.remove(
+                                          workstep.workstepId,
+                                        );
                                       });
                                     },
-                                ),
+                                  ),
                               ],
                             ),
                           ),
