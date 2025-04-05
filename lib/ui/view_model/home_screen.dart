@@ -15,9 +15,15 @@ class HomeScreenViewModel extends ChangeNotifier {
       color: FarmColors.lightGreen,
     ),
     ButtonData(
+      icon: Icons.info,
+      title: 'Informationen',
+      routeWidget: Info(title: "Informationen"),
+      color: FarmColors.lightGreen,
+    ),
+    ButtonData(
       icon: Icons.list_alt_outlined,
-      title: 'Übersicht',
-      routeWidget: WorkstepSummary(title: "Übersicht"),
+      title: 'Meine Tätigkeiten',
+      routeWidget: WorkstepSummary(title: "Meine Tätigkeiten"),
       color: FarmColors.skyBlue,
     ),
     ButtonData(
@@ -25,12 +31,6 @@ class HomeScreenViewModel extends ChangeNotifier {
       title: 'Mein Bauernhof',
       routeWidget: MyFarm(title: "Mein Bauernhof"),
       color: FarmColors.skyBlue,
-    ),
-    ButtonData(
-      icon: Icons.info,
-      title: 'Informationen',
-      routeWidget: Info(title: "Informationen"),
-      color: FarmColors.lightGreen,
     ),
   ];
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /*
 * Dropdown Widget
 */
-class FormDate extends StatefulWidget{
+class FormDate extends StatefulWidget {
   final String label;
   final DateTime? placeholderDate;
   final Function(DateTime) dateSelected;
@@ -12,32 +12,31 @@ class FormDate extends StatefulWidget{
     super.key,
     required this.label,
     required this.placeholderDate,
-    required this.dateSelected
+    required this.dateSelected,
   });
 
   @override
   FormDateState createState() => FormDateState();
 }
 
-class FormDateState extends State<FormDate>{
+class FormDateState extends State<FormDate> {
   late DateTime? selectedDate;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     selectedDate = widget.placeholderDate;
   }
 
-
   Future<void> _selectDate(BuildContext context) async {
     DateTime? selected = await showDatePicker(
-                                context: context, 
-                                initialDate: selectedDate,
-                                firstDate: DateTime(2020), 
-                                lastDate: DateTime(2100),
-                                );
-    
-    if(selected != null && selected != selectedDate){
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2100),
+    );
+
+    if (selected != null && selected != selectedDate) {
       setState(() {
         selectedDate = selected;
       });
@@ -51,31 +50,27 @@ class FormDateState extends State<FormDate>{
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          widget.label, 
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold
-          )
+          widget.label,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(
-          height: 5
-        ),
+        const SizedBox(height: 5),
         TextFormField(
-          readOnly: true, 
+          readOnly: true,
           controller: TextEditingController(
-            text: (selectedDate?.day == null||selectedDate?.month == null|| selectedDate?.year == null)
-            ? "${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}"
-            : "${selectedDate?.day}.${selectedDate?.month}.${selectedDate?.year}",
+            text:
+                (selectedDate?.day == null ||
+                        selectedDate?.month == null ||
+                        selectedDate?.year == null)
+                    ? "${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}"
+                    : "${selectedDate?.day}.${selectedDate?.month}.${selectedDate?.year}",
           ),
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
-            suffixIcon: Icon(Icons.calendar_view_month)
+            suffixIcon: Icon(Icons.edit_calendar),
           ),
           onTap: () => _selectDate(context),
-          ),
-        const SizedBox(
-          height: 15
         ),
+        const SizedBox(height: 15),
       ],
     );
   }

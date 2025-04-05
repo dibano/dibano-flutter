@@ -30,7 +30,7 @@ class Info extends StatelessWidget {
       appBar: CustomAppBar(
         title: title,
         hasInfo: true,
-        onInfoPressed: () => _showInfoDialog(context), // Info-Dialog anzeigen
+        onInfoPressed: () => _showInfoDialog(context),
       ),
       body: SingleChildScrollView(
         child: Column(

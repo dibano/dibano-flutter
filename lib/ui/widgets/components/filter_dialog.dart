@@ -152,7 +152,7 @@ class _FilterDialogState extends State<FilterDialog> {
                   MaterialPageRoute(
                     builder:
                         (context) => WorkstepSummary(
-                          title: "Gefilterte Übersicht",
+                          title: "Tätigkeiten gefiltert",
                           selectedFields:
                               selectedFieldNames.isEmpty
                                   ? null

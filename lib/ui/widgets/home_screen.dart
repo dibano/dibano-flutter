@@ -21,7 +21,14 @@ class HomeScreen extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        child: _buildBody(context),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            _buildBody(context),
+            _buildFullWidthButton(context, "Meine Tätigkeiten"),
+            _buildFullWidthButton(context, "Tätigkeiten erfassen"),
+          ],
+        ),
       ),
     );
   }
@@ -44,29 +51,28 @@ class HomeScreen extends StatelessWidget {
         : constraints.maxWidth / 2 - (padding * 1.5);
   }
 
-  // Methode zum Erstellen der Scrollbaren Button Liste
+  // Methode zum Erstellen der scrollbaren Button-Liste
   Widget _buildButtonList(double buttonSize) {
     const padding = 16.0;
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(padding),
-      child: Center(
-        child: Wrap(
-          spacing: padding,
-          runSpacing: padding,
-          alignment: WrapAlignment.center,
-          children: _createButtons(buttonSize),
-        ),
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Wrap(
+        spacing: padding,
+        runSpacing: padding,
+        alignment: WrapAlignment.center,
+        children: _createButtons(buttonSize),
       ),
     );
   }
 
-  // Methode zum erstellen der Buttons
+  // Methode zum Erstellen der Buttons
   List<Widget> _createButtons(double buttonSize) {
     final buttonDataList = viewModel.getButtonDataList();
     return [
-      for (final buttonData
-          in buttonDataList) // Schleife durch die Button-Daten
-        _createButton(buttonData, buttonSize), // Erstelle jeden Button
+      for (final buttonData in buttonDataList)
+        if (buttonData.title != "Tätigkeiten erfassen" &&
+            buttonData.title != "Meine Tätigkeiten")
+          _createButton(buttonData, buttonSize),
     ];
   }
 
@@ -103,6 +109,44 @@ class HomeScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildFullWidthButton(BuildContext context, String title) {
+    const padding = 16.0;
+    final buttonData = viewModel.getButtonDataList().firstWhere(
+      (data) => data.title == title,
+    );
+
+    return Padding(
+      padding: const EdgeInsets.all(padding),
+      child: SizedBox(
+        width: double.infinity,
+        height: 150,
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => buttonData.routeWidget),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            backgroundColor: buttonData.color,
+            padding: const EdgeInsets.all(16.0),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(buttonData.icon, size: 48), // Icon hinzufügen
+              const SizedBox(height: 8),
+              Text(buttonData.title),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:dibano/ui/view_model/track_worksteps.dart';
 import 'package:dibano/ui/widgets/components/custom_alert_dialog.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
+import 'package:dibano/ui/widgets/field_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/form_dropdown.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
@@ -208,6 +209,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                     return FormDropdown(
                       label: "Feld",
                       value: _selectedArea!,
+                      createNewView: FieldEdit(title: "Feld erstellen"),
                       items: [
                         DropdownMenuItem(
                           value: "-1",

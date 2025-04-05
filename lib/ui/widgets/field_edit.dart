@@ -104,6 +104,15 @@ class FieldEdit extends StatelessWidget {
                                 );
                                 Navigator.pop(context, true);
                               }
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return CustomAlertDialog(
+                                    alertText: "Erfolgreich gespeichert!",
+                                    alertType: AlertType.success,
+                                  );
+                                },
+                              );
                             } else if (_descriptionController.text != "" &&
                                 fieldExisting == true) {
                               await showDialog(

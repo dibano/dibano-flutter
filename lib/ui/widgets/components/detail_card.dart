@@ -31,15 +31,18 @@ class DetailCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Icon(detail.isInfo ? Icons.visibility : 
-                     detail.toEdit ? Icons.edit : 
-                     null
-                    ),
+                Icon(
+                  detail.isInfo
+                      ? Icons.arrow_forward
+                      : detail.toEdit
+                      ? Icons.edit
+                      : null,
+                ),
               ],
             ),
           ),
         ),
       ),
-      );
+    );
   }
 }

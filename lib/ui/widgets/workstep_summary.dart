@@ -253,6 +253,36 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => TrackWorksteps(
+                    title: "Tätigkeit erfassen",
+                    selectedArea: null,
+                    selectedPerson: null,
+                    selectedActivity: null,
+                    description: null,
+                    workstepActivityId: null,
+                    workstepId: null,
+                    activityDate: null,
+                  ),
+            ),
+          );
+          if (result == true) {
+            await Provider.of<WorkstepSummaryViewModel>(
+              context,
+              listen: false,
+            ).getCompleteWorksteps();
+          }
+        },
+        backgroundColor: Colors.green,
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

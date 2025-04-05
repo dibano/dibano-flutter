@@ -187,6 +187,15 @@ class _CropsEditState extends State<CropsEdit> {
                                     fieldId!,
                                   );
                                   Navigator.pop(context, true);
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return CustomAlertDialog(
+                                        alertText: "Erfolgreich gespeichert!",
+                                        alertType: AlertType.success,
+                                      );
+                                    },
+                                  );
                                 } else if (endIsBeforeStart == true) {
                                   await showDialog(
                                     context: context,

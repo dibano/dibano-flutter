@@ -8,6 +8,7 @@ class FormDropdown extends StatelessWidget {
   final String value;
   final List<DropdownMenuItem<String>> items;
   final ValueChanged<String?> onChanged;
+  final Widget? createNewView;
 
   const FormDropdown({
     super.key,
@@ -15,6 +16,7 @@ class FormDropdown extends StatelessWidget {
     required this.value,
     required this.items,
     required this.onChanged,
+    this.createNewView,
   });
 
   @override
@@ -30,8 +32,31 @@ class FormDropdown extends StatelessWidget {
         DropdownButtonFormField(
           value: value,
           decoration: const InputDecoration(border: OutlineInputBorder()),
-          onChanged: onChanged,
-          items: items,
+          onChanged: (selectedValue) {
+            if (selectedValue == 'new') {
+              if (createNewView != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => createNewView!),
+                );
+              }
+            } else {
+              onChanged(selectedValue);
+            }
+          },
+          items: [
+            ...items,
+            DropdownMenuItem(
+              value: 'new',
+              child: Row(
+                children: [
+                  const Icon(Icons.add, color: Colors.green),
+                  const SizedBox(width: 8),
+                  Text('$label hinzufügen'),
+                ],
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 15),
       ],
