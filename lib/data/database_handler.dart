@@ -110,6 +110,7 @@ class DatabaseHandler{
               ,ws.id as workstepId
               ,wa.activityId
               ,ws.personId
+              ,pe.personName
               ,ac.activityName
               ,fd.fieldName
               ,cp.cropName
@@ -126,6 +127,8 @@ class DatabaseHandler{
             on cp.id = cd.cropId
             INNER JOIN Field fd
             on fd.id = cd.fieldId
+            INNER JOIN Person pe
+            on pe.id = ws.personId
         ''');
       }
     );

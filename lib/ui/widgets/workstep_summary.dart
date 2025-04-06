@@ -1,3 +1,5 @@
+import 'package:dibano/data/pdf/pdf_api.dart';
+import 'package:dibano/data/pdf/save_pdf.dart';
 import 'package:dibano/ui/widgets/components/filter_dialog.dart';
 import 'package:dibano/ui/view_model/workstep_summary.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
@@ -5,6 +7,7 @@ import 'package:dibano/ui/widgets/components/warn_card.dart';
 import 'package:dibano/ui/widgets/track_worksteps.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/activity_card.dart';
+import 'package:dibano/data/model/completeWorkstep_model.dart';
 import 'package:provider/provider.dart';
 
 class WorkstepSummary extends StatefulWidget {
@@ -33,6 +36,9 @@ class WorkstepSummary extends StatefulWidget {
 }
 
 class _WorkstepSummaryState extends State<WorkstepSummary> {
+  late List<CompleteWorkstep> _completeWorksteps;
+  late List<String> _personNames;
+
   @override
   void initState() {
     super.initState();
@@ -130,13 +136,14 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                 if (widget.isFiltered)
                   PopupMenuButton<int>(
                     icon: Icon(Icons.share),
-                    onSelected: (value) {
+                    onSelected: (value) async {
                       switch (value) {
                         case 1:
                           // Aktion für "Per Email senden"
                           break;
                         case 2:
-                          // Aktion für "Als PDF speichern"
+                          final pdf = await PdfApi.generateTablePdf(_completeWorksteps, widget.selectedActivities, widget.selectedCrops, widget.selectedFields, _personNames);
+                          SavePdf.openPdf(pdf);
                           break;
                         case 3:
                           // Aktion für "Cloud-Dienste"
@@ -176,7 +183,12 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                       widget.isFiltered == true
                           ? workstepSummaryViewModel.filteredWorksteps
                           : workstepSummaryViewModel.completeWorksteps;
-
+                  _completeWorksteps = workstepSummaryViewModel.filteredWorksteps;
+                  if(widget.selectedPersons != null){
+                    _personNames = workstepSummaryViewModel.getPersonNameById(widget.selectedPersons!);
+                  }else{
+                    _personNames =[];
+                  }
                   return Center(
                     child: Column(
                       children: <Widget>[
