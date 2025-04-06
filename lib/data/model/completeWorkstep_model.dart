@@ -6,6 +6,7 @@ class CompleteWorkstep{
   final int workstepId;
   final int activityId;
   final int personId;
+  final String personName;
   final String fieldName;
   final String cropName;
   final String activityName;
@@ -18,6 +19,7 @@ class CompleteWorkstep{
     required this.workstepId,
     required this.activityId,
     required this.personId,
+    required this.personName,
     required this.fieldName,
     required this.cropName,
     required this.activityName,
@@ -31,6 +33,7 @@ class CompleteWorkstep{
                         workstepId: completeWorkstepMap['workstepId'] as int,
                         activityId: completeWorkstepMap['activityId'] as int,
                         personId: completeWorkstepMap['personId'] as int,
+                        personName: completeWorkstepMap['personName'] as String,
                         cropName: completeWorkstepMap['cropName'] as String,
                         fieldName: completeWorkstepMap['fieldName'] as String, 
                         activityName: completeWorkstepMap['activityName'] as String,
