@@ -1,9 +1,10 @@
+import 'package:dibano/ui/widgets/components/farm_colors.dart';
 import 'package:flutter/material.dart';
 
 /*
 * Dropdown Widget
 */
-class FormTextfieldDisabled extends StatelessWidget{
+class FormTextfieldDisabled extends StatelessWidget {
   final String label;
   final TextEditingController textController;
 
@@ -19,25 +20,41 @@ class FormTextfieldDisabled extends StatelessWidget{
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label, 
+          label,
           style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold
-          )
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: FarmColors.darkGreenIntense,
+          ),
         ),
-        const SizedBox(
-          height: 5
-        ),
+        const SizedBox(height: 5),
         TextFormField(
           controller: textController,
           enabled: false,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: const Color.fromARGB(172, 159, 157, 157),
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: FarmColors.darkGreenIntense,
+                width: 1.5,
+              ),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: FarmColors.darkGreenIntense,
+                width: 1.5,
+              ),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 12.0,
+              horizontal: 16.0,
+            ),
           ),
         ),
-        const SizedBox(
-          height: 15
-        )
+        const SizedBox(height: 15),
       ],
     );
   }

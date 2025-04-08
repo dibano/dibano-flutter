@@ -1,3 +1,4 @@
+import 'package:dibano/ui/widgets/components/farm_colors.dart';
 import 'package:dibano/ui/widgets/components/filter_dialog.dart';
 import 'package:dibano/ui/view_model/workstep_summary.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
@@ -68,14 +69,34 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
           Padding(
             padding: const EdgeInsets.only(
               top: 20.0,
-              left: 8.0,
-              right: 8.0,
+              left: 10.0,
+              right: 10.0,
               bottom: 8.0,
             ),
             child: TextField(
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: const BorderSide(
+                    color: FarmColors.darkGreenIntense,
+                    width: 1.5,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: const BorderSide(
+                    color: FarmColors.darkGreenIntense,
+                    width: 2.0,
+                  ),
+                ),
                 labelText: 'Suchen...',
+                labelStyle: const TextStyle(color: FarmColors.darkGreenIntense),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 12.0,
+                  horizontal: 16.0,
+                ),
               ),
             ),
           ),
@@ -90,7 +111,18 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 PopupMenuButton<int>(
-                  icon: Icon(Icons.sort),
+                  icon: Container(
+                    decoration: BoxDecoration(
+                      color: FarmColors.darkGreenIntense,
+                      shape: BoxShape.circle,
+                    ),
+                    padding: const EdgeInsets.all(8.0),
+                    child: const Icon(
+                      Icons.sort,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                  ),
                   onSelected: (value) {
                     WorkstepSummaryViewModel workstepSummaryViewModel =
                         Provider.of<WorkstepSummaryViewModel>(
@@ -101,15 +133,15 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                   },
                   itemBuilder:
                       (context) => [
-                        PopupMenuItem(
+                        const PopupMenuItem(
                           value: 1,
                           child: Text('Nach Feld sortieren'),
                         ),
-                        PopupMenuItem(
+                        const PopupMenuItem(
                           value: 2,
                           child: Text('Nach Aktivität sortieren'),
                         ),
-                        PopupMenuItem(
+                        const PopupMenuItem(
                           value: 3,
                           child: Text('Nach Datum sortieren'),
                         ),
@@ -117,6 +149,14 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                 ),
                 if (!widget.isFiltered)
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: FarmColors.darkGreenIntense,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 12.0,
+                      ),
+                    ),
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -125,11 +165,22 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                         },
                       );
                     },
-                    child: Text("Filtern und Teilen"),
+                    child: const Text("Filtern und Teilen"),
                   ),
                 if (widget.isFiltered)
                   PopupMenuButton<int>(
-                    icon: Icon(Icons.share),
+                    icon: Container(
+                      decoration: BoxDecoration(
+                        color: FarmColors.darkGreenIntense,
+                        shape: BoxShape.circle,
+                      ),
+                      padding: const EdgeInsets.all(8.0),
+                      child: const Icon(
+                        Icons.share,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                    ),
                     onSelected: (value) {
                       switch (value) {
                         case 1:
@@ -149,16 +200,19 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                     },
                     itemBuilder:
                         (context) => [
-                          PopupMenuItem(
+                          const PopupMenuItem(
                             value: 1,
                             child: Text('Per Email senden'),
                           ),
-                          PopupMenuItem(
+                          const PopupMenuItem(
                             value: 2,
                             child: Text('Als PDF speichern'),
                           ),
-                          PopupMenuItem(value: 3, child: Text('Cloud-Dienste')),
-                          PopupMenuItem(
+                          const PopupMenuItem(
+                            value: 3,
+                            child: Text('Cloud-Dienste'),
+                          ),
+                          const PopupMenuItem(
                             value: 4,
                             child: Text('Per Schnittstelle weiterleiten'),
                           ),
@@ -258,17 +312,7 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
           final result = await Navigator.push(
             context,
             MaterialPageRoute(
-              builder:
-                  (context) => TrackWorksteps(
-                    title: "Tätigkeit erfassen",
-                    selectedArea: null,
-                    selectedPerson: null,
-                    selectedActivity: null,
-                    description: null,
-                    workstepActivityId: null,
-                    workstepId: null,
-                    activityDate: null,
-                  ),
+              builder: (context) => TrackWorksteps(title: "Tätigkeit erfassen"),
             ),
           );
           if (result == true) {

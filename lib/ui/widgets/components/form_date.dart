@@ -1,3 +1,4 @@
+import 'package:dibano/ui/widgets/components/farm_colors.dart';
 import 'package:flutter/material.dart';
 
 /*
@@ -51,7 +52,11 @@ class FormDateState extends State<FormDate> {
       children: [
         Text(
           widget.label,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: FarmColors.darkGreenIntense,
+          ),
         ),
         const SizedBox(height: 5),
         TextFormField(
@@ -64,9 +69,31 @@ class FormDateState extends State<FormDate> {
                     ? "${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}"
                     : "${selectedDate?.day}.${selectedDate?.month}.${selectedDate?.year}",
           ),
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            suffixIcon: Icon(Icons.edit_calendar),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: FarmColors.darkGreenIntense,
+                width: 1.5,
+              ),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: FarmColors.darkGreenIntense,
+                width: 2.0,
+              ),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 12.0,
+              horizontal: 16.0,
+            ),
+            suffixIcon: const Icon(
+              Icons.edit_calendar,
+              color: FarmColors.darkGreenIntense,
+            ),
           ),
           onTap: () => _selectDate(context),
         ),

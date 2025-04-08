@@ -38,35 +38,57 @@ class CustomAlertDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           getAlertIcon(),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             alertText,
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
             textAlign: TextAlign.center,
           ),
         ],
       ),
-      actionsPadding: EdgeInsets.symmetric(horizontal: 8.0),
+      actionsPadding: const EdgeInsets.symmetric(horizontal: 8.0),
       actions: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             if (alertType == AlertType.delete)
-              TextButton(
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  ),
+                  onPressed: () {
+                    if (alertType == AlertType.delete && onDelete != null) {
+                      onDelete!();
+                    }
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    "Löschen",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                ),
                 onPressed: () {
-                  if (alertType == AlertType.delete && onDelete != null) {
-                    onDelete!();
-                  }
                   Navigator.of(context).pop();
                 },
-                child: Text("Löschen"),
+                child: Text(
+                  alertType == AlertType.delete ? "Abbrechen" : "OK",
+                  style: const TextStyle(color: Colors.white),
+                ),
               ),
-            Spacer(),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(alertType == AlertType.delete ? "Abbrechen" : "OK"),
             ),
           ],
         ),

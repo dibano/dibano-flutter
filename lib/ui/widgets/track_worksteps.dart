@@ -7,6 +7,7 @@ import 'package:dibano/ui/widgets/components/custom_alert_dialog.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:dibano/ui/widgets/field_edit.dart';
+import 'package:dibano/ui/widgets/workstep_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/form_dropdown.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
@@ -89,7 +90,6 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
             widget.workstepId!,
             _activityDate ?? DateTime.now(),
           );
-          Navigator.pop(context, true);
         }
 
         _descriptionController.clear();
@@ -97,6 +97,13 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
         _selectedActivity = "-1";
         _selectedCulture = "-1";
         _selectedPerson = "-1";
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WorkstepSummary(title: "Meine Tätigkeiten"),
+          ),
+        );
       });
 
       showDialog(
@@ -209,7 +216,6 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                     return FormDropdown(
                       label: "Feld",
                       value: _selectedArea!,
-                      createNewView: FieldEdit(title: "Feld erstellen"),
                       items: [
                         DropdownMenuItem(
                           value: "-1",

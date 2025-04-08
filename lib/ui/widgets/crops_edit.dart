@@ -6,6 +6,7 @@ import 'package:dibano/ui/widgets/components/form_date.dart';
 import 'package:dibano/ui/widgets/components/form_dropdown.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
 import 'package:dibano/ui/view_model/fields.dart';
+import 'package:dibano/ui/widgets/field_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -73,8 +74,13 @@ class _CropsEditState extends State<CropsEdit> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Flexible(
-                          child: IconButton(
-                            icon: const Icon(Icons.delete),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              shape: const CircleBorder(),
+                              elevation: 2,
+                              padding: const EdgeInsets.all(8.0),
+                            ),
                             onPressed: () async {
                               bool? confirmDelete = await showDialog<bool>(
                                 context: context,
@@ -96,6 +102,11 @@ class _CropsEditState extends State<CropsEdit> {
                                 Navigator.pop(context, true);
                               }
                             },
+                            child: const Icon(
+                              Icons.delete,
+                              size: 28,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ],
@@ -131,6 +142,9 @@ class _CropsEditState extends State<CropsEdit> {
                               return FormDropdown(
                                 label: "Feld",
                                 value: _selectedField!,
+                                createNewView: FieldEdit(
+                                  title: "Feld erstellen",
+                                ),
                                 items: [
                                   DropdownMenuItem(
                                     value: "-1",

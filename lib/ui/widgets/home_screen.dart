@@ -24,9 +24,18 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            _buildBody(context),
-            _buildFullWidthButton(context, "Meine Tätigkeiten"),
-            _buildFullWidthButton(context, "Tätigkeiten erfassen"),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 24.0),
+              child: Column(
+                children: [
+                  _buildBody(context),
+                  const SizedBox(height: 8),
+                  _buildFullWidthButton(context, "Meine Tätigkeiten"),
+                  const SizedBox(height: 8),
+                  _buildFullWidthButton(context, "Tätigkeiten erfassen"),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -78,7 +87,7 @@ class HomeScreen extends StatelessWidget {
 
   // Methode zum Erstellen eines einzelnen Buttons
   Widget _createButton(ButtonData buttonData, double buttonSize) {
-    const iconSize = 48.0;
+    const iconSize = 75.0;
     return Builder(
       builder: (context) {
         return SizedBox(
@@ -101,9 +110,13 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(buttonData.icon, size: iconSize),
+                Icon(buttonData.icon, size: iconSize, color: Colors.white),
                 const SizedBox(height: 8),
-                Text(buttonData.title, textAlign: TextAlign.center),
+                Text(
+                  buttonData.title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white),
+                ),
               ],
             ),
           ),
@@ -119,7 +132,12 @@ class HomeScreen extends StatelessWidget {
     );
 
     return Padding(
-      padding: const EdgeInsets.all(padding),
+      padding: const EdgeInsets.only(
+        top: padding,
+        left: padding,
+        right: padding,
+        bottom: 2.0,
+      ),
       child: SizedBox(
         width: double.infinity,
         height: 150,
@@ -140,9 +158,12 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(buttonData.icon, size: 48), // Icon hinzufügen
+              Icon(buttonData.icon, size: 75, color: Colors.white),
               const SizedBox(height: 8),
-              Text(buttonData.title),
+              Text(
+                buttonData.title,
+                style: const TextStyle(color: Colors.white),
+              ),
             ],
           ),
         ),
