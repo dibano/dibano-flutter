@@ -14,14 +14,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isHome = title == "Home";
     return SafeArea(
       child: Container(
-        decoration: const BoxDecoration(color: Colors.transparent),
+        decoration: BoxDecoration(
+          color: isHome ? Colors.white : Colors.transparent,
+        ),
         child: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: isHome ? Colors.white : Colors.transparent,
           elevation: 0,
           leading:
-              Navigator.canPop(context)
+              !isHome
                   ? IconButton(
                     icon: Container(
                       decoration: BoxDecoration(
@@ -44,7 +47,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             title,
             style: const TextStyle(
               color: Color(0xFF004d00),
-              fontSize: 26,
+              fontSize: 20,
               fontFamily: 'Poppins',
             ),
           ),
