@@ -17,12 +17,12 @@ class Crops extends StatefulWidget {
 
 class _CropsState extends State<Crops> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_){
-      Provider.of<CropsViewModel>(context,listen: false).getCompleteCrops();
-      Provider.of<CropsViewModel>(context,listen: false).getCrops();
-      Provider.of<FieldsViewModel>(context,listen: false).getFields();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<CropsViewModel>(context, listen: false).getCompleteCrops();
+      Provider.of<CropsViewModel>(context, listen: false).getCrops();
+      Provider.of<FieldsViewModel>(context, listen: false).getFields();
     });
   }
 
@@ -44,9 +44,10 @@ class _CropsState extends State<Crops> {
                           DetailCard(
                             detail: Detail(
                               name: crop.cropName,
+                              description: crop.fieldName,
                               toEdit: true,
                             ),
-                            onTap: () async{
+                            onTap: () async {
                               final result = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -56,17 +57,27 @@ class _CropsState extends State<Crops> {
                                         cropId: crop.id,
                                         cropDateId: crop.cropDateId,
                                         cropName: crop.cropName,
-                                        startDate: DateTime.tryParse(crop.startDate),
-                                        endDate: DateTime.tryParse(crop.endDate),
+                                        startDate: DateTime.tryParse(
+                                          crop.startDate,
+                                        ),
+                                        endDate: DateTime.tryParse(
+                                          crop.endDate,
+                                        ),
                                         fieldId: crop.fieldId,
                                       ),
                                 ),
                               );
                               if (result == true) {
-                                await Provider.of<CropsViewModel>(context,listen: false,).getCompleteCrops();
-                                await Provider.of<CropsViewModel>(context,listen: false,).getCrops();
+                                await Provider.of<CropsViewModel>(
+                                  context,
+                                  listen: false,
+                                ).getCompleteCrops();
+                                await Provider.of<CropsViewModel>(
+                                  context,
+                                  listen: false,
+                                ).getCrops();
                               }
-                            },  
+                            },
                           ),
                       ],
                     ),
@@ -88,8 +99,14 @@ class _CropsState extends State<Crops> {
             ),
           );
           if (result == true) {
-            await Provider.of<CropsViewModel>(context,listen: false,).getCompleteCrops();
-            await Provider.of<CropsViewModel>(context,listen: false,).getCrops();
+            await Provider.of<CropsViewModel>(
+              context,
+              listen: false,
+            ).getCompleteCrops();
+            await Provider.of<CropsViewModel>(
+              context,
+              listen: false,
+            ).getCrops();
           }
         },
         backgroundColor: Colors.green,

@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class Activity {
   final String description;
   final String fieldName;
@@ -5,10 +7,17 @@ class Activity {
   final String activityName;
   final DateTime date;
 
-  Activity({required this.description, required this.fieldName, required this.cropName, required this.activityName, required this.date});
+  Activity({
+    required this.description,
+    required this.fieldName,
+    required this.cropName,
+    required this.activityName,
+    required this.date,
+  });
 
   @override
   String toString() {
-    return '$description\n Feld: $fieldName, \n Kultur: $cropName,\n Aktivität: $activityName, \n Datum: $date';
+    final formattedDate = DateFormat('dd.MM.yyyy').format(date);
+    return '$description\n$cropName auf $fieldName,\n$activityName, \n$formattedDate';
   }
 }
