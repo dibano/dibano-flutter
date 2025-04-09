@@ -1,5 +1,6 @@
 import 'package:dibano/ui/view_model/components/detail_card.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class DetailCard extends StatelessWidget {
   const DetailCard({super.key, required this.detail, this.onTap});
@@ -9,6 +10,13 @@ class DetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String? formattedStartDate;
+    String? formattedEndDate;
+    if (detail.startDate != null && detail.endDate != null) {
+      formattedStartDate = DateFormat('dd.MM.yyyy').format(detail.startDate!);
+      formattedEndDate = DateFormat('dd.MM.yyyy').format(detail.endDate!);
+    }
+
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: GestureDetector(
@@ -26,6 +34,11 @@ class DetailCard extends StatelessWidget {
                       if (detail.description != null)
                         Text(
                           detail.description!,
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      if (detail.startDate != null && detail.endDate != null)
+                        Text(
+                          ('$formattedStartDate - $formattedEndDate'),
                           style: TextStyle(fontSize: 12),
                         ),
                     ],

@@ -45,6 +45,8 @@ class _CropsState extends State<Crops> {
                             detail: Detail(
                               name: crop.cropName,
                               description: crop.fieldName,
+                              startDate: DateTime.tryParse(crop.startDate),
+                              endDate: DateTime.tryParse(crop.endDate),
                               toEdit: true,
                             ),
                             onTap: () async {

@@ -42,18 +42,18 @@ class MyFarm extends StatelessWidget {
           children: [
             FarmBox(
               box: FarmContent(
-                icon: Icons.grass,
-                title: "Meine Felder",
-                routeWidget: Fields(title: "Meine Felder"),
+                icon: Icons.person,
+                title: "Meine Mitarbeiter",
+                routeWidget: People(title: "Meine Mitarbeiter"),
                 color: FarmColors.grassGreen,
               ),
             ),
             const SizedBox(height: 8),
             FarmBox(
               box: FarmContent(
-                icon: Icons.person,
-                title: "Meine Mitarbeiter",
-                routeWidget: People(title: "Meine Mitarbeiter"),
+                icon: Icons.agriculture,
+                title: "Meine Aktivitäten",
+                routeWidget: Activities(title: "Meine Aktivitäten"),
                 color: FarmColors.grassGreen,
               ),
             ),
@@ -69,9 +69,9 @@ class MyFarm extends StatelessWidget {
             const SizedBox(height: 8),
             FarmBox(
               box: FarmContent(
-                icon: Icons.agriculture,
-                title: "Meine Aktivitäten",
-                routeWidget: Activities(title: "Meine Aktivitäten"),
+                icon: Icons.grass,
+                title: "Meine Felder",
+                routeWidget: Fields(title: "Meine Felder"),
                 color: FarmColors.grassGreen,
               ),
             ),
