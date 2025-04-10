@@ -11,6 +11,8 @@ class ActivityCard extends StatefulWidget {
     this.onDelete,
     this.isCheckable = false,
     this.isDeletable = false,
+    this.checkboxState = false,
+    required this.checkValueChanged,
   });
 
   final CompleteWorkstep workstep;
@@ -18,13 +20,14 @@ class ActivityCard extends StatefulWidget {
   final VoidCallback? onDelete;
   final bool isCheckable;
   final bool isDeletable;
+  final bool checkboxState;
+  final ValueChanged<bool> checkValueChanged;
 
   @override
   ActivityCardState createState() => ActivityCardState();
 }
 
 class ActivityCardState extends State<ActivityCard> {
-  bool checkboxState = true;
   @override
   Widget build(BuildContext context) {
     Activity activity = Activity(
@@ -55,10 +58,10 @@ class ActivityCardState extends State<ActivityCard> {
                   ),
                   if (widget.isCheckable)
                     Checkbox(
-                      value: checkboxState,
+                      value: widget.checkboxState,
                       onChanged: (bool? newValue) {
                         setState(() {
-                          checkboxState = newValue ?? true;
+                          widget.checkValueChanged(newValue ?? true);
                         });
                       },
                     ),

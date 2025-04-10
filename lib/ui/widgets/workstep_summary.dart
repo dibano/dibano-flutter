@@ -39,6 +39,7 @@ class WorkstepSummary extends StatefulWidget {
 class _WorkstepSummaryState extends State<WorkstepSummary> {
   late List<CompleteWorkstep> _completeWorksteps;
   late List<String> _personNames;
+  final Map<int,bool>_checkedWorksteps = {};
 
   @override
   void initState() {
@@ -193,7 +194,8 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                           // Aktion für "Per Email senden"
                           break;
                         case 2:
-                          final pdf = await PdfApi.generateTablePdf(_completeWorksteps, widget.selectedActivities, widget.selectedCrops, widget.selectedFields, _personNames);
+                          final checkedWorksteps  = _completeWorksteps.where((workstep) => _checkedWorksteps[workstep.workstepId] == true).toList();
+                          final pdf = await PdfApi.generateTablePdf(checkedWorksteps, widget.selectedActivities, widget.selectedCrops, widget.selectedFields, _personNames);
                           SavePdf.openPdf(pdf);
                           break;
                         case 3:
@@ -259,9 +261,16 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                                 ],
                                 for (var workstep in worksteps)
                                   ActivityCard(
+                                    checkboxState: _checkedWorksteps[workstep.workstepId]??true,
                                     isDeletable: !widget.isFiltered,
                                     isCheckable: widget.isFiltered,
                                     workstep: workstep,
+                                    checkValueChanged: (bool checkValue){
+                                      setState(() {
+                                        _checkedWorksteps[workstep.workstepId] = checkValue;
+                                        print(_checkedWorksteps);
+                                      });
+                                    },
                                     onTap: () async {
                                       final result = await Navigator.push(
                                         context,
