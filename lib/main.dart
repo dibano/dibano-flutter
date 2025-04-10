@@ -9,7 +9,7 @@ import 'package:dibano/ui/view_model/track_worksteps.dart';
 import 'package:dibano/ui/widgets/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_localizations/flutter_localizations.dart'; // Lokalisierung hinzufügen
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +39,7 @@ class Dibano extends StatelessWidget {
       title: 'DIBANO',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 44, 72, 15),
+          seedColor: const Color.fromARGB(255, 85, 140, 26),
         ),
       ),
       home: HomeScreen(title: 'Home'),

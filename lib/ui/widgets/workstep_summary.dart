@@ -256,7 +256,7 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                                         MaterialPageRoute(
                                           builder:
                                               (context) => TrackWorksteps(
-                                                title: "Kultur bearbeiten",
+                                                title: "Tätigkeit bearbeiten",
                                                 selectedArea:
                                                     workstep.id.toString(),
                                                 selectedPerson:

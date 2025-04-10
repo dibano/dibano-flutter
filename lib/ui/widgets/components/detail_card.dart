@@ -1,4 +1,5 @@
 import 'package:dibano/ui/view_model/components/detail_card.dart';
+import 'package:dibano/ui/widgets/components/farm_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -22,6 +23,7 @@ class DetailCard extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Card(
+          color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(

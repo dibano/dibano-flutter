@@ -41,6 +41,7 @@ class ActivityCardState extends State<ActivityCard> {
         child: SizedBox(
           width: double.infinity,
           child: Card(
+            color: Colors.white,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
