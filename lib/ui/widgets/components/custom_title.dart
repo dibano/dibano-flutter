@@ -1,3 +1,4 @@
+import 'package:dibano/ui/widgets/components/farm_colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomTitle extends StatelessWidget {
@@ -9,7 +10,7 @@ class CustomTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontSize: 24),
+      style: TextStyle(fontSize: 24, color: FarmColors.darkGreenIntense),
     );
   }
 }

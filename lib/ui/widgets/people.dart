@@ -90,16 +90,11 @@ class _PeopleState extends State<People> {
             ).getPerson();
           }
         },
-        backgroundColor: Colors.green, // Hintergrundfarbe des Kreises
-        shape: const CircleBorder(), // Stellt sicher, dass der Button rund ist
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ), // Pluszeichen in Weiß
+        backgroundColor: Colors.green,
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation
-              .endFloat, // Position am unteren rechten Rand
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

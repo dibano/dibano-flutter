@@ -12,25 +12,25 @@ class HomeScreenViewModel extends ChangeNotifier {
       icon: Icons.add_task,
       title: 'Tätigkeiten erfassen',
       routeWidget: TrackWorksteps(title: 'Tätigkeiten erfassen'),
-      color: FarmColors.lightGreen,
-    ),
-    ButtonData(
-      icon: Icons.list_alt_outlined,
-      title: 'Übersicht',
-      routeWidget: WorkstepSummary(title: "Übersicht"),
-      color: FarmColors.skyBlue,
-    ),
-    ButtonData(
-      icon: Icons.home,
-      title: 'Mein Bauernhof',
-      routeWidget: MyFarm(title: "Mein Bauernhof"),
-      color: FarmColors.skyBlue,
+      color: FarmColors.darkGreen,
     ),
     ButtonData(
       icon: Icons.info,
       title: 'Informationen',
       routeWidget: Info(title: "Informationen"),
-      color: FarmColors.lightGreen,
+      color: FarmColors.earthBrown,
+    ),
+    ButtonData(
+      icon: Icons.list_alt_outlined,
+      title: 'Meine Tätigkeiten',
+      routeWidget: WorkstepSummary(title: "Meine Tätigkeiten"),
+      color: FarmColors.grassGreen,
+    ),
+    ButtonData(
+      icon: Icons.home,
+      title: 'Mein Bauernhof',
+      routeWidget: MyFarm(title: "Mein Bauernhof"),
+      color: FarmColors.grassGreen,
     ),
   ];
 

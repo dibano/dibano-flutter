@@ -40,8 +40,13 @@ class ActivitiesEdit extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Flexible(
-                          child: IconButton(
-                            icon: const Icon(Icons.delete),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              shape: const CircleBorder(),
+                              elevation: 2,
+                              padding: const EdgeInsets.all(8.0),
+                            ),
                             onPressed: () async {
                               bool? confirmDelete = await showDialog<bool>(
                                 context: context,
@@ -54,7 +59,6 @@ class ActivitiesEdit extends StatelessWidget {
                                       await activitiesViewModel.remove(
                                         activityId!,
                                       );
-
                                       Navigator.pop(context, true);
                                     },
                                   );
@@ -64,6 +68,11 @@ class ActivitiesEdit extends StatelessWidget {
                                 Navigator.pop(context, true);
                               }
                             },
+                            child: const Icon(
+                              Icons.delete,
+                              size: 28,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ],
@@ -107,6 +116,15 @@ class ActivitiesEdit extends StatelessWidget {
                                 );
                                 Navigator.pop(context, true);
                               }
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return CustomAlertDialog(
+                                    alertText: "Erfolgreich gespeichert!",
+                                    alertType: AlertType.success,
+                                  );
+                                },
+                              );
                             } else if (_descriptionController.text != "" &&
                                 activityExisting == true) {
                               await showDialog(

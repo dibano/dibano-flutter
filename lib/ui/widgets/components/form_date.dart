@@ -1,9 +1,10 @@
+import 'package:dibano/ui/widgets/components/farm_colors.dart';
 import 'package:flutter/material.dart';
 
 /*
 * Dropdown Widget
 */
-class FormDate extends StatefulWidget{
+class FormDate extends StatefulWidget {
   final String label;
   final DateTime? placeholderDate;
   final Function(DateTime) dateSelected;
@@ -12,32 +13,31 @@ class FormDate extends StatefulWidget{
     super.key,
     required this.label,
     required this.placeholderDate,
-    required this.dateSelected
+    required this.dateSelected,
   });
 
   @override
   FormDateState createState() => FormDateState();
 }
 
-class FormDateState extends State<FormDate>{
+class FormDateState extends State<FormDate> {
   late DateTime? selectedDate;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     selectedDate = widget.placeholderDate;
   }
 
-
   Future<void> _selectDate(BuildContext context) async {
     DateTime? selected = await showDatePicker(
-                                context: context, 
-                                initialDate: selectedDate,
-                                firstDate: DateTime(2020), 
-                                lastDate: DateTime(2100),
-                                );
-    
-    if(selected != null && selected != selectedDate){
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2100),
+    );
+
+    if (selected != null && selected != selectedDate) {
       setState(() {
         selectedDate = selected;
       });
@@ -51,31 +51,53 @@ class FormDateState extends State<FormDate>{
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          widget.label, 
+          widget.label,
           style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold
-          )
-        ),
-        const SizedBox(
-          height: 5
-        ),
-        TextFormField(
-          readOnly: true, 
-          controller: TextEditingController(
-            text: (selectedDate?.day == null||selectedDate?.month == null|| selectedDate?.year == null)
-            ? "${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}"
-            : "${selectedDate?.day}.${selectedDate?.month}.${selectedDate?.year}",
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: FarmColors.darkGreenIntense,
           ),
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            suffixIcon: Icon(Icons.calendar_view_month)
+        ),
+        const SizedBox(height: 5),
+        TextFormField(
+          readOnly: true,
+          controller: TextEditingController(
+            text:
+                (selectedDate?.day == null ||
+                        selectedDate?.month == null ||
+                        selectedDate?.year == null)
+                    ? "${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}"
+                    : "${selectedDate?.day}.${selectedDate?.month}.${selectedDate?.year}",
+          ),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: FarmColors.darkGreenIntense,
+                width: 1.5,
+              ),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: FarmColors.darkGreenIntense,
+                width: 2.0,
+              ),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 12.0,
+              horizontal: 16.0,
+            ),
+            suffixIcon: const Icon(
+              Icons.edit_calendar,
+              color: FarmColors.darkGreenIntense,
+            ),
           ),
           onTap: () => _selectDate(context),
-          ),
-        const SizedBox(
-          height: 15
         ),
+        const SizedBox(height: 15),
       ],
     );
   }

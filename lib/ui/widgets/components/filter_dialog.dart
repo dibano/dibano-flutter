@@ -5,6 +5,7 @@ import 'package:dibano/ui/view_model/activities.dart';
 import 'package:dibano/ui/view_model/people.dart';
 import 'package:dibano/ui/view_model/crops.dart';
 import 'package:dibano/ui/widgets/workstep_summary.dart';
+import 'package:dibano/ui/widgets/components/form_date.dart';
 
 class FilterDialog extends StatefulWidget {
   const FilterDialog({super.key});
@@ -57,7 +58,7 @@ class _FilterDialogState extends State<FilterDialog> {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: DefaultTabController(
-        length: 4,
+        length: 5,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -67,6 +68,7 @@ class _FilterDialogState extends State<FilterDialog> {
                 Tab(icon: Icon(Icons.eco)), // Kulturen
                 Tab(icon: Icon(Icons.agriculture)), // Aktivitäten
                 Tab(icon: Icon(Icons.person)), // Mitarbeiter
+                Tab(icon: Icon(Icons.date_range)), // Datum
               ],
             ),
             SizedBox(
@@ -93,93 +95,135 @@ class _FilterDialogState extends State<FilterDialog> {
                     _selectedPersons,
                     (item) => item.personName,
                   ),
+                  _buildDateTab(),
                 ],
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                final fieldsViewModel = Provider.of<FieldsViewModel>(
-                  context,
-                  listen: false,
-                );
-                final activitiesViewModel = Provider.of<ActivitiesViewModel>(
-                  context,
-                  listen: false,
-                );
-                final cropsViewModel = Provider.of<CropsViewModel>(
-                  context,
-                  listen: false,
-                );
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                ),
+                onPressed: () {
+                  final fieldsViewModel = Provider.of<FieldsViewModel>(
+                    context,
+                    listen: false,
+                  );
+                  final activitiesViewModel = Provider.of<ActivitiesViewModel>(
+                    context,
+                    listen: false,
+                  );
+                  final cropsViewModel = Provider.of<CropsViewModel>(
+                    context,
+                    listen: false,
+                  );
 
-                final selectedFieldNames =
-                    _selectedFields
-                        .map(
-                          (id) =>
-                              fieldsViewModel.fields
-                                  .firstWhere(
-                                    (field) => field.id.toString() == id,
-                                  )
-                                  .fieldName,
-                        )
-                        .toList();
+                  final selectedFieldNames =
+                      _selectedFields
+                          .map(
+                            (id) =>
+                                fieldsViewModel.fields
+                                    .firstWhere(
+                                      (field) => field.id.toString() == id,
+                                    )
+                                    .fieldName,
+                          )
+                          .toList();
 
-                final selectedActivityNames =
-                    _selectedActivities
-                        .map(
-                          (id) =>
-                              activitiesViewModel.activities
-                                  .firstWhere(
-                                    (activity) => activity.id.toString() == id,
-                                  )
-                                  .activityName,
-                        )
-                        .toList();
+                  final selectedActivityNames =
+                      _selectedActivities
+                          .map(
+                            (id) =>
+                                activitiesViewModel.activities
+                                    .firstWhere(
+                                      (activity) =>
+                                          activity.id.toString() == id,
+                                    )
+                                    .activityName,
+                          )
+                          .toList();
 
-                final selectedCropNames =
-                    _selectedCrops
-                        .map(
-                          (id) =>
-                              cropsViewModel.cropList
-                                  .firstWhere(
-                                    (crop) => crop.id.toString() == id,
-                                  )
-                                  .cropName,
-                        )
-                        .toList();
+                  final selectedCropNames =
+                      _selectedCrops
+                          .map(
+                            (id) =>
+                                cropsViewModel.cropList
+                                    .firstWhere(
+                                      (crop) => crop.id.toString() == id,
+                                    )
+                                    .cropName,
+                          )
+                          .toList();
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) => WorkstepSummary(
-                          title: "Gefilterte Übersicht",
-                          selectedFields:
-                              selectedFieldNames.isEmpty
-                                  ? null
-                                  : selectedFieldNames,
-                          selectedActivities:
-                              selectedActivityNames.isEmpty
-                                  ? null
-                                  : selectedActivityNames,
-                          selectedPersons:
-                              _selectedPersons.isEmpty
-                                  ? null
-                                  : _selectedPersons,
-                          selectedCrops:
-                              selectedCropNames.isEmpty
-                                  ? null
-                                  : selectedCropNames,
-                          startDate: _startDate,
-                          endDate: _endDate,
-                          isFiltered: true,
-                        ),
-                  ),
-                );
-              },
-              child: Text("Filter anwenden"),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => WorkstepSummary(
+                            title: "Tätigkeiten gefiltert",
+                            selectedFields:
+                                selectedFieldNames.isEmpty
+                                    ? null
+                                    : selectedFieldNames,
+                            selectedActivities:
+                                selectedActivityNames.isEmpty
+                                    ? null
+                                    : selectedActivityNames,
+                            selectedPersons:
+                                _selectedPersons.isEmpty
+                                    ? null
+                                    : _selectedPersons,
+                            selectedCrops:
+                                selectedCropNames.isEmpty
+                                    ? null
+                                    : selectedCropNames,
+                            startDate: _startDate,
+                            endDate: _endDate,
+                            isFiltered: true,
+                          ),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "Filter anwenden",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDateTab() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          FormDate(
+            label: "Datum von",
+            placeholderDate: null,
+            dateSelected: (date) {
+              setState(() {
+                _startDate = date;
+              });
+            },
+          ),
+          const SizedBox(height: 16),
+          FormDate(
+            label: "Datum bis",
+            placeholderDate: null,
+            dateSelected: (date) {
+              setState(() {
+                _endDate = date;
+              });
+            },
+          ),
+        ],
       ),
     );
   }

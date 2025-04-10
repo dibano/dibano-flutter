@@ -10,6 +10,7 @@ import 'package:dibano/ui/widgets/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sqflite/sqflite.dart';
 
 void main() async {
@@ -40,10 +41,16 @@ class Dibano extends StatelessWidget {
       title: 'DIBANO',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 66, 129, 4),
+          seedColor: const Color.fromARGB(255, 85, 140, 26),
         ),
       ),
       home: HomeScreen(title: 'Home'),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [const Locale('de', 'DE')],
+      locale: const Locale('de', 'DE'),
     );
   }
 }
