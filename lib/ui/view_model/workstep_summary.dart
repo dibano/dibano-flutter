@@ -114,4 +114,9 @@ class WorkstepSummaryViewModel extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  List<String> getPersonNameById(List<String> selectedPersonIds){
+    return _completeWorksteps.where((workstep) => selectedPersonIds.contains(workstep.personId.toString()))
+    .map((workstep)=> workstep.personName).toList();
+  }
 }
