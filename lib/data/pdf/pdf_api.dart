@@ -50,8 +50,12 @@ class PdfApi {
     }else{
       textPerson = "";
     }
-
-    String filterText =  "Die angewendeten Filter sind: $textActivities $textFields $textCrops $textPerson \n\n";
+    String filterText = "";
+    if(textActivities == "" && textFields == "" && textCrops == "" && textPerson == ""){
+      filterText =  "Die angewendeten Filter sind: Keine Filter wurden angewendet \n\n";
+    }else{
+      filterText =  "Die angewendeten Filter sind: $textActivities $textFields $textCrops $textPerson \n\n";
+    }
 
     final data = completeWorksteps.map((workstep) => [workstep.activityName, workstep.cropName, workstep.fieldName, workstep.description,DateFormat('dd.MM.yyyy').format(DateTime.parse(workstep.date))]).toList();
     final title = "Aktivitätenübersicht\n\n";
