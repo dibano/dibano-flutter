@@ -144,7 +144,14 @@ class _CropsEditState extends State<CropsEdit> {
                                 value: _selectedField!,
                                 createNewView: FieldEdit(
                                   title: "Feld erstellen",
+                                  isCreate: true,
                                 ),
+                                onCreateNew: (context) async {
+                                  await Provider.of<FieldsViewModel>(
+                                    context,
+                                    listen: false,
+                                  ).getFields();
+                                },
                                 items: [
                                   DropdownMenuItem(
                                     value: "-1",
@@ -201,8 +208,7 @@ class _CropsEditState extends State<CropsEdit> {
                                       );
                                     },
                                   );
-                                }
-                                else if (inExistingDate != true) {
+                                } else if (inExistingDate != true) {
                                   int? fieldId = int.tryParse(
                                     _selectedField!,
                                   ); // Konvertiert String zu int
