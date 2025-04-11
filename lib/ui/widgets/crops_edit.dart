@@ -190,7 +190,19 @@ class _CropsEditState extends State<CropsEdit> {
                                       _startDate ?? DateTime.now(),
                                       _endDate ?? DateTime.now(),
                                     );
-                                if (inExistingDate != true) {
+                                if (endIsBeforeStart == true) {
+                                  await showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return CustomAlertDialog(
+                                        alertText:
+                                            "Das Startdatum darf nicht nach dem Enddatum sein.",
+                                        alertType: AlertType.error,
+                                      );
+                                    },
+                                  );
+                                }
+                                else if (inExistingDate != true) {
                                   int? fieldId = int.tryParse(
                                     _selectedField!,
                                   ); // Konvertiert String zu int
@@ -207,17 +219,6 @@ class _CropsEditState extends State<CropsEdit> {
                                       return CustomAlertDialog(
                                         alertText: "Erfolgreich gespeichert!",
                                         alertType: AlertType.success,
-                                      );
-                                    },
-                                  );
-                                } else if (endIsBeforeStart == true) {
-                                  await showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return CustomAlertDialog(
-                                        alertText:
-                                            "Das Startdatum darf nicht nach dem Enddatum sein.",
-                                        alertType: AlertType.error,
                                       );
                                     },
                                   );

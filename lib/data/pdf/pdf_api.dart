@@ -9,6 +9,8 @@ import 'package:open_file/open_file.dart';
 import 'package:pdf/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
+
 
 class PdfApi {
   static Future<File> generateTablePdf(List<CompleteWorkstep> completeWorksteps, List<String>? activities, List<String>? crops, List<String>? fields, List<String>? persons) async{
@@ -48,19 +50,31 @@ class PdfApi {
     }else{
       textPerson = "";
     }
+    String filterText = "";
+    if(textActivities == "" && textFields == "" && textCrops == "" && textPerson == ""){
+      filterText =  "Die angewendeten Filter sind: Keine Filter wurden angewendet \n\n";
+    }else{
+      filterText =  "Die angewendeten Filter sind: $textActivities $textFields $textCrops $textPerson \n\n";
+    }
 
-    String filterText =  "Die angewendeten Filter sind: $textActivities $textFields $textCrops $textPerson \n\n";
-
-    final data = completeWorksteps.map((workstep) => [workstep.activityName, workstep.cropName, workstep.fieldName, workstep.description, workstep.date]).toList();
+    final data = completeWorksteps.map((workstep) => [workstep.activityName, workstep.cropName, workstep.fieldName, workstep.description,DateFormat('dd.MM.yyyy').format(DateTime.parse(workstep.date))]).toList();
     final title = "Aktivitätenübersicht\n\n";
     final formattedDate = DateFormat('dd.MM.yyyy').format(DateTime.now());
     final text = "Die folgende Tabelle stellt detailliert die landwirtschaftlichen Aktivitäten dar, die von den Landwirten und Landwirtinnen auf ihren Feldern und in den jeweiligen Kulturen ausgeführt wurden. \n\n\n Datum: $formattedDate";
-    final dibano = "Dibano";
+    //final logoImageFile = File('assets/images/dibanoLogo.png');
+    final logoBytesData = await rootBundle.load('assets/images/dibanoLogo.png');
+    final logoImage = pw.MemoryImage(logoBytesData.buffer.asUint8List());
+
     pdf.addPage(
+
       Page(
         build: (_)=> Center(
           child: Column(
             children: [
+              Image(logoImage, width:150),
+              SizedBox(height: 10),
+              Divider(thickness: 1, color: PdfColors.green900),
+              SizedBox(height: 10),
               Text(
                 title,
                 style: const pw.TextStyle(fontSize: 24),
