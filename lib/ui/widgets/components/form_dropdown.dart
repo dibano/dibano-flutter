@@ -1,5 +1,8 @@
+import 'package:dibano/ui/view_model/activities.dart';
+import 'package:dibano/ui/view_model/fields.dart';
 import 'package:dibano/ui/widgets/components/farm_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /*
 * Dropdown Widget
@@ -10,6 +13,7 @@ class FormDropdown extends StatelessWidget {
   final List<DropdownMenuItem<String>> items;
   final ValueChanged<String?> onChanged;
   final Widget? createNewView;
+  final Future<void> Function(BuildContext context)? onCreateNew;
 
   const FormDropdown({
     super.key,
@@ -18,6 +22,7 @@ class FormDropdown extends StatelessWidget {
     required this.items,
     required this.onChanged,
     this.createNewView,
+    this.onCreateNew,
   });
 
   @override
@@ -62,13 +67,16 @@ class FormDropdown extends StatelessWidget {
             Icons.arrow_drop_down,
             color: FarmColors.darkGreenIntense,
           ),
-          onChanged: (selectedValue) {
+          onChanged: (selectedValue) async {
             if (selectedValue == 'new') {
               if (createNewView != null) {
-                Navigator.push(
+                final result = await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => createNewView!),
                 );
+                if (result == true && onCreateNew != null) {
+                  await onCreateNew!(context);
+                }
               }
             } else {
               onChanged(selectedValue);

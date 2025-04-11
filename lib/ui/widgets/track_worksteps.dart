@@ -3,10 +3,12 @@ import 'package:dibano/ui/view_model/fields.dart';
 import 'package:dibano/ui/view_model/people.dart';
 import 'package:dibano/ui/view_model/activities.dart';
 import 'package:dibano/ui/view_model/track_worksteps.dart';
+import 'package:dibano/ui/widgets/activities_edit.dart';
 import 'package:dibano/ui/widgets/components/custom_alert_dialog.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:dibano/ui/widgets/field_edit.dart';
+import 'package:dibano/ui/widgets/person_edit.dart';
 import 'package:dibano/ui/widgets/workstep_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/form_dropdown.dart';
@@ -305,6 +307,16 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                       return FormDropdown(
                         label: "Aktivität",
                         value: _selectedActivity!,
+                        createNewView: ActivitiesEdit(
+                          title: "Aktivität erstellen",
+                          isCreate: true,
+                        ),
+                        onCreateNew: (context) async {
+                          await Provider.of<ActivitiesViewModel>(
+                            context,
+                            listen: false,
+                          ).getActivities();
+                        },
                         items: [
                           DropdownMenuItem(
                             value: "-1",
@@ -329,6 +341,16 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                       return FormDropdown(
                         label: "Person",
                         value: _selectedPerson!,
+                        createNewView: PersonEdit(
+                          title: "Person erstellen",
+                          isCreate: true,
+                        ),
+                        onCreateNew: (context) async {
+                          await Provider.of<PersonViewModel>(
+                            context,
+                            listen: false,
+                          ).getPerson();
+                        },
                         items: [
                           DropdownMenuItem(
                             value: "-1",
