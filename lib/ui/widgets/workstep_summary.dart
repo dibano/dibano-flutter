@@ -268,7 +268,6 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                                     checkValueChanged: (bool checkValue){
                                       setState(() {
                                         _checkedWorksteps[workstep.workstepId] = checkValue;
-                                        print(_checkedWorksteps);
                                       });
                                     },
                                     onTap: () async {
