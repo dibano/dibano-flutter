@@ -1,4 +1,4 @@
-package com.example.dibano
+package com.dibano.app
 
 import io.flutter.embedding.android.FlutterActivity
 
