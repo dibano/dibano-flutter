@@ -5,8 +5,8 @@ class FieldsViewModel extends ChangeNotifier {
   List<Field> _fields = [];
   List<Field> get fields => _fields;
 
-  Future<void> addField(String fieldName) async{
-    Field field = Field(fieldName: fieldName);
+  Future<void> addField(String fieldName, String fieldSize, String? latitude, String? longitude) async{
+    Field field = Field(fieldName: fieldName, fieldSize: double.parse(fieldSize), latitude: latitude != null ? double.tryParse(latitude) : null, longitude: longitude != null ? double.tryParse(longitude) : null);
     await field.insert();
     notifyListeners();
   }
@@ -23,8 +23,8 @@ class FieldsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> update(int id, String fieldName) async{
-    Field field = Field(id:id, fieldName: fieldName);
+  Future<void> update(int id, String fieldName, String fieldSize, String? latitude, String? longitude) async{
+    Field field = Field(id: id, fieldName: fieldName, fieldSize: double.parse(fieldSize), latitude: latitude != null ? double.tryParse(latitude) : null, longitude: longitude != null ? double.tryParse(longitude) : null);
     await field.update();
     notifyListeners();
   }

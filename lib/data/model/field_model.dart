@@ -4,11 +4,17 @@ class Field extends DatabaseModel{
   @override
   final int? id;
   final String fieldName;
+  final double fieldSize;
+  final double? longitude;
+  final double? latitude;
   static String table = "Field";
 
   Field({
       this.id,
-      required this.fieldName
+      required this.fieldName,
+      required this.fieldSize,
+      this.longitude,
+      this.latitude,
   });
 
   static Future<List<Field>> getAll() async{
@@ -21,7 +27,11 @@ class Field extends DatabaseModel{
   Map<String, Object?> toMap() {
     return {
       'id': id, 
-      'fieldName': fieldName
+      'fieldName': fieldName,
+      'fieldSize': fieldSize,
+      'longitude': longitude,
+      'latitude': latitude
+
     };
   }
 
@@ -29,7 +39,7 @@ class Field extends DatabaseModel{
   // each dog when using the print statement.
   @override
   String toString() {
-    return 'Field{id: $id, fieldName: $fieldName}';
+    return 'Field{id: $id, fieldName: $fieldName, fieldSize: $fieldSize, longitude: $longitude, latitude: $latitude}';
   }
   
   @override

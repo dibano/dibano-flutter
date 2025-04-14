@@ -12,21 +12,32 @@ class FieldEdit extends StatelessWidget {
     super.key,
     required this.title,
     this.fieldName = "",
+    this.fieldSize = "",
+    this.latitude = "",
+    this.longitude = "",
     this.fieldId,
     this.isCreate = false,
   });
 
   final String title;
   final String fieldName;
+  final String fieldSize;
+  final String latitude;
+  final String longitude;
   final int? fieldId;
   bool isCreate;
 
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _fieldSizeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    String? _longitude = longitude;
+    String? _latitude = latitude;
+    String _fieldSize = fieldSize;
+    String? _actualFieldName = fieldName;
     _descriptionController.text = fieldName;
-
+    _fieldSizeController.text = _fieldSize;
     return Scaffold(
       appBar: CustomAppBar(title: title),
       body: Padding(
@@ -88,6 +99,12 @@ class FieldEdit extends StatelessWidget {
                             keyboardType: TextInputType.text,
                             maxLine: 1,
                           ),
+                          FormTextfield(
+                            label: "Feldgrösse in ha",
+                            controller: _fieldSizeController,
+                            keyboardType: TextInputType.number,
+                            maxLine: 1,
+                          ),
                         ],
                       ),
                     ),
@@ -102,16 +119,22 @@ class FieldEdit extends StatelessWidget {
                             final fieldExisting = fieldsViewModel
                                 .checkIfExisting(_descriptionController.text);
                             if (_descriptionController.text != "" &&
-                                fieldExisting == false) {
+                                (fieldExisting == false || _actualFieldName == _descriptionController.text)) {
                               if (fieldId == null) {
                                 await fieldsViewModel.addField(
                                   _descriptionController.text,
+                                  _fieldSizeController.text,
+                                  _longitude,
+                                  _latitude,
                                 );
                                 Navigator.pop(context, true);
                               } else {
                                 await fieldsViewModel.update(
                                   fieldId!,
                                   _descriptionController.text,
+                                  _fieldSizeController.text,
+                                  _longitude,
+                                  _latitude
                                 );
                                 Navigator.pop(context, true);
                               }
@@ -124,7 +147,7 @@ class FieldEdit extends StatelessWidget {
                                   );
                                 },
                               );
-                            } else if (_descriptionController.text != "" &&
+                            } else if (_descriptionController.text != "" && _fieldSizeController.text != "" &&
                                 fieldExisting == true) {
                               await showDialog(
                                 context: context,
@@ -142,7 +165,7 @@ class FieldEdit extends StatelessWidget {
                                 builder: (BuildContext context) {
                                   return CustomAlertDialog(
                                     alertText:
-                                        "Der Feldname muss ausgefüllt sein!",
+                                        "Alle Felder müssen ausgefüllt sein!",
                                     alertType: AlertType.error,
                                   );
                                 },
@@ -151,18 +174,21 @@ class FieldEdit extends StatelessWidget {
                           },
                         ),
                       ),
-                      //TEST
-                      // Innerhalb deines Row-Widgets, z. B. bei deinen Buttons:
                       ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
+                        onPressed: () async{
+                          final result = await Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => FieldMap(geoAdminLayer: 'ch.blw.landwirtschaftliche-nutzungsflaechen')),
                           );
+                          if(result != null){
+                            _longitude = result['longitude'].toString();
+                            _latitude = result['latitude'].toString();
+                            _fieldSize = result['flaecheHa'].toString();
+                            _fieldSizeController.text = _fieldSize;
+                          }
                         },
                         child: const Text('Karte anzeigen'),
                       ),
-                    Text("© Data: swisstopo"),
                     ],
                   ),
                 ],

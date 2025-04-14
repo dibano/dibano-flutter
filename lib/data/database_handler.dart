@@ -35,7 +35,10 @@ class DatabaseHandler{
         await database.execute('''
           CREATE TABLE Field(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            fieldName VARCHAR(50) NOT NULL UNIQUE
+            fieldName VARCHAR(50) NOT NULL UNIQUE,
+            fieldSize DOUBLE NOT NULL,
+            longitude DOUBLE,
+            latitude DOUBLE
           )
         ''');
 
@@ -198,9 +201,9 @@ class DatabaseHandler{
     final db = await database;
     final List<Map<String, Object?>> fieldMaps = await db.query('Field');
     return [
-      for (final {'id': id as int, 'fieldName': fieldName as String}
+      for (final {'id': id as int, 'fieldName': fieldName as String, 'fieldSize': fieldSize as double, 'latitude': latitude as double?, 'longitude': longitude as double?}
           in fieldMaps)
-        Field(id: id, fieldName: fieldName),
+        Field(id: id, fieldName: fieldName, fieldSize: fieldSize, latitude: latitude, longitude: longitude),
     ];
   }
 

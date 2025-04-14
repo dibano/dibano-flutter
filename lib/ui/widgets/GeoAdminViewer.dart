@@ -37,13 +37,12 @@ class _FieldMapState extends State<FieldMap> {
     final identifyParams = {
       'geometry': geometry,
       'geometryType': 'esriGeometryPoint',
-      // Layer als Input-Parameter:
       'layers': 'all:${widget.geoAdminLayer}',
-      'tolerance': '5', // Toleranz in Pixeln
+      'tolerance': '5',
       'mapExtent': mapWithBuffer,
-      'imageDisplay': '800,600,96', // Breite, Höhe, dpi
-      'sr': '4326', // WGS84
-      'returnGeometry': 'false', // Geometrie nur falls nicht benötigt
+      'imageDisplay': '800,600,96',
+      'sr': '4326',
+      'returnGeometry': 'false',
       'lang': 'de'
     };
 
@@ -74,20 +73,11 @@ class _FieldMapState extends State<FieldMap> {
               final attributes = foundData['attributes'] ?? {};
               final flaeche_m2 = attributes['flaeche_m2'];
               _flaeche_ha = (flaeche_m2/10000);
-              // Zeige die Fläche in einem Dialog an.
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text("Feldinformationen wurden geladen"),
-                  content: Text("Fläche in Hektaren: $_flaeche_ha ha. An den Koordinaten: $_longitude $_latitude "),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text("OK"),
-                    ),
-                  ],
-                ),
-              );
+              Navigator.pop(context, {
+                'longitude': _longitude,
+                'latitude': _latitude,
+                'flaecheHa': _flaeche_ha,
+              });
             }else{
               _failedLoad = true;
             }

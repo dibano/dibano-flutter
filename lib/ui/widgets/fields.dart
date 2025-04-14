@@ -52,6 +52,10 @@ class _FieldsState extends State<Fields> {
                                       title: "Felder bearbeiten",
                                       fieldId: field.id,
                                       fieldName: field.fieldName,
+                                      fieldSize: field.fieldSize.toString(),
+                                      longitude: field.longitude.toString(),
+                                      latitude: field.latitude.toString(),
+                                      isCreate: true,
                                     ),
                               ),
                             );
