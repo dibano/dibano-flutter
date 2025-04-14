@@ -3,8 +3,7 @@ import 'package:dibano/ui/widgets/components/custom_alert_dialog.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
-//import 'package:dibano/ui/widgets/GeoDataScreen.dart';
-//import 'package:dibano/ui/widgets/GeoAdminViewer.dart';
+import 'package:dibano/ui/widgets/GeoAdminViewer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -154,7 +153,7 @@ class FieldEdit extends StatelessWidget {
                       ),
                       //TEST
                       // Innerhalb deines Row-Widgets, z. B. bei deinen Buttons:
-                      /*ElevatedButton(
+                      ElevatedButton(
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -163,7 +162,7 @@ class FieldEdit extends StatelessWidget {
                         },
                         child: const Text('Karte anzeigen'),
                       ),
-                    Text("© Data: swisstopo"),*/
+                    Text("© Data: swisstopo"),
                     ],
                   ),
                 ],
