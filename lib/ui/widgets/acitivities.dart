@@ -16,10 +16,10 @@ class Activities extends StatefulWidget {
 
 class _ActivitiesState extends State<Activities> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_){
-      Provider.of<ActivitiesViewModel>(context,listen: false).getActivities();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ActivitiesViewModel>(context, listen: false).getActivities();
     });
   }
 
@@ -38,28 +38,31 @@ class _ActivitiesState extends State<Activities> {
                     child: Column(
                       children: <Widget>[
                         for (var activity in activitiesViewModel.activities)
-                        DetailCard(
-                          detail: Detail(
-                            name: activity.activityName,
-                            toEdit: true,
+                          DetailCard(
+                            detail: Detail(
+                              name: activity.activityName,
+                              toEdit: true,
+                            ),
+                            onTap: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => ActivitiesEdit(
+                                        title: "Aktivitäten bearbeiten",
+                                        activityId: activity.id,
+                                        activityName: activity.activityName,
+                                      ),
+                                ),
+                              );
+                              if (result == true) {
+                                await Provider.of<ActivitiesViewModel>(
+                                  context,
+                                  listen: false,
+                                ).getActivities();
+                              }
+                            },
                           ),
-                          onTap: () async{
-                            final result = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => ActivitiesEdit(
-                                      title: "Aktivitäten bearbeiten",
-                                      activityId: activity.id,
-                                      activityName: activity.activityName,
-                                    ),
-                              ),
-                            );
-                            if (result == true) {
-                              await Provider.of<ActivitiesViewModel>(context,listen: false,).getActivities();
-                            }
-                          },
-                        )
                       ],
                     ),
                   ),
@@ -82,12 +85,15 @@ class _ActivitiesState extends State<Activities> {
             ),
           );
           if (result == true) {
-            await Provider.of<ActivitiesViewModel>(context,listen: false,).getActivities();
+            await Provider.of<ActivitiesViewModel>(
+              context,
+              listen: false,
+            ).getActivities();
           }
         },
         backgroundColor: Colors.green,
         shape: const CircleBorder(),
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: Colors.white, size: 36),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

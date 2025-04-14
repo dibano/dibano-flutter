@@ -2,20 +2,21 @@ import 'package:dibano/ui/widgets/components/farm_colors.dart';
 import 'package:flutter/material.dart';
 
 /*
-* Dropdown Widget
+* FormTextfield Widget
 */
 class FormTextfield extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final TextInputType keyboardType;
   final int maxLine;
-
+  final FocusNode? focusNode;
   const FormTextfield({
     super.key,
     required this.label,
     required this.controller,
     required this.keyboardType,
     required this.maxLine,
+    this.focusNode,
   });
 
   @override
@@ -36,6 +37,7 @@ class FormTextfield extends StatelessWidget {
           controller: controller,
           keyboardType: keyboardType,
           maxLines: maxLine,
+          focusNode: focusNode,
           textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
             filled: true,

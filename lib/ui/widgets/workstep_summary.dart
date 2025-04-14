@@ -19,9 +19,10 @@ class WorkstepSummary extends StatefulWidget {
   final List<String>? selectedCrops;
   final DateTime? startDate;
   final DateTime? endDate;
-  final bool isFiltered;
+  bool isFiltered;
+  final String? searchString;
 
-  const WorkstepSummary({
+  WorkstepSummary({
     super.key,
     required this.title,
     this.selectedFields,
@@ -31,6 +32,7 @@ class WorkstepSummary extends StatefulWidget {
     this.startDate,
     this.endDate,
     this.isFiltered = false,
+    this.searchString,
   });
   @override
   State<WorkstepSummary> createState() => _WorkstepSummaryState();
@@ -39,24 +41,31 @@ class WorkstepSummary extends StatefulWidget {
 class _WorkstepSummaryState extends State<WorkstepSummary> {
   late List<CompleteWorkstep> _completeWorksteps;
   late List<String> _personNames;
-  final Map<int,bool>_checkedWorksteps = {};
+  final Map<int, bool> _checkedWorksteps = {};
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.isFiltered == true) {
-        Provider.of<WorkstepSummaryViewModel>(
-          context,
-          listen: false,
-        ).filterCompleteWorkstepsByIds(
-          selectedFields: widget.selectedFields,
-          selectedCrops: widget.selectedCrops,
-          selectedActivities: widget.selectedActivities,
-          selectedPersonIds: widget.selectedPersons,
-          selectedStartDate: widget.startDate,
-          selectedEndDate: widget.endDate,
-        );
+        if (widget.searchString != null && widget.searchString!.isNotEmpty) {
+          Provider.of<WorkstepSummaryViewModel>(
+            context,
+            listen: false,
+          ).searchWorksteps(widget.searchString!);
+        } else {
+          Provider.of<WorkstepSummaryViewModel>(
+            context,
+            listen: false,
+          ).filterCompleteWorkstepsByIds(
+            selectedFields: widget.selectedFields,
+            selectedCrops: widget.selectedCrops,
+            selectedActivities: widget.selectedActivities,
+            selectedPersonIds: widget.selectedPersons,
+            selectedStartDate: widget.startDate,
+            selectedEndDate: widget.endDate,
+          );
+        }
       } else {
         Provider.of<WorkstepSummaryViewModel>(
           context,
@@ -105,6 +114,15 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                   horizontal: 16.0,
                 ),
               ),
+              textInputAction:
+                  TextInputAction.search, // Lupensymbol auf der Tastatur
+              onSubmitted: (String query) {
+                widget.isFiltered = true;
+                Provider.of<WorkstepSummaryViewModel>(
+                  context,
+                  listen: false,
+                ).searchWorksteps(query);
+              },
             ),
           ),
           Padding(
@@ -127,7 +145,7 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                     child: const Icon(
                       Icons.sort,
                       color: Colors.white,
-                      size: 28,
+                      size: 38,
                     ),
                   ),
                   onSelected: (value) {
@@ -172,60 +190,44 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                         },
                       );
                     },
-                    child: const Text("Filtern und Teilen"),
+                    child: const Text(
+                      "Filtern und Teilen",
+                      style: TextStyle(fontSize: 16.0),
+                    ),
                   ),
                 if (widget.isFiltered)
-                  PopupMenuButton<int>(
-                    icon: Container(
-                      decoration: BoxDecoration(
-                        color: FarmColors.darkGreenIntense,
-                        shape: BoxShape.circle,
-                      ),
-                      padding: const EdgeInsets.all(8.0),
-                      child: const Icon(
-                        Icons.share,
-                        color: Colors.white,
-                        size: 28,
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: FarmColors.darkGreenIntense,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 12.0,
                       ),
                     ),
-                    onSelected: (value) async {
-                      switch (value) {
-                        case 1:
-                          // Aktion für "Per Email senden"
-                          break;
-                        case 2:
-                          final checkedWorksteps  = _completeWorksteps.where((workstep) => _checkedWorksteps[workstep.workstepId] == true).toList();
-                          final pdf = await PdfApi.generateTablePdf(checkedWorksteps, widget.selectedActivities, widget.selectedCrops, widget.selectedFields, _personNames);
-                          SavePdf.openPdf(pdf);
-                          break;
-                        case 3:
-                          // Aktion für "Cloud-Dienste"
-                          break;
-                        case 4:
-                          // Aktion für "Per Schnittstelle weiterleiten"
-                          break;
-                        default:
-                      }
+                    onPressed: () async {
+                      final checkedWorksteps =
+                          _completeWorksteps
+                              .where(
+                                (workstep) =>
+                                    _checkedWorksteps[workstep.workstepId] ==
+                                    true,
+                              )
+                              .toList();
+                      final pdf = await PdfApi.generateTablePdf(
+                        checkedWorksteps,
+                        widget.selectedActivities,
+                        widget.selectedCrops,
+                        widget.selectedFields,
+                        _personNames,
+                      );
+                      SavePdf.openPdf(pdf);
                     },
-                    itemBuilder:
-                        (context) => [
-                          const PopupMenuItem(
-                            value: 1,
-                            child: Text('Per Email senden'),
-                          ),
-                          const PopupMenuItem(
-                            value: 2,
-                            child: Text('Als PDF speichern'),
-                          ),
-                          const PopupMenuItem(
-                            value: 3,
-                            child: Text('Cloud-Dienste'),
-                          ),
-                          const PopupMenuItem(
-                            value: 4,
-                            child: Text('Per Schnittstelle weiterleiten'),
-                          ),
-                        ],
+                    child: Icon(
+                      Icons.picture_as_pdf,
+                      color: Colors.white,
+                      size: 32.0,
+                    ),
                   ),
               ],
             ),
@@ -239,11 +241,14 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                       widget.isFiltered == true
                           ? workstepSummaryViewModel.filteredWorksteps
                           : workstepSummaryViewModel.completeWorksteps;
-                  _completeWorksteps = workstepSummaryViewModel.filteredWorksteps;
-                  if(widget.selectedPersons != null){
-                    _personNames = workstepSummaryViewModel.getPersonNameById(widget.selectedPersons!);
-                  }else{
-                    _personNames =[];
+                  _completeWorksteps =
+                      workstepSummaryViewModel.filteredWorksteps;
+                  if (widget.selectedPersons != null) {
+                    _personNames = workstepSummaryViewModel.getPersonNameById(
+                      widget.selectedPersons!,
+                    );
+                  } else {
+                    _personNames = [];
                   }
                   return Center(
                     child: Column(
@@ -256,18 +261,22 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                                 if (worksteps.isEmpty && widget.isFiltered) ...[
                                   Warn(
                                     warnText:
-                                        "Keine Einträge für die aktuelle Filterung gefunden",
+                                        "Keine Einträge für die aktuelle Filterung oder Suche gefunden",
                                   ),
                                 ],
                                 for (var workstep in worksteps)
                                   ActivityCard(
-                                    checkboxState: _checkedWorksteps[workstep.workstepId]??true,
+                                    checkboxState:
+                                        _checkedWorksteps[workstep
+                                            .workstepId] ??
+                                        true,
                                     isDeletable: !widget.isFiltered,
                                     isCheckable: widget.isFiltered,
                                     workstep: workstep,
-                                    checkValueChanged: (bool checkValue){
+                                    checkValueChanged: (bool checkValue) {
                                       setState(() {
-                                        _checkedWorksteps[workstep.workstepId] = checkValue;
+                                        _checkedWorksteps[workstep.workstepId] =
+                                            checkValue;
                                       });
                                     },
                                     onTap: () async {
@@ -344,7 +353,7 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
         },
         backgroundColor: Colors.green,
         shape: const CircleBorder(),
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: Colors.white, size: 36.0),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
