@@ -16,10 +16,10 @@ class Fields extends StatefulWidget {
 
 class _FieldsState extends State<Fields> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_){
-      Provider.of<FieldsViewModel>(context,listen: false).getFields();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<FieldsViewModel>(context, listen: false).getFields();
     });
   }
 
@@ -55,7 +55,6 @@ class _FieldsState extends State<Fields> {
                                       fieldSize: field.fieldSize.toString(),
                                       longitude: field.longitude.toString(),
                                       latitude: field.latitude.toString(),
-                                      isCreate: true,
                                     ),
                               ),
                             );
@@ -63,7 +62,7 @@ class _FieldsState extends State<Fields> {
                               await Provider.of<FieldsViewModel>(context,listen: false,).getFields();
                             }
                           },
-                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -92,7 +91,7 @@ class _FieldsState extends State<Fields> {
         },
         backgroundColor: Colors.green,
         shape: const CircleBorder(),
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: Colors.white, size: 36),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

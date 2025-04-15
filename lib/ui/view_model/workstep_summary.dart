@@ -115,8 +115,35 @@ class WorkstepSummaryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> getPersonNameById(List<String> selectedPersonIds){
-    return _completeWorksteps.where((workstep) => selectedPersonIds.contains(workstep.personId.toString()))
-    .map((workstep)=> workstep.personName).toList();
+  void searchWorksteps(String query) {
+    if (query.isEmpty) {
+      _filteredWorksteps = _completeWorksteps;
+    } else {
+      _filteredWorksteps =
+          _completeWorksteps.where((workstep) {
+            final lowerCaseQuery = query.toLowerCase();
+
+            return workstep.activityName.toLowerCase().contains(
+                  lowerCaseQuery,
+                ) ||
+                workstep.personName.toLowerCase().contains(lowerCaseQuery) ||
+                workstep.cropName.toLowerCase().contains(lowerCaseQuery) ||
+                workstep.fieldName.toLowerCase().contains(lowerCaseQuery) ||
+                workstep.date.toLowerCase().contains(lowerCaseQuery) ||
+                (workstep.description?.toLowerCase().contains(lowerCaseQuery) ??
+                    false);
+          }).toList();
+    }
+    notifyListeners();
+  }
+
+  List<String> getPersonNameById(List<String> selectedPersonIds) {
+    return _completeWorksteps
+        .where(
+          (workstep) =>
+              selectedPersonIds.contains(workstep.personId.toString()),
+        )
+        .map((workstep) => workstep.personName)
+        .toList();
   }
 }

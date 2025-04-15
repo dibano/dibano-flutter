@@ -21,10 +21,15 @@ class ActivitiesEdit extends StatelessWidget {
   bool isCreate;
 
   final TextEditingController _descriptionController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
     _descriptionController.text = activityName;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
 
     return Scaffold(
       appBar: CustomAppBar(title: title),
@@ -88,6 +93,7 @@ class ActivitiesEdit extends StatelessWidget {
                             controller: _descriptionController,
                             keyboardType: TextInputType.text,
                             maxLine: 1,
+                            focusNode: _focusNode,
                           ),
                         ],
                       ),

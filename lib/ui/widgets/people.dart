@@ -92,7 +92,7 @@ class _PeopleState extends State<People> {
         },
         backgroundColor: Colors.green,
         shape: const CircleBorder(),
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: Colors.white, size: 36),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

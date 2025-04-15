@@ -29,6 +29,7 @@ class FieldEdit extends StatelessWidget {
 
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _fieldSizeController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +39,11 @@ class FieldEdit extends StatelessWidget {
     String? _actualFieldName = fieldName;
     _descriptionController.text = fieldName;
     _fieldSizeController.text = _fieldSize;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
+
     return Scaffold(
       appBar: CustomAppBar(title: title),
       body: Padding(
@@ -55,7 +61,7 @@ class FieldEdit extends StatelessWidget {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red,
-                              shape: CircleBorder(),
+                              shape: const CircleBorder(),
                               elevation: 2,
                               padding: const EdgeInsets.all(8.0),
                             ),
@@ -98,6 +104,7 @@ class FieldEdit extends StatelessWidget {
                             controller: _descriptionController,
                             keyboardType: TextInputType.text,
                             maxLine: 1,
+                            focusNode: _focusNode,
                           ),
                           FormTextfield(
                             label: "Feldgrösse in ha",
