@@ -39,27 +39,30 @@ class _FieldsState extends State<Fields> {
                       children: <Widget>[
                         for (var field in fieldsViewModel.fields)
                           DetailCard(
-                            detail: Detail(name: field.fieldName, toEdit: true),
-                            onTap: () async {
-                              final result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) => FieldEdit(
-                                        title: "Felder bearbeiten",
-                                        fieldId: field.id,
-                                        fieldName: field.fieldName,
-                                      ),
-                                ),
-                              );
-                              if (result == true) {
-                                await Provider.of<FieldsViewModel>(
-                                  context,
-                                  listen: false,
-                                ).getFields();
-                              }
-                            },
-                          ),
+                            detail: Detail(
+                              name: field.fieldName,
+                              toEdit: true,
+                            ),
+                          onTap: () async{
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => FieldEdit(
+                                      title: "Felder bearbeiten",
+                                      fieldId: field.id,
+                                      fieldName: field.fieldName,
+                                      fieldSize: field.fieldSize.toString(),
+                                      longitude: field.longitude.toString(),
+                                      latitude: field.latitude.toString(),
+                                    ),
+                              ),
+                            );
+                            if (result == true) {
+                              await Provider.of<FieldsViewModel>(context,listen: false,).getFields();
+                            }
+                          },
+                        ),
                       ],
                     ),
                   ),
