@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
 import 'package:dibano/ui/widgets/components/custom_alert_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 
@@ -107,25 +108,49 @@ class _FieldMapState extends State<FieldMap> {
     }
     _failedLoad = false;
   }
+
+  Future<void> _launchCopyrightPage() async{
+    print("tapped");
+    final Uri url = Uri.parse('https://www.openstreetmap.org/copyright');
+      if (!await launchUrl(url)) {
+    throw Exception('Could not launch $url');
+  }
+  }
+
+
     @override
     Widget build(BuildContext context) {
       return Scaffold(
         appBar: AppBar(
           title: const Text("Flutter Map Example"),
         ),
-        body: FlutterMap(
-          mapController: _mapController,
-          options: MapOptions(
-            initialCenter: LatLng(47.000, 8.6033),
-            initialZoom: 15.0,
-            onTap: (tapPosition, latlng) => _onTap(latlng),
-          ),
+        body: Stack(
           children: [
-            TileLayer(
-              urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+            FlutterMap(
+              mapController: _mapController,
+              options: MapOptions(
+                initialCenter: LatLng(47.000, 8.6033),
+                initialZoom: 15.0,
+                onTap: (tapPosition, latlng) => _onTap(latlng),
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                ),
+              ],
             ),
-          ],
-        ),
+            Positioned(
+              bottom: 8,
+              right: 8,
+              child: GestureDetector(
+                onTap: _launchCopyrightPage,
+                child: const Text(
+                  '© OpenStreetMap contributors'
+                )
+              )
+            )
+          ]
+        )
       );
     }
   }
