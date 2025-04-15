@@ -105,6 +105,9 @@ class FieldEdit extends StatelessWidget {
                             keyboardType: TextInputType.number,
                             maxLine: 1,
                           ),
+                          Text(
+                            "Daten: © geo.admin.ch"
+                          )
                         ],
                       ),
                     ),
