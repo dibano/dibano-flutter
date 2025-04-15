@@ -21,10 +21,15 @@ class PersonEdit extends StatelessWidget {
   bool isCreate;
 
   final TextEditingController _descriptionController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
     _descriptionController.text = personName;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
 
     return Scaffold(
       appBar: CustomAppBar(title: title),
@@ -75,7 +80,6 @@ class PersonEdit extends StatelessWidget {
                         ),
                       ],
                     ),
-
                   const SizedBox(height: 24),
                   Expanded(
                     child: SingleChildScrollView(
@@ -87,6 +91,7 @@ class PersonEdit extends StatelessWidget {
                             controller: _descriptionController,
                             keyboardType: TextInputType.text,
                             maxLine: 1,
+                            focusNode: _focusNode,
                           ),
                         ],
                       ),

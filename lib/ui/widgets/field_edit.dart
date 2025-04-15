@@ -21,10 +21,15 @@ class FieldEdit extends StatelessWidget {
   bool isCreate;
 
   final TextEditingController _descriptionController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
     _descriptionController.text = fieldName;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
 
     return Scaffold(
       appBar: CustomAppBar(title: title),
@@ -43,7 +48,7 @@ class FieldEdit extends StatelessWidget {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red,
-                              shape: CircleBorder(),
+                              shape: const CircleBorder(),
                               elevation: 2,
                               padding: const EdgeInsets.all(8.0),
                             ),
@@ -86,6 +91,7 @@ class FieldEdit extends StatelessWidget {
                             controller: _descriptionController,
                             keyboardType: TextInputType.text,
                             maxLine: 1,
+                            focusNode: _focusNode,
                           ),
                         ],
                       ),
