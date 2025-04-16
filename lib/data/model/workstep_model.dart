@@ -25,9 +25,9 @@ class Workstep extends DatabaseModel{
   final String? germinationAbility;
   final double? goalQuantity;
   final String? spray;
-  final bool? turning;
+  //final bool? turning;
   final double? machiningDepth;
-  final bool? ptoDriven;
+  //final bool? ptoDriven;
   final String? productName;
   final String? plantProtectionType;
   final double? actualQuantity;
@@ -65,9 +65,9 @@ class Workstep extends DatabaseModel{
     this.germinationAbility,
     this.goalQuantity,
     this.spray,
-    this.turning,
+    //this.turning,
     this.machiningDepth,
-    this.ptoDriven,
+    //this.ptoDriven,
     this.productName,
     this.plantProtectionType,
     this.actualQuantity,
@@ -110,9 +110,9 @@ class Workstep extends DatabaseModel{
       'germinationAbility': germinationAbility,
       'goalQuantity': goalQuantity,
       'spray': spray,
-      'turning': turning,
+      //'turning': turning,
       'machiningDepth': machiningDepth,
-      'ptoDriven': ptoDriven,
+      //'ptoDriven': ptoDriven,
       'productName': productName,
       'plantProtectionType': plantProtectionType,
       'actualQuantity': actualQuantity,
@@ -141,7 +141,7 @@ class Workstep extends DatabaseModel{
            'kPerField: $kPerField, kPerHa: $kPerHa, fertilizerSpreader: $fertilizerSpreader, '
            'seedingDepth: $seedingDepth, seedingQuantity: $seedingQuantity, plantProtectionName: $plantProtectionName, '
            'rowDistance: $rowDistance, seedingDistance: $seedingDistance, germinationAbility: $germinationAbility, goalQuantity: $goalQuantity, spray: $spray, '
-           'turning: $turning, machiningDepth: $machiningDepth, ptoDriven: $ptoDriven, productName: $productName, '
+           'machiningDepth: $machiningDepth, productName: $productName, '
            'plantProtectionType: $plantProtectionType, actualQuantity: $actualQuantity, waterQuantityProcentage: $waterQuantityProcentage, '
            'groundDamage: $groundDamage, pest: $pest, fungal: $fungal, problemWeeds: $problemWeeds, nutrient: $nutrient, '
            'countPerPlant: $countPerPlant, plantPerQm: $plantPerQm, fertilizerId: $fertilizerId}';

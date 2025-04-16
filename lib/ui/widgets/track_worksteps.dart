@@ -123,12 +123,42 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
             widget.selectedActivity == null ||
             widget.selectedPerson == null ||
             widget.description == null) {
-          _trackWorkstepsViewModel.addWorkstepActivity(
+            _trackWorkstepsViewModel.addWorkstepActivity(
             int.parse(_selectedArea.toString()),
             _descriptionController.text,
             int.parse(_selectedPerson.toString()),
             int.parse(_selectedActivity.toString()),
             _activityDate ?? DateTime.now(),
+            double.tryParse(_quantityPerFieldController.text),
+            double.tryParse(_quantityPerHaController.text),
+            double.tryParse(_nPerField.text),
+            double.tryParse(_nPerHa.text),
+            double.tryParse(_pPerField.text),
+            double.tryParse(_pPerHa.text),
+            double.tryParse(_kPerField.text),
+            double.tryParse(_kPerHa.text),
+            _fertilizerSpreader.text,
+            double.tryParse(_seedingDepth.text),
+            double.tryParse(_seedingQuantity.text),
+            _plantProtectionName.text,
+            double.tryParse(_rowDistance.text),
+            double.tryParse(_seedingDistance.text),
+            _germinationAbility.text,
+            double.tryParse(_goalQuantity.text),
+            _spray.text,
+            double.tryParse(_machiningDepth.text),
+            _productName.text,
+            _selectedPlantProtectionType,
+            double.tryParse(_actualQuantity.text),
+            double.tryParse(_waterQuantityProcentage.text),
+            _selectedGroundDamage,
+            _pest.text,
+            _fungus.text,
+            _problemWeeds.text,
+            _nutrient.text,
+            double.tryParse(_countPerPlant.text),
+            double.tryParse(_plantPerQm.text),
+            int.parse(_selectedFertilizer!),
           );
         } else {
           _trackWorkstepsViewModel.updateWorkStepActivity(
@@ -139,9 +169,75 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
             widget.workstepActivityId!,
             widget.workstepId!,
             _activityDate ?? DateTime.now(),
+            double.tryParse(_quantityPerFieldController.text),
+            double.tryParse(_quantityPerHaController.text),
+            double.tryParse(_nPerField.text),
+            double.tryParse(_nPerHa.text),
+            double.tryParse(_pPerField.text),
+            double.tryParse(_pPerHa.text),
+            double.tryParse(_kPerField.text),
+            double.tryParse(_kPerHa.text),
+            _fertilizerSpreader.text,
+            double.tryParse(_seedingDepth.text),
+            double.tryParse(_seedingQuantity.text),
+            _plantProtectionName.text,
+            double.tryParse(_rowDistance.text),
+            double.tryParse(_seedingDistance.text),
+            _germinationAbility.text,
+            double.tryParse(_goalQuantity.text),
+            _spray.text,
+            double.tryParse(_machiningDepth.text),
+            _productName.text,
+            _selectedPlantProtectionType,
+            double.tryParse(_actualQuantity.text),
+            double.tryParse(_waterQuantityProcentage.text),
+            _selectedGroundDamage,
+            _pest.text,
+            _fungus.text,
+            _problemWeeds.text,
+            _nutrient.text,
+            double.tryParse(_countPerPlant.text),
+            double.tryParse(_plantPerQm.text),
+            int.parse(_selectedFertilizer!),
           );
         }
+        _descriptionController.clear();
+        _cropController.clear();
 
+        _quantityPerFieldController.clear();
+        _quantityPerHaController.clear();
+        _nPerField.clear();
+        _nPerHa.clear();
+        _pPerField.clear();
+        _pPerHa.clear();
+        _kPerField.clear();
+        _kPerHa.clear();
+
+        _tractor.clear();
+        _fertilizerSpreader.clear();
+
+        _seedingDepth.clear();
+        _seedingQuantity.clear();
+        _plantProtectionName.clear();
+        _rowDistance.clear();
+        _seedingDistance.clear();
+        _germinationAbility.clear();
+        _goalQuantity.clear();
+        _spray.clear();
+
+        _machiningDepth.clear();
+        _usedMachine.clear();
+
+        _productName.clear();
+        _actualQuantity.clear();
+        _waterQuantityProcentage.clear();
+
+        _pest.clear();
+        _fungus.clear();
+        _problemWeeds.clear();
+        _countPerPlant.clear();
+        _plantPerQm.clear();
+        _nutrient.clear();
         _descriptionController.clear();
         _selectedArea = "-1";
         _selectedActivity = "-1";
