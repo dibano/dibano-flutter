@@ -1,6 +1,7 @@
 import 'package:dibano/data/database_handler.dart';
 import 'package:dibano/data/model/database_model.dart';
 import 'package:dibano/ui/view_model/activities.dart';
+import 'package:dibano/ui/view_model/fertilizer.dart';
 import 'package:dibano/ui/view_model/workstep_summary.dart';
 import 'package:dibano/ui/view_model/people.dart';
 import 'package:dibano/ui/view_model/crops.dart';
@@ -17,11 +18,12 @@ import 'package:sqflite/sqflite.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DatabaseModel.dbHandler = DatabaseHandler();
-  //await deleteDatabase(join(await getDatabasesPath(), 'dibano_db'));
+  await deleteDatabase(join(await getDatabasesPath(), 'dibano_db'));
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => FieldsViewModel()),
+        ChangeNotifierProvider(create: (context) => FertilizerViewModel()),
         ChangeNotifierProvider(create: (context) => CropsViewModel()),
         ChangeNotifierProvider(create: (context) => TrackWorkstepsViewModel()),
         ChangeNotifierProvider(create: (context) => PersonViewModel()),

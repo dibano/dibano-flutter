@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:dibano/data/model/completeCrop_model.dart';
 import 'package:dibano/data/model/completeWorkstep_model.dart';
 import 'package:dibano/data/model/cropdate_model.dart';
 import 'package:dibano/data/model/database_model.dart';
+import 'package:dibano/data/model/fertilizer_model.dart';
 import 'package:dibano/data/model/workstepActivity_model.dart';
 import 'package:dibano/data/model/workstep_model.dart';
 import 'package:path/path.dart';
@@ -43,6 +45,16 @@ class DatabaseHandler{
         ''');
 
         await database.execute('''
+          CREATE TABLE Fertilizer(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            fertilizerName VARCHAR(50) NOT NULL UNIQUE,
+            n DOUBLE NOT NULL,
+            p DOUBLE NOT NULL,
+            k DOUBLE NOT NULL
+          )
+        ''');
+
+        await database.execute('''
           CREATE TABLE Crop(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             cropName VARCHAR(50) NOT NULL
@@ -67,9 +79,43 @@ class DatabaseHandler{
             cropdateId INTEGER NOT NULL,
             description VARCHAR(200) NOT NULL,
             date DATE NOT NULL,
+            quantityPerField DOUBLE,
+            quantityPerHa DOUBLE,
+            nPerField DOUBLE,
+            nPerHa DOUBLE,
+            pPerField DOUBLE,
+            pPerHa DOUBLE,
+            kPerField DOUBLE,
+            kPerHa DOUBLE,
+            fertilizerSpreader VARCHAR(200),
+            seedingDepth DOUBLE,
+            seedingQuantity DOUBLE,
+            plantProtectionName VARCHAR(200),
+            rowDistance DOUBLE,
+            seedingDistance DOUBLE,
+            germinationAbility VARCHAR(200),
+            goalQuantity DOUBLE,
+            spray VARCHAR(200),
+            turning BOOL,
+            machiningDepth DOUBLE,
+            usedMachine VARCHAR(200),
+            ptoDriven BOOL,
+            productName VARCHAR(200),
+            plantProtectionType VARCHAR(200),
+            actualQuantity DOUBLE,
+            waterQuantityProcentage DOUBLE,
+            groundDamage VARCHAR(200),
+            pest VARCHAR(200),
+            fungal VARCHAR(200),
+            problemWeeds VARCHAR(200),
+            nutrient VARCHAR(200),
+            countPerPlant DOUBLE,
+            plantPerQm DOUBLE,
             personId INTEGER NOT NULL,
+            fertilizerId INTEGER NOT NULL,
             FOREIGN KEY(cropdateId) REFERENCES CropDate(id)
             FOREIGN KEY(personId) REFERENCES Person(id)
+            FOREIGN KEY(fertilizerId) REFERENCES Fertilizer(id)
           )
         ''');
 
@@ -78,6 +124,46 @@ class DatabaseHandler{
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             activityName VARCHAR(50) NOT NULL UNIQUE
           )
+        ''');
+
+        await database.execute('''
+          INSERT INTO Activity(activityName)
+          VALUES ('Düngen (Körner)');
+        ''');
+
+        await database.execute('''
+          INSERT INTO Activity(activityName)
+          VALUES ('Düngen (flüssig)');
+        ''');
+
+        await database.execute('''
+          INSERT INTO Activity(activityName)
+          VALUES ('Saat');
+        ''');
+
+        await database.execute('''
+          INSERT INTO Activity(activityName)
+          VALUES ('Bodenbearbeitung');
+        ''');
+
+        await database.execute('''
+          INSERT INTO Activity(activityName)
+          VALUES ('Saatbeetbearbeitung');
+        ''');
+
+        await database.execute('''
+          INSERT INTO Activity(activityName)
+          VALUES ('Anwedung Pflanzenschutzmittel');
+        ''');
+
+        await database.execute('''
+          INSERT INTO Activity(activityName)
+          VALUES ('Ernte');
+        ''');
+
+        await database.execute('''
+          INSERT INTO Activity(activityName)
+          VALUES ('Kontrolle');
         ''');
 
         await database.execute('''
@@ -207,6 +293,17 @@ class DatabaseHandler{
     ];
   }
 
+  // A method that retrieves all the Fertilizer from the fertilizer table.
+  Future<List<Fertilizer>> fertilizer() async {
+    final db = await database;
+    final List<Map<String, Object?>> fertilizerMap = await db.query('Fertilizer');
+    return [
+      for (final {'id': id as int, 'fertilizerName': fertilizerName as String, 'n': n as double, 'p': p as double, 'k': k as double}
+          in fertilizerMap)
+        Fertilizer(id: id, fertilizerName: fertilizerName, n: n, p: p, k: k),
+    ];
+  }
+
   // A method that retrieves all the Fields from the fields table.
   Future<List<CropDate>> cropDates() async {
     final db = await database;
@@ -274,9 +371,83 @@ class DatabaseHandler{
     final db = await database;
     final List<Map<String, Object?>> worksteps = await db.query('Workstep');
     return [
-      for (final {'id': id as int, 'description': description as String, 'personId': personId as int, 'cropdateId': cropDateId as int, 'date': date as String}
+      for (final {'id': id as int, 
+                  'description': description as String, 
+                  'quantityPerField':quantityPerField as double,
+                  'quantityPerHa':quantityPerHa as double,
+                  'nPerField':nPerField as double,
+                  'nPerHa':nPerHa as double,
+                  'pPerField':pPerField as double,
+                  'pPerHa':pPerHa as double,
+                  'kPerField':kPerField as double,
+                  'kPerHa':kPerHa as double,
+                  'fertilizerSpreader':fertilizerSpreader as String, 
+                  'seedingDepth':seedingDepth as double,
+                  'seedingQuantity':seedingQuantity as double,
+                  'plantProtectionName':plantProtectionName as String, 
+                  'rowDistance':rowDistance as double,
+                  'seedingDistance':seedingDistance as double,
+                  'germinationAbility':germinationAbility as String, 
+                  'goalQuantity':goalQuantity as double,
+                  'spray':spray as String, 
+                  'turning':turning as bool, 
+                  'machiningDepth':machiningDepth as double,
+                  'ptoDriven':ptoDriven as bool,
+                  'productName':productName as String, 
+                  'plantProtectionType':plantProtectionType as String,
+                  'actualQuantity':actualQuantity as double,
+                  'waterQuantityProcentage':waterQuantityProcentage as double,
+                  'groundDamage':groundDamage as String, 
+                  'pest':pest as String, 
+                  'fungal':fungal as String, 
+                  'problemWeeds':problemWeeds as String, 
+                  'nutrient':nutrient as String, 
+                  'countPerPlant':countPerPlant as double,
+                  'plantPerQm':plantPerQm as double,
+                  'fertilizerId':fertilizerId as int,
+                  'personId': personId as int, 
+                  'cropdateId': cropDateId as int, 
+                  'date': date as String}
         in worksteps)
-        Workstep(id: id, description: description, personId: personId, cropdateId: cropDateId, date: date),
+        Workstep(
+          id: id,
+          description: description,
+          quantityPerField: quantityPerField,
+          quantityPerHa: quantityPerHa,
+          nPerField: nPerField,
+          nPerHa: nPerHa,
+          pPerField: pPerField,
+          pPerHa: pPerHa,
+          kPerField: kPerField,
+          kPerHa: kPerHa,
+          fertilizerSpreader: fertilizerSpreader,
+          seedingDepth: seedingDepth,
+          seedingQuantity: seedingQuantity,
+          plantProtectionName: plantProtectionName,
+          rowDistance: rowDistance,
+          seedingDistance: seedingDistance,
+          germinationAbility: germinationAbility,
+          goalQuantity: goalQuantity,
+          spray: spray,
+          turning: turning,
+          machiningDepth: machiningDepth,
+          ptoDriven: ptoDriven,
+          productName: productName,
+          plantProtectionType: plantProtectionType,
+          actualQuantity: actualQuantity,
+          waterQuantityProcentage: waterQuantityProcentage,
+          groundDamage: groundDamage,
+          pest: pest,
+          fungal: fungal,
+          problemWeeds: problemWeeds,
+          nutrient: nutrient,
+          countPerPlant: countPerPlant,
+          plantPerQm: plantPerQm,
+          fertilizerId: fertilizerId,
+          personId: personId,
+          cropdateId: cropDateId,
+          date: date,
+        )
     ];  
   }
 }
