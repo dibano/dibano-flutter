@@ -24,22 +24,88 @@ class TrackWorksteps extends StatefulWidget {
     super.key,
     required this.title,
     this.selectedArea,
-    this.selectedPerson,
+    this.selectedCropName,
     this.selectedActivity,
+    this.selectedPerson,
+    this.selectedFertilizer,
+    this.selectedPlantProtectionType,
+    this.selectedGroundDamage,
     this.description,
     this.workstepActivityId,
     this.workstepId,
     this.activityDate,
+    this.quantityPerField,
+    this.quantityPerHa,
+    this.nPerField,
+    this.nPerHa,
+    this.pPerField,
+    this.pPerHa,
+    this.kPerField,
+    this.kPerHa,
+    this.tractor,
+    this.fertilizerSpreader,
+    this.seedingDepth,
+    this.seedingQuantity,
+    this.plantProtectionName,
+    this.rowDistance,
+    this.seedingDistance,
+    this.germinationAbility,
+    this.goalQuantity,
+    this.spray,
+    this.machiningDepth,
+    this.usedMachine,
+    this.productName,
+    this.actualQuantity,
+    this.waterQuantityProcentage,
+    this.pest,
+    this.fungus,
+    this.problemWeeds,
+    this.countPerPlant,
+    this.plantPerQm,
+    this.nutrient,
   });
 
   final String title;
   final String? selectedArea;
+  final String? selectedCropName;
   final String? selectedActivity;
   final String? selectedPerson;
+  final String? selectedFertilizer;
+  final String? selectedPlantProtectionType;
+  final String? selectedGroundDamage;
   final String? description;
   final int? workstepActivityId;
   final int? workstepId;
   final DateTime? activityDate;
+  final String? quantityPerField;
+  final String? quantityPerHa;
+  final String? nPerField;
+  final String? nPerHa;
+  final String? pPerField;
+  final String? pPerHa;
+  final String? kPerField;
+  final String? kPerHa;
+  final String? tractor;
+  final String? fertilizerSpreader;
+  final String? seedingDepth;
+  final String? seedingQuantity;
+  final String? plantProtectionName;
+  final String? rowDistance;
+  final String? seedingDistance;
+  final String? germinationAbility;
+  final String? goalQuantity;
+  final String? spray;
+  final String? machiningDepth;
+  final String? usedMachine;
+  final String? productName;
+  final String? actualQuantity;
+  final String? waterQuantityProcentage;
+  final String? pest;
+  final String? fungus;
+  final String? problemWeeds;
+  final String? countPerPlant;
+  final String? plantPerQm;
+  final String? nutrient;
 
   @override
   State<TrackWorksteps> createState() => _TrackWorkstepsState();
@@ -137,6 +203,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
             double.tryParse(_pPerHa.text),
             double.tryParse(_kPerField.text),
             double.tryParse(_kPerHa.text),
+            _tractor.text,
             _fertilizerSpreader.text,
             double.tryParse(_seedingDepth.text),
             double.tryParse(_seedingQuantity.text),
@@ -147,6 +214,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
             double.tryParse(_goalQuantity.text),
             _spray.text,
             double.tryParse(_machiningDepth.text),
+            _usedMachine.text,
             _productName.text,
             _selectedPlantProtectionType,
             double.tryParse(_actualQuantity.text),
@@ -177,6 +245,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
             double.tryParse(_pPerHa.text),
             double.tryParse(_kPerField.text),
             double.tryParse(_kPerHa.text),
+            _tractor.text,
             _fertilizerSpreader.text,
             double.tryParse(_seedingDepth.text),
             double.tryParse(_seedingQuantity.text),
@@ -187,6 +256,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
             double.tryParse(_goalQuantity.text),
             _spray.text,
             double.tryParse(_machiningDepth.text),
+            _usedMachine.text,
             _productName.text,
             _selectedPlantProtectionType,
             double.tryParse(_actualQuantity.text),
@@ -267,7 +337,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
         context: context,
         builder: (BuildContext context) {
           return CustomAlertDialog(
-            alertText: "Alle Felder müssen ausgefüllt sein!",
+            alertText: "Alle Pflichtfelder müssen ausgefüllt sein!",
             alertType: AlertType.error,
           );
         },
@@ -320,21 +390,146 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
     ]);
 
     setState(() {
+      // Fläche & Ernte
       if (widget.selectedArea != null) {
         _fieldSelected = true;
         _selectedArea = widget.selectedArea;
         _loadCropsName();
       }
+      if (widget.selectedCropName != null) {
+        _selectedCulture = widget.selectedCropName;
+        _cropController.text = widget.selectedCropName!;
+      }
+
+      // Aktivität, Person, Dünger & Pflanzenschutz
       if (widget.selectedActivity != null) {
         _selectedActivity = widget.selectedActivity;
       }
       if (widget.selectedPerson != null) {
         _selectedPerson = widget.selectedPerson;
       }
+      if (widget.selectedFertilizer != null) {
+        _selectedFertilizer = widget.selectedFertilizer;
+      }
+      if (widget.selectedPlantProtectionType != null) {
+        _selectedPlantProtectionType = widget.selectedPlantProtectionType;
+      }
+      if (widget.selectedGroundDamage != null) {
+        _selectedGroundDamage = widget.selectedGroundDamage;
+      }
+
+      // Beschreibung & Datum
       if (widget.description != null) {
-        _descriptionController.text = widget.description.toString();
+        _descriptionController.text = widget.description!;
+      }
+      if (widget.activityDate != null) {
+        _activityDate = widget.activityDate;
+      }
+
+      // Mengen‑Felder
+      if (widget.quantityPerField != null) {
+        _quantityPerFieldController.text = widget.quantityPerField!;
+      }
+      if (widget.quantityPerHa != null) {
+        _quantityPerHaController.text = widget.quantityPerHa!;
+      }
+      if (widget.nPerField != null) {
+        _nPerField.text = widget.nPerField!;
+      }
+      if (widget.nPerHa != null) {
+        _nPerHa.text = widget.nPerHa!;
+      }
+      if (widget.pPerField != null) {
+        _pPerField.text = widget.pPerField!;
+      }
+      if (widget.pPerHa != null) {
+        _pPerHa.text = widget.pPerHa!;
+      }
+      if (widget.kPerField != null) {
+        _kPerField.text = widget.kPerField!;
+      }
+      if (widget.kPerHa != null) {
+        _kPerHa.text = widget.kPerHa!;
+      }
+
+      // Maschinen
+      if (widget.tractor != null) {
+        _tractor.text = widget.tractor!;
+      }
+      if (widget.usedMachine != null) {
+        _usedMachine.text = widget.usedMachine!;
+      }
+      if (widget.fertilizerSpreader != null) {
+        _fertilizerSpreader.text = widget.fertilizerSpreader!;
+      }
+
+      // Aussaat
+      if (widget.seedingDepth != null) {
+        _seedingDepth.text = widget.seedingDepth!;
+      }
+      if (widget.seedingQuantity != null) {
+        _seedingQuantity.text = widget.seedingQuantity!;
+      }
+      if (widget.rowDistance != null) {
+        _rowDistance.text = widget.rowDistance!;
+      }
+      if (widget.seedingDistance != null) {
+        _seedingDistance.text = widget.seedingDistance!;
+      }
+      if (widget.germinationAbility != null) {
+        _germinationAbility.text = widget.germinationAbility!;
+      }
+      if (widget.goalQuantity != null) {
+        _goalQuantity.text = widget.goalQuantity!;
+      }
+
+      // Pflanzenschutz & Spray
+      if (widget.plantProtectionName != null) {
+        _plantProtectionName.text = widget.plantProtectionName!;
+      }
+      if (widget.spray != null) {
+        _spray.text = widget.spray!;
+      }
+      if (widget.productName != null) {
+        _productName.text = widget.productName!;
+      }
+
+      // Bearbeitungstiefe
+      if (widget.machiningDepth != null) {
+        _machiningDepth.text = widget.machiningDepth!;
+      }
+
+      // Ernte
+      if (widget.actualQuantity != null) {
+        _actualQuantity.text = widget.actualQuantity!;
+      }
+      if (widget.waterQuantityProcentage != null) {
+        _waterQuantityProcentage.text = widget.waterQuantityProcentage!;
+      }
+
+      // Schädlinge & Co.
+      if (widget.pest != null) {
+        _pest.text = widget.pest!;
+      }
+      if (widget.fungus != null) {
+        _fungus.text = widget.fungus!;
+      }
+      if (widget.problemWeeds != null) {
+        _problemWeeds.text = widget.problemWeeds!;
+      }
+      if (widget.nutrient != null) {
+        _nutrient.text = widget.nutrient!;
+      }
+
+      // Pflanzendichte
+      if (widget.countPerPlant != null) {
+        _countPerPlant.text = widget.countPerPlant!;
+      }
+      if (widget.plantPerQm != null) {
+        _plantPerQm.text = widget.plantPerQm!;
       }
     });
+
     if (_fieldSelected && _activityDate != null) {
       await _loadCropsName();
     }

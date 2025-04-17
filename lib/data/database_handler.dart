@@ -87,6 +87,7 @@ class DatabaseHandler{
             pPerHa DOUBLE,
             kPerField DOUBLE,
             kPerHa DOUBLE,
+            tractor VARCHAR(200),
             fertilizerSpreader VARCHAR(200),
             seedingDepth DOUBLE,
             seedingQuantity DOUBLE,
@@ -203,6 +204,38 @@ class DatabaseHandler{
               ,cp.cropName
               ,ws.description
               ,ws.date
+              ,ws.quantityPerField
+              ,ws.quantityPerHa
+              ,ws.nPerField
+              ,ws.nPerHa
+              ,ws.pPerField
+              ,ws.pPerHa
+              ,ws.kPerField
+              ,ws.kPerHa
+              ,ws.tractor
+              ,ws.fertilizerSpreader
+              ,ws.seedingDepth
+              ,ws.seedingQuantity
+              ,ws.plantProtectionName
+              ,ws.rowDistance
+              ,ws.seedingDistance
+              ,ws.germinationAbility
+              ,ws.goalQuantity
+              ,ws.spray
+              ,ws.machiningDepth
+              ,ws.usedMachine
+              ,ws.productName
+              ,ws.plantProtectionType
+              ,ws.actualQuantity
+              ,ws.waterQuantityProcentage
+              ,ws.groundDamage
+              ,ws.pest
+              ,ws.fungal
+              ,ws.problemWeeds
+              ,ws.nutrient
+              ,ws.countPerPlant
+              ,ws.plantPerQm
+              ,ws.fertilizerId
             FROM WorkstepActivity wa
             INNER JOIN Workstep ws
             on ws.id = wa.workstepId
@@ -393,7 +426,7 @@ class DatabaseHandler{
                   //'ptoDriven':ptoDriven as bool?,
                   'productName':productName as String?, 
                   'plantProtectionType':plantProtectionType as String?,
-                  'actualQuantity':actualQuantity as double,
+                  'actualQuantity':actualQuantity as double?,
                   'waterQuantityProcentage':waterQuantityProcentage as double?,
                   'groundDamage':groundDamage as String?, 
                   'pest':pest as String?, 

@@ -16,6 +16,7 @@ class Workstep extends DatabaseModel{
   final double? pPerHa;
   final double? kPerField;
   final double? kPerHa;
+  final String? tractor;
   final String? fertilizerSpreader;
   final double? seedingDepth;
   final double? seedingQuantity;
@@ -27,6 +28,7 @@ class Workstep extends DatabaseModel{
   final String? spray;
   //final bool? turning;
   final double? machiningDepth;
+  final String? usedMachine;
   //final bool? ptoDriven;
   final String? productName;
   final String? plantProtectionType;
@@ -56,6 +58,7 @@ class Workstep extends DatabaseModel{
     this.pPerHa,
     this.kPerField,
     this.kPerHa,
+    this.tractor,
     this.fertilizerSpreader,
     this.seedingDepth,
     this.seedingQuantity,
@@ -67,6 +70,7 @@ class Workstep extends DatabaseModel{
     this.spray,
     //this.turning,
     this.machiningDepth,
+    this.usedMachine,
     //this.ptoDriven,
     this.productName,
     this.plantProtectionType,
@@ -101,6 +105,7 @@ class Workstep extends DatabaseModel{
       'pPerHa': pPerHa,
       'kPerField': kPerField,
       'kPerHa': kPerHa,
+      'tractor': tractor,
       'fertilizerSpreader': fertilizerSpreader,
       'seedingDepth': seedingDepth,
       'seedingQuantity': seedingQuantity,
@@ -112,6 +117,7 @@ class Workstep extends DatabaseModel{
       'spray': spray,
       //'turning': turning,
       'machiningDepth': machiningDepth,
+      'usedMachine':  usedMachine,
       //'ptoDriven': ptoDriven,
       'productName': productName,
       'plantProtectionType': plantProtectionType,
