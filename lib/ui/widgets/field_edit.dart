@@ -111,9 +111,7 @@ class FieldEdit extends StatelessWidget {
                             keyboardType: TextInputType.number,
                             maxLine: 1,
                           ),
-                          Text(
-                            "Daten: © geo.admin.ch"
-                          )
+                          Text("Daten: © geo.admin.ch"),
                         ],
                       ),
                     ),
@@ -127,8 +125,11 @@ class FieldEdit extends StatelessWidget {
                           onPressed: () async {
                             final fieldExisting = fieldsViewModel
                                 .checkIfExisting(_descriptionController.text);
-                            if (_descriptionController.text != "" && _fieldSizeController.text != "" &&
-                                (fieldExisting == false || actualFieldName == _descriptionController.text)) {
+                            if (_descriptionController.text != "" &&
+                                _fieldSizeController.text != "" &&
+                                (fieldExisting == false ||
+                                    actualFieldName ==
+                                        _descriptionController.text)) {
                               if (fieldId == null) {
                                 await fieldsViewModel.addField(
                                   _descriptionController.text,
@@ -143,7 +144,7 @@ class FieldEdit extends StatelessWidget {
                                   _descriptionController.text,
                                   _fieldSizeController.text,
                                   longitude,
-                                  latitude
+                                  latitude,
                                 );
                                 Navigator.pop(context, true);
                               }
@@ -156,7 +157,8 @@ class FieldEdit extends StatelessWidget {
                                   );
                                 },
                               );
-                            } else if (_descriptionController.text != "" && _fieldSizeController.text != "" &&
+                            } else if (_descriptionController.text != "" &&
+                                _fieldSizeController.text != "" &&
                                 fieldExisting == true) {
                               await showDialog(
                                 context: context,
@@ -184,12 +186,18 @@ class FieldEdit extends StatelessWidget {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () async{
+                        onPressed: () async {
                           final result = await Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => FieldMap(geoAdminLayer: 'ch.blw.landwirtschaftliche-nutzungsflaechen')),
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => FieldMap(
+                                    geoAdminLayer:
+                                        'ch.blw.landwirtschaftliche-nutzungsflaechen',
+                                  ),
+                            ),
                           );
-                          if(result != null){
+                          if (result != null) {
                             longitude = result['longitude'].toString();
                             latitude = result['latitude'].toString();
                             fieldSize = result['flaecheHa'].toString();

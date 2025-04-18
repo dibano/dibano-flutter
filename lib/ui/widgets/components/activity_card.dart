@@ -35,6 +35,7 @@ class ActivityCardState extends State<ActivityCard> {
       fieldName: widget.workstep.fieldName,
       cropName: widget.workstep.cropName,
       activityName: widget.workstep.activityName ?? "",
+      fertilizerName: widget.workstep.fertilizerName ?? "",
       date: DateTime.tryParse(widget.workstep.date)!,
     );
     return Padding(

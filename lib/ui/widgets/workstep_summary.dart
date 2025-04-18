@@ -21,19 +21,22 @@ class WorkstepSummary extends StatefulWidget {
   final DateTime? endDate;
   bool isFiltered;
   final String? searchString;
+  final List<String?>? selectedFertilizers;
 
   WorkstepSummary({
     super.key,
     required this.title,
-    this.selectedFields=const [],
-    this.selectedActivities=const [],
-    this.selectedPersons=const [],
-    this.selectedCrops=const [],
+    this.selectedFields = const [],
+    this.selectedActivities = const [],
+    this.selectedPersons = const [],
+    this.selectedCrops = const [],
+    this.selectedFertilizers = const [],
     this.startDate,
     this.endDate,
     this.isFiltered = false,
     this.searchString,
   });
+
   @override
   State<WorkstepSummary> createState() => _WorkstepSummaryState();
 }
@@ -62,6 +65,7 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
             selectedCrops: widget.selectedCrops,
             selectedActivities: widget.selectedActivities,
             selectedPersonIds: widget.selectedPersons,
+            selectedFertilizers: widget.selectedFertilizers,
             selectedStartDate: widget.startDate,
             selectedEndDate: widget.endDate,
           );
@@ -114,14 +118,35 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                   horizontal: 16.0,
                 ),
               ),
-              textInputAction:
-                  TextInputAction.search, // Lupensymbol auf der Tastatur
+              textInputAction: TextInputAction.search,
               onSubmitted: (String query) {
-                widget.isFiltered = true;
-                Provider.of<WorkstepSummaryViewModel>(
-                  context,
-                  listen: false,
-                ).searchWorksteps(query);
+                setState(() {
+                  if (query.isNotEmpty) {
+                    widget.isFiltered = true;
+                    Provider.of<WorkstepSummaryViewModel>(
+                      context,
+                      listen: false,
+                    ).searchWorksteps(query);
+
+                    _completeWorksteps =
+                        Provider.of<WorkstepSummaryViewModel>(
+                          context,
+                          listen: false,
+                        ).filteredWorksteps;
+                  } else {
+                    widget.isFiltered = false;
+                    Provider.of<WorkstepSummaryViewModel>(
+                      context,
+                      listen: false,
+                    ).getCompleteWorksteps();
+
+                    _completeWorksteps =
+                        Provider.of<WorkstepSummaryViewModel>(
+                          context,
+                          listen: false,
+                        ).completeWorksteps;
+                  }
+                });
               },
             ),
           ),
@@ -191,7 +216,7 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                       );
                     },
                     child: const Text(
-                      "Filtern und Teilen",
+                      "Filtern und Exportieren",
                       style: TextStyle(fontSize: 16.0),
                     ),
                   ),
@@ -223,7 +248,7 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                       );
                       SavePdf.openPdf(pdf);
                     },
-                    child: Icon(
+                    child: const Icon(
                       Icons.picture_as_pdf,
                       color: Colors.white,
                       size: 32.0,
@@ -238,7 +263,7 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
               child: Consumer<WorkstepSummaryViewModel>(
                 builder: (context, workstepSummaryViewModel, child) {
                   final worksteps =
-                      widget.isFiltered == true
+                      widget.isFiltered
                           ? workstepSummaryViewModel.filteredWorksteps
                           : workstepSummaryViewModel.completeWorksteps;
                   _completeWorksteps =
@@ -286,48 +311,111 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                                           builder:
                                               (context) => TrackWorksteps(
                                                 title: "Tätigkeit bearbeiten",
-                                                selectedArea: workstep.id.toString(),
-                                                selectedCropName: workstep.cropName,
-                                                selectedActivity: workstep.activityId.toString(),
-                                                selectedPerson: workstep.personId.toString(),
-                                                selectedFertilizer: workstep.fertilizerId?.toString(),
-                                                selectedPlantProtectionType: workstep.plantProtectionType,
-                                                selectedGroundDamage: workstep.groundDamage,
-                                                description: workstep.description,
-                                                workstepActivityId: workstep.workstepActivityId,
+                                                selectedArea:
+                                                    workstep.id.toString(),
+                                                selectedCropName:
+                                                    workstep.cropName,
+                                                selectedActivity:
+                                                    workstep.activityId
+                                                        .toString(),
+                                                selectedPerson:
+                                                    workstep.personId
+                                                        .toString(),
+                                                selectedFertilizer:
+                                                    workstep.fertilizerId
+                                                        ?.toString(),
+                                                selectedPlantProtectionType:
+                                                    workstep
+                                                        .plantProtectionType,
+                                                selectedGroundDamage:
+                                                    workstep.groundDamage,
+                                                description:
+                                                    workstep.description,
+                                                workstepActivityId:
+                                                    workstep.workstepActivityId,
                                                 workstepId: workstep.workstepId,
-                                                activityDate: DateTime.tryParse(workstep.date),
-                                                quantityPerField: workstep.quantityPerField?.toString(),
-                                                quantityPerHa: workstep.quantityPerHa?.toString(),
-                                                nPerField: workstep.nPerField?.toString(),
-                                                nPerHa: workstep.nPerHa?.toString(),
-                                                pPerField: workstep.pPerField?.toString(),
-                                                pPerHa: workstep.pPerHa?.toString(),
-                                                kPerField: workstep.kPerField?.toString(),
-                                                kPerHa: workstep.kPerHa?.toString(),
+                                                activityDate: DateTime.tryParse(
+                                                  workstep.date,
+                                                ),
+                                                quantityPerField:
+                                                    workstep.quantityPerField
+                                                        ?.toString(),
+                                                quantityPerHa:
+                                                    workstep.quantityPerHa
+                                                        ?.toString(),
+                                                nPerField:
+                                                    workstep.nPerField
+                                                        ?.toString(),
+                                                nPerHa:
+                                                    workstep.nPerHa?.toString(),
+                                                pPerField:
+                                                    workstep.pPerField
+                                                        ?.toString(),
+                                                pPerHa:
+                                                    workstep.pPerHa?.toString(),
+                                                kPerField:
+                                                    workstep.kPerField
+                                                        ?.toString(),
+                                                kPerHa:
+                                                    workstep.kPerHa?.toString(),
                                                 tractor: workstep.tractor,
-                                                fertilizerSpreader: workstep.fertilizerSpreader,
-                                                seedingDepth: workstep.seedingDepth?.toString(),
-                                                seedingQuantity: workstep.seedingQuantity?.toString(),
-                                                plantProtectionName: workstep.plantProtectionName,
-                                                rowDistance: workstep.rowDistance?.toString(),
-                                                seedingDistance: workstep.seedingDistance?.toString(),
-                                                germinationAbility: workstep.germinationAbility?.toString(),
-                                                goalQuantity: workstep.goalQuantity?.toString(),
+                                                fertilizerSpreader:
+                                                    workstep.fertilizerSpreader,
+                                                seedingDepth:
+                                                    workstep.seedingDepth
+                                                        ?.toString(),
+                                                seedingQuantity:
+                                                    workstep.seedingQuantity
+                                                        ?.toString(),
+                                                plantProtectionName:
+                                                    workstep
+                                                        .plantProtectionName,
+                                                rowDistance:
+                                                    workstep.rowDistance
+                                                        ?.toString(),
+                                                seedingDistance:
+                                                    workstep.seedingDistance
+                                                        ?.toString(),
+                                                germinationAbility:
+                                                    workstep.germinationAbility
+                                                        ?.toString(),
+                                                goalQuantity:
+                                                    workstep.goalQuantity
+                                                        ?.toString(),
                                                 spray: workstep.spray,
-                                                machiningDepth: workstep.machiningDepth?.toString(),
-                                                usedMachine: workstep.usedMachine,
-                                                productName: workstep.productName,
-                                                actualQuantity: workstep.actualQuantity?.toString(),
-                                                waterQuantityProcentage: workstep.waterQuantityProcentage?.toString(),
+                                                machiningDepth:
+                                                    workstep.machiningDepth
+                                                        ?.toString(),
+                                                usedMachine:
+                                                    workstep.usedMachine,
+                                                productName:
+                                                    workstep.productName,
+                                                actualQuantity:
+                                                    workstep.actualQuantity
+                                                        ?.toString(),
+                                                waterQuantityProcentage:
+                                                    workstep
+                                                        .waterQuantityProcentage
+                                                        ?.toString(),
                                                 pest: workstep.pest,
                                                 fungus: workstep.fungal,
-                                                problemWeeds: workstep.problemWeeds,
-                                                countPerPlant: workstep.countPerPlant?.toString(),
-                                                plantPerQm: workstep.plantPerQm?.toString(),
+                                                problemWeeds:
+                                                    workstep.problemWeeds,
+                                                countPerPlant:
+                                                    workstep.countPerPlant
+                                                        ?.toString(),
+                                                plantPerQm:
+                                                    workstep.plantPerQm
+                                                        ?.toString(),
                                                 nutrient: workstep.nutrient,
-                                                turning: workstep.turning == 1?true:false,
-                                                ptoDriven: workstep.ptoDriven == 1?true:false,
+                                                turning:
+                                                    workstep.turning == 1
+                                                        ? true
+                                                        : false,
+                                                ptoDriven:
+                                                    workstep.ptoDriven == 1
+                                                        ? true
+                                                        : false,
                                               ),
                                         ),
                                       );

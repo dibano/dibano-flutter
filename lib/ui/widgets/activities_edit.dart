@@ -18,7 +18,7 @@ class ActivitiesEdit extends StatelessWidget {
   final String title;
   final String activityName;
   final int? activityId;
-  bool isCreate;
+  final bool isCreate;
 
   final TextEditingController _descriptionController = TextEditingController();
   final FocusNode _focusNode = FocusNode();

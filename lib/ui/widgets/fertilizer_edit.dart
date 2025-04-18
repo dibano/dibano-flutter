@@ -24,7 +24,7 @@ class FertilizerEdit extends StatelessWidget {
   final String p;
   final String k;
   final int? fertilizerId;
-  bool isCreate;
+  final bool isCreate;
 
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _nController = TextEditingController();
@@ -40,7 +40,6 @@ class FertilizerEdit extends StatelessWidget {
     _nController.text = n;
     _pController.text = p;
     _kController.text = k;
-
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNode.requestFocus();
@@ -76,7 +75,9 @@ class FertilizerEdit extends StatelessWidget {
                                         "Möchtest du dieses Düngmittel wirklich löschen?",
                                     alertType: AlertType.delete,
                                     onDelete: () async {
-                                      await fertilizerViewModel.remove(fertilizerId!);
+                                      await fertilizerViewModel.remove(
+                                        fertilizerId!,
+                                      );
                                       Navigator.pop(context, true);
                                     },
                                   );
@@ -139,11 +140,13 @@ class FertilizerEdit extends StatelessWidget {
                           onPressed: () async {
                             final fertilizerExisting = fertilizerViewModel
                                 .checkIfExisting(_descriptionController.text);
-                            if (_descriptionController.text != "" && 
+                            if (_descriptionController.text != "" &&
                                 _nController.text != "" &&
                                 _pController.text != "" &&
                                 _kController.text != "" &&
-                                (fertilizerExisting == false || _actualFertilizerName == _descriptionController.text)) {
+                                (fertilizerExisting == false ||
+                                    _actualFertilizerName ==
+                                        _descriptionController.text)) {
                               if (fertilizerId == null) {
                                 await fertilizerViewModel.addFertilizer(
                                   _descriptionController.text,
@@ -172,10 +175,10 @@ class FertilizerEdit extends StatelessWidget {
                                 },
                               );
                             } else if (_descriptionController.text != "" &&
-                                       _nController.text != "" &&
-                                       _pController.text != "" &&
-                                       _kController.text != "" &&
-                                       fertilizerExisting == true) {
+                                _nController.text != "" &&
+                                _pController.text != "" &&
+                                _kController.text != "" &&
+                                fertilizerExisting == true) {
                               await showDialog(
                                 context: context,
                                 builder: (BuildContext context) {

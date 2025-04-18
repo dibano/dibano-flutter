@@ -38,54 +38,56 @@ class MyFarm extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FarmBox(
-              box: FarmContent(
-                icon: Icons.person,
-                title: "Meine Mitarbeiter",
-                routeWidget: People(title: "Meine Mitarbeiter"),
-                color: FarmColors.darkGreenIntense,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FarmBox(
+                box: FarmContent(
+                  icon: Icons.person,
+                  title: "Meine Mitarbeiter",
+                  routeWidget: People(title: "Meine Mitarbeiter"),
+                  color: FarmColors.darkGreenIntense,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            FarmBox(
-              box: FarmContent(
-                icon: Icons.agriculture,
-                title: "Meine Aktivitäten",
-                routeWidget: Activities(title: "Meine Aktivitäten"),
-                color: FarmColors.grassGreen,
+              const SizedBox(height: 3),
+              FarmBox(
+                box: FarmContent(
+                  icon: Icons.agriculture,
+                  title: "Meine Aktivitäten",
+                  routeWidget: Activities(title: "Meine Aktivitäten"),
+                  color: FarmColors.grassGreen,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            FarmBox(
-              box: FarmContent(
-                icon: Icons.grass,
-                title: "Meine Felder",
-                routeWidget: Fields(title: "Meine Felder"),
-                color: FarmColors.darkGreenIntense,
+              const SizedBox(height: 3),
+              FarmBox(
+                box: FarmContent(
+                  icon: Icons.grass,
+                  title: "Meine Felder",
+                  routeWidget: Fields(title: "Meine Felder"),
+                  color: FarmColors.darkGreenIntense,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            FarmBox(
-              box: FarmContent(
-                icon: Icons.eco,
-                title: "Meine Kulturen",
-                routeWidget: Crops(title: "Meine Kulturen"),
-                color: FarmColors.grassGreen,
+              const SizedBox(height: 3),
+              FarmBox(
+                box: FarmContent(
+                  icon: Icons.eco,
+                  title: "Meine Kulturen",
+                  routeWidget: Crops(title: "Meine Kulturen"),
+                  color: FarmColors.grassGreen,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            FarmBox(
-              box: FarmContent(
-                icon: Icons.water_drop,
-                title: "Meine Düngemittel",
-                routeWidget: Fertilizer(title: "Meine Düngemittel"),
-                color: FarmColors.darkGreenIntense,
+              const SizedBox(height: 3),
+              FarmBox(
+                box: FarmContent(
+                  icon: Icons.water_drop,
+                  title: "Meine Düngemittel",
+                  routeWidget: Fertilizer(title: "Meine Düngemittel"),
+                  color: FarmColors.darkGreenIntense,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

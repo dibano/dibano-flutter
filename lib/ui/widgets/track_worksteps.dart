@@ -64,7 +64,7 @@ class TrackWorksteps extends StatefulWidget {
     this.plantPerQm,
     this.nutrient,
     this.turning,
-    this.ptoDriven
+    this.ptoDriven,
   });
 
   final String title;
@@ -111,7 +111,6 @@ class TrackWorksteps extends StatefulWidget {
   final bool? turning;
   final bool? ptoDriven;
 
-
   @override
   State<TrackWorksteps> createState() => _TrackWorkstepsState();
 }
@@ -144,9 +143,11 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
 
   DateTime? _activityDate;
 
-// Zusätzliche Felder
-  final TextEditingController _quantityPerFieldController = TextEditingController();
-  final TextEditingController _quantityPerHaController = TextEditingController();
+  // Zusätzliche Felder
+  final TextEditingController _quantityPerFieldController =
+      TextEditingController();
+  final TextEditingController _quantityPerHaController =
+      TextEditingController();
   final TextEditingController _nPerField = TextEditingController();
   final TextEditingController _nPerHa = TextEditingController();
   final TextEditingController _pPerField = TextEditingController();
@@ -163,7 +164,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
   final TextEditingController _seedingDistance = TextEditingController();
   final TextEditingController _germinationAbility = TextEditingController();
   final TextEditingController _goalQuantity = TextEditingController();
-  final TextEditingController _spray= TextEditingController();
+  final TextEditingController _spray = TextEditingController();
 
   final TextEditingController _machiningDepth = TextEditingController();
 
@@ -174,7 +175,8 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
   final TextEditingController _productName = TextEditingController();
 
   final TextEditingController _actualQuantity = TextEditingController();
-  final TextEditingController _waterQuantityProcentage = TextEditingController();
+  final TextEditingController _waterQuantityProcentage =
+      TextEditingController();
 
   final TextEditingController _pest = TextEditingController();
   final TextEditingController _fungus = TextEditingController();
@@ -187,7 +189,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
     if (_selectedArea != "-1") {
       setState(() {
         if (widget.selectedArea == null) {
-            _trackWorkstepsViewModel.addWorkstepActivity(
+          _trackWorkstepsViewModel.addWorkstepActivity(
             int.parse(_selectedArea.toString()),
             _descriptionController.text,
             int.parse(_selectedPerson.toString()),
@@ -298,43 +300,42 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
           );
         },
       );
-    } 
+    }
   }
 
-
-  void clearFields(){
-        _quantityPerFieldController.clear();
-        _quantityPerHaController.clear();
-        _nPerField.clear();
-        _nPerHa.clear();
-        _pPerField.clear();
-        _pPerHa.clear();
-        _kPerField.clear();
-        _kPerHa.clear();
-        _tractor.clear();
-        _fertilizerSpreader.clear();
-        _seedingDepth.clear();
-        _seedingQuantity.clear();
-        _plantProtectionName.clear();
-        _rowDistance.clear();
-        _seedingDistance.clear();
-        _germinationAbility.clear();
-        _goalQuantity.clear();
-        _spray.clear();
-        _machiningDepth.clear();
-        _usedMachine.clear();
-        _productName.clear();
-        _actualQuantity.clear();
-        _waterQuantityProcentage.clear();
-        _turning = false;
-        _ptoDriven = false;
-        _pest.clear();
-        _fungus.clear();
-        _problemWeeds.clear();
-        _countPerPlant.clear();
-        _plantPerQm.clear();
-        _nutrient.clear();
-        _selectedFertilizer = "-1";
+  void clearFields() {
+    _quantityPerFieldController.clear();
+    _quantityPerHaController.clear();
+    _nPerField.clear();
+    _nPerHa.clear();
+    _pPerField.clear();
+    _pPerHa.clear();
+    _kPerField.clear();
+    _kPerHa.clear();
+    _tractor.clear();
+    _fertilizerSpreader.clear();
+    _seedingDepth.clear();
+    _seedingQuantity.clear();
+    _plantProtectionName.clear();
+    _rowDistance.clear();
+    _seedingDistance.clear();
+    _germinationAbility.clear();
+    _goalQuantity.clear();
+    _spray.clear();
+    _machiningDepth.clear();
+    _usedMachine.clear();
+    _productName.clear();
+    _actualQuantity.clear();
+    _waterQuantityProcentage.clear();
+    _turning = false;
+    _ptoDriven = false;
+    _pest.clear();
+    _fungus.clear();
+    _problemWeeds.clear();
+    _countPerPlant.clear();
+    _plantPerQm.clear();
+    _nutrient.clear();
+    _selectedFertilizer = "-1";
   }
 
   @override
@@ -523,47 +524,49 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
     setState(() {});
   }
 
-  void reloadCalculatedFields(String? value, FertilizerViewModel fertilizerViewModel){
+  void reloadCalculatedFields(
+    String? value,
+    FertilizerViewModel fertilizerViewModel,
+  ) {
     _selectedFertilizer = value ?? "-1";
-      if (value != "-1") {
-        if (_fieldSize != null) {
-          if (double.tryParse(_quantityPerFieldController.text) != null &&
-              double.tryParse(_quantityPerFieldController.text)! > 0) {
-            _nPerField.text =
-                (fertilizerViewModel.calcNPerField(value!) *
-                        double.parse(_quantityPerFieldController.text))
-                    .toString();
-            _pPerField.text =
-                (fertilizerViewModel.calcPPerField(value) *
-                        double.parse(_quantityPerFieldController.text))
-                    .toString();
-            _kPerField.text =
-                (fertilizerViewModel.calcKPerField(value) *
-                        double.parse(_quantityPerFieldController.text))
-                    .toString();
+    if (value != "-1") {
+      if (_fieldSize != null) {
+        if (double.tryParse(_quantityPerFieldController.text) != null &&
+            double.tryParse(_quantityPerFieldController.text)! > 0) {
+          _nPerField.text =
+              (fertilizerViewModel.calcNPerField(value!) *
+                      double.parse(_quantityPerFieldController.text))
+                  .toString();
+          _pPerField.text =
+              (fertilizerViewModel.calcPPerField(value) *
+                      double.parse(_quantityPerFieldController.text))
+                  .toString();
+          _kPerField.text =
+              (fertilizerViewModel.calcKPerField(value) *
+                      double.parse(_quantityPerFieldController.text))
+                  .toString();
 
-            _nPerHa.text =
-                fertilizerViewModel.calcNPerHa(value, _fieldSize!).toString();
-          }
-          if (double.tryParse(_quantityPerHaController.text) != null &&
-              double.tryParse(_quantityPerHaController.text)! > 0) {
-            _nPerHa.text =
-                (fertilizerViewModel.calcNPerHa(value!, _fieldSize!) *
-                        double.parse(_quantityPerHaController.text))
-                    .toString();
-            _pPerHa.text =
-                (fertilizerViewModel.calcPPerHa(value, _fieldSize!) *
-                        double.parse(_quantityPerHaController.text))
-                    .toString();
-            _kPerHa.text =
-                (fertilizerViewModel.calcKPerHa(value, _fieldSize!) *
-                        double.parse(_quantityPerHaController.text))
-                    .toString();
-          }
+          _nPerHa.text =
+              fertilizerViewModel.calcNPerHa(value, _fieldSize!).toString();
+        }
+        if (double.tryParse(_quantityPerHaController.text) != null &&
+            double.tryParse(_quantityPerHaController.text)! > 0) {
+          _nPerHa.text =
+              (fertilizerViewModel.calcNPerHa(value!, _fieldSize!) *
+                      double.parse(_quantityPerHaController.text))
+                  .toString();
+          _pPerHa.text =
+              (fertilizerViewModel.calcPPerHa(value, _fieldSize!) *
+                      double.parse(_quantityPerHaController.text))
+                  .toString();
+          _kPerHa.text =
+              (fertilizerViewModel.calcKPerHa(value, _fieldSize!) *
+                      double.parse(_quantityPerHaController.text))
+                  .toString();
         }
       }
+    }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -603,7 +606,9 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                           _selectedArea = value ?? "-1";
                           if (_selectedArea != "-1") {
                             _fieldSelected = true;
-                            _fieldSize = cropsViewModel.getFieldSize(_selectedArea!);
+                            _fieldSize = cropsViewModel.getFieldSize(
+                              _selectedArea!,
+                            );
                           } else {
                             _fieldSelected = false;
                           }
@@ -714,32 +719,50 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                FormTextfield(label: "Ausbringmenge pro Feld (kg)", 
-                                              controller: _quantityPerFieldController, 
-                                              keyboardType: TextInputType.number, 
-                                              maxLine: 1, 
-                                              onChanged: (value){ 
-                                                setState((){
-                                                  _selectedFertilizer = "-1"; 
-                                                  if(_quantityPerFieldController != "" && _quantityPerFieldController != null && _fieldSize != "0" && _fieldSize != null){
-                                                    _quantityPerHaController.text = (double.parse(_quantityPerFieldController.text)/_fieldSize!).toString();
-                                                  }else{
-                                                    _quantityPerHaController.text = "";
-                                                  }
-                                                  _nPerField.text = "";
-                                                  _nPerHa.text = "";
-                                                  _pPerField.text = "";
-                                                  _pPerHa.text = "";
-                                                  _kPerField.text = "";
-                                                  _kPerHa.text = "";
-                                                });
-                                              }),
-                                FormTextfieldDisabled(label: "Ausbringmenge pro Ha (kg)", textController: _quantityPerHaController),
+                                FormTextfield(
+                                  label: "Ausbringmenge pro Feld (kg)",
+                                  controller: _quantityPerFieldController,
+                                  keyboardType: TextInputType.number,
+                                  maxLine: 1,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedFertilizer = "-1";
+                                      if (_quantityPerFieldController != "" &&
+                                          _quantityPerFieldController != null &&
+                                          _fieldSize != "0" &&
+                                          _fieldSize != null) {
+                                        _quantityPerHaController.text =
+                                            (double.parse(
+                                                      _quantityPerFieldController
+                                                          .text,
+                                                    ) /
+                                                    _fieldSize!)
+                                                .toString();
+                                      } else {
+                                        _quantityPerHaController.text = "";
+                                      }
+                                      _nPerField.text = "";
+                                      _nPerHa.text = "";
+                                      _pPerField.text = "";
+                                      _pPerHa.text = "";
+                                      _kPerField.text = "";
+                                      _kPerHa.text = "";
+                                    });
+                                  },
+                                ),
+                                FormTextfieldDisabled(
+                                  label: "Ausbringmenge pro Ha (kg)",
+                                  textController: _quantityPerHaController,
+                                ),
                                 Consumer<FertilizerViewModel>(
-                                  builder: (context, fertilizerViewModel, child) {
+                                  builder: (
+                                    context,
+                                    fertilizerViewModel,
+                                    child,
+                                  ) {
                                     return FormDropdown(
-                                      label: "Düngemittel", 
-                                      value: _selectedFertilizer!, 
+                                      label: "Düngemittel",
+                                      value: _selectedFertilizer!,
                                       createNewView: FertilizerEdit(
                                         title: "Düngemittel erstellen",
                                         isCreate: true,
@@ -755,30 +778,63 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                           value: "-1",
                                           child: Text("Düngemittel wählen"),
                                         ),
-                                        ...fertilizerViewModel.fertilizerList.map(
-                                          (fertilizer) => DropdownMenuItem(
-                                            value: fertilizer.id.toString(),
-                                            child: Text(fertilizer.fertilizerName),
-                                          ),
-                                        ),
+                                        ...fertilizerViewModel.fertilizerList
+                                            .map(
+                                              (fertilizer) => DropdownMenuItem(
+                                                value: fertilizer.id.toString(),
+                                                child: Text(
+                                                  fertilizer.fertilizerName,
+                                                ),
+                                              ),
+                                            ),
                                       ],
-                                      onChanged: (value){
+                                      onChanged: (value) {
                                         setState(() {
-                                          reloadCalculatedFields(value, fertilizerViewModel);
+                                          reloadCalculatedFields(
+                                            value,
+                                            fertilizerViewModel,
+                                          );
                                         });
                                       },
                                     );
                                   },
                                 ),
-                                      FormTextfieldDisabled(label: "N pro Feld", textController: _nPerField),
-                                      FormTextfieldDisabled(label: "N pro Ha", textController: _nPerHa),
-                                      FormTextfieldDisabled(label: "K pro Feld", textController: _pPerField),
-                                      FormTextfieldDisabled(label: "K pro Ha", textController: _pPerHa),
-                                      FormTextfieldDisabled(label: "P pro Feld", textController: _kPerField),
-                                      FormTextfieldDisabled(label: "P pro Ha", textController: _kPerHa),
-                                      FormTextfield(label: "Verwendeter Traktor", controller: _tractor, keyboardType: TextInputType.text, maxLine: 1),
-                                      FormTextfield(label: "Verwendeter Düngerstreuer", controller: _fertilizerSpreader, keyboardType: TextInputType.text, maxLine: 1),
-                                
+                                FormTextfieldDisabled(
+                                  label: "N pro Feld",
+                                  textController: _nPerField,
+                                ),
+                                FormTextfieldDisabled(
+                                  label: "N pro Ha",
+                                  textController: _nPerHa,
+                                ),
+                                FormTextfieldDisabled(
+                                  label: "K pro Feld",
+                                  textController: _pPerField,
+                                ),
+                                FormTextfieldDisabled(
+                                  label: "K pro Ha",
+                                  textController: _pPerHa,
+                                ),
+                                FormTextfieldDisabled(
+                                  label: "P pro Feld",
+                                  textController: _kPerField,
+                                ),
+                                FormTextfieldDisabled(
+                                  label: "P pro Ha",
+                                  textController: _kPerHa,
+                                ),
+                                FormTextfield(
+                                  label: "Verwendeter Traktor",
+                                  controller: _tractor,
+                                  keyboardType: TextInputType.text,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Verwendeter Düngerstreuer",
+                                  controller: _fertilizerSpreader,
+                                  keyboardType: TextInputType.text,
+                                  maxLine: 1,
+                                ),
                               ],
                             ),
                           );
@@ -789,48 +845,135 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                FormTextfield(label: "Saattiefe (cm)", controller: _seedingDepth, keyboardType: TextInputType.number, maxLine: 1),
-                                FormTextfield(label: "Saatmenge (Körner / Quadratmeter)", controller: _seedingQuantity, keyboardType: TextInputType.number, maxLine: 1),
-                                FormTextfield(label: "Beizung", controller: _plantProtectionName, keyboardType: TextInputType.text, maxLine: 1),
-                                FormTextfield(label: "Reihenabstand (cm)", controller: _rowDistance, keyboardType: TextInputType.number, maxLine: 1),
-                                FormTextfield(label: "Abstand Körner in einer Reihe (cm)", controller: _seedingDistance, keyboardType: TextInputType.number, maxLine: 1),
-                                FormTextfield(label: "Keimfähigkeit", controller: _germinationAbility, keyboardType: TextInputType.text, maxLine: 1),
-                                FormTextfield(label: "Ziel Auflaufmenge", controller: _goalQuantity, keyboardType: TextInputType.number, maxLine: 1),
-                                FormTextfield(label: "Verwendeter Traktor", controller: _tractor, keyboardType: TextInputType.text, maxLine: 1),
-                                FormTextfield(label: "Verwendete Spritze", controller: _spray, keyboardType: TextInputType.text, maxLine: 1),
+                                FormTextfield(
+                                  label: "Saattiefe (cm)",
+                                  controller: _seedingDepth,
+                                  keyboardType: TextInputType.number,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Saatmenge (Körner / Quadratmeter)",
+                                  controller: _seedingQuantity,
+                                  keyboardType: TextInputType.number,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Beizung",
+                                  controller: _plantProtectionName,
+                                  keyboardType: TextInputType.text,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Reihenabstand (cm)",
+                                  controller: _rowDistance,
+                                  keyboardType: TextInputType.number,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Abstand Körner in einer Reihe (cm)",
+                                  controller: _seedingDistance,
+                                  keyboardType: TextInputType.number,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Keimfähigkeit",
+                                  controller: _germinationAbility,
+                                  keyboardType: TextInputType.text,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Ziel Auflaufmenge",
+                                  controller: _goalQuantity,
+                                  keyboardType: TextInputType.number,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Verwendeter Traktor",
+                                  controller: _tractor,
+                                  keyboardType: TextInputType.text,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Verwendete Spritze",
+                                  controller: _spray,
+                                  keyboardType: TextInputType.text,
+                                  maxLine: 1,
+                                ),
                               ],
                             ),
                           );
                         case "4": //bodenbearbeitung
-                         //clearFields();
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                FormTextfield(label: "Bearbeittiefe", controller: _machiningDepth, keyboardType: TextInputType.number, maxLine: 1),
-                                FormTextfield(label: "Verwendeter Traktor", controller: _seedingQuantity, keyboardType: TextInputType.text, maxLine: 1),
-                                FormTextfield(label: "Verwendete Maschine", controller: _seedingDepth, keyboardType: TextInputType.text, maxLine: 1),
-                                CheckboxListTile(title: Text("Wendend"), value: _turning,onChanged: (bool? newTurningValue){setState(() {
-                                  _turning = newTurningValue ?? false;
-                                });})
-                              ],
-                            ),
-                          );
-
-                        case "5": //Saatbeetbearbeitung 
                           //clearFields();
                           return Padding(
                             padding: const EdgeInsets.only(top: 16.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                FormTextfield(label: "Bearbeittiefe", controller: _machiningDepth, keyboardType: TextInputType.number, maxLine: 1),
-                                FormTextfield(label: "Verwendeter Traktor", controller: _tractor, keyboardType: TextInputType.text, maxLine: 1),
-                                FormTextfield(label: "Verwendete Maschine", controller: _usedMachine, keyboardType: TextInputType.text, maxLine: 1),
-                                CheckboxListTile(title: Text("Zapftriebwellenbetrieben"), value: _ptoDriven,onChanged: (bool? newPtoValue){setState(() {
-                                  _ptoDriven = newPtoValue ?? false;
-                                });})
+                                FormTextfield(
+                                  label: "Bearbeittiefe",
+                                  controller: _machiningDepth,
+                                  keyboardType: TextInputType.number,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Verwendeter Traktor",
+                                  controller: _seedingQuantity,
+                                  keyboardType: TextInputType.text,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Verwendete Maschine",
+                                  controller: _seedingDepth,
+                                  keyboardType: TextInputType.text,
+                                  maxLine: 1,
+                                ),
+                                CheckboxListTile(
+                                  title: Text("Wendend"),
+                                  value: _turning,
+                                  onChanged: (bool? newTurningValue) {
+                                    setState(() {
+                                      _turning = newTurningValue ?? false;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+
+                        case "5": //Saatbeetbearbeitung
+                          //clearFields();
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                FormTextfield(
+                                  label: "Bearbeittiefe",
+                                  controller: _machiningDepth,
+                                  keyboardType: TextInputType.number,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Verwendeter Traktor",
+                                  controller: _tractor,
+                                  keyboardType: TextInputType.text,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Verwendete Maschine",
+                                  controller: _usedMachine,
+                                  keyboardType: TextInputType.text,
+                                  maxLine: 1,
+                                ),
+                                CheckboxListTile(
+                                  title: Text("Zapftriebwellenbetrieben"),
+                                  value: _ptoDriven,
+                                  onChanged: (bool? newPtoValue) {
+                                    setState(() {
+                                      _ptoDriven = newPtoValue ?? false;
+                                    });
+                                  },
+                                ),
                               ],
                             ),
                           );
@@ -841,25 +984,49 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                FormTextfield(label: "Wirkstoff", controller: _plantProtectionName, keyboardType: TextInputType.text, maxLine: 1),
-                                FormTextfield(label: "Produktname", controller: _productName, keyboardType: TextInputType.text, maxLine: 1),
-                                FormTextfield(label: "Ausbringmenge pro Feld (l)", 
-                                              controller: _quantityPerFieldController, 
-                                              keyboardType: TextInputType.number, 
-                                              maxLine: 1, 
-                                              onChanged: (value){ 
-                                                setState((){
-                                                  if(_quantityPerFieldController != "" && _quantityPerFieldController != null && _fieldSize != "0" && _fieldSize != null){
-                                                    _quantityPerHaController.text = (double.parse(_quantityPerFieldController.text)/_fieldSize!).toString();
-                                                  }else{
-                                                    _quantityPerHaController.text = "";
-                                                  }
-                                                });
-                                              }),
-                                FormTextfieldDisabled(label: "Ausbringmenge pro Ha (l)", textController: _quantityPerHaController),
+                                FormTextfield(
+                                  label: "Wirkstoff",
+                                  controller: _plantProtectionName,
+                                  keyboardType: TextInputType.text,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Produktname",
+                                  controller: _productName,
+                                  keyboardType: TextInputType.text,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Ausbringmenge pro Feld (l)",
+                                  controller: _quantityPerFieldController,
+                                  keyboardType: TextInputType.number,
+                                  maxLine: 1,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      if (_quantityPerFieldController != "" &&
+                                          _quantityPerFieldController != null &&
+                                          _fieldSize != "0" &&
+                                          _fieldSize != null) {
+                                        _quantityPerHaController.text =
+                                            (double.parse(
+                                                      _quantityPerFieldController
+                                                          .text,
+                                                    ) /
+                                                    _fieldSize!)
+                                                .toString();
+                                      } else {
+                                        _quantityPerHaController.text = "";
+                                      }
+                                    });
+                                  },
+                                ),
+                                FormTextfieldDisabled(
+                                  label: "Ausbringmenge pro Ha (l)",
+                                  textController: _quantityPerHaController,
+                                ),
                                 FormDropdown(
-                                  label: "Beizungstyp", 
-                                  value: _selectedPlantProtectionType!,                                   
+                                  label: "Beizungstyp",
+                                  value: _selectedPlantProtectionType!,
                                   items: [
                                     DropdownMenuItem(
                                       value: "-1",
@@ -881,15 +1048,19 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                       value: "3",
                                       child: Text("Kombination"),
                                     ),
-                                  ],                              
+                                  ],
                                   onChanged: (value) {
-                                    setState(() => _selectedPlantProtectionType = value ?? "-1");
+                                    setState(
+                                      () =>
+                                          _selectedPlantProtectionType =
+                                              value ?? "-1",
+                                    );
                                   },
                                 ),
                               ],
                             ),
                           );
-                        
+
                         case "7": //Ernte
                           //clearFields();
                           return Padding(
@@ -897,11 +1068,21 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                FormTextfield(label: "Ertrag (dt/ha)", controller: _actualQuantity, keyboardType: TextInputType.number, maxLine: 1),
-                                FormTextfield(label: "Wassergehalt (%)", controller: _waterQuantityProcentage, keyboardType: TextInputType.number, maxLine: 1),
+                                FormTextfield(
+                                  label: "Ertrag (dt/ha)",
+                                  controller: _actualQuantity,
+                                  keyboardType: TextInputType.number,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Wassergehalt (%)",
+                                  controller: _waterQuantityProcentage,
+                                  keyboardType: TextInputType.number,
+                                  maxLine: 1,
+                                ),
                                 FormDropdown(
-                                  label: "Bodenschaden", 
-                                  value: _selectedGroundDamage!,                                   
+                                  label: "Bodenschaden",
+                                  value: _selectedGroundDamage!,
                                   items: [
                                     DropdownMenuItem(
                                       value: "-1",
@@ -909,19 +1090,28 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                     ),
                                     DropdownMenuItem(
                                       value: "0",
-                                      child: Text("Kleine Schäden (kaum sichtbar) "),
+                                      child: Text(
+                                        "Kleine Schäden (kaum sichtbar) ",
+                                      ),
                                     ),
                                     DropdownMenuItem(
                                       value: "1",
-                                      child: Text("Mittlere Schädem (gut sichtbar)"),
+                                      child: Text(
+                                        "Mittlere Schädem (gut sichtbar)",
+                                      ),
                                     ),
                                     DropdownMenuItem(
                                       value: "2",
-                                      child: Text("Grosse Schäden (tiefe Gräben)"),
+                                      child: Text(
+                                        "Grosse Schäden (tiefe Gräben)",
+                                      ),
                                     ),
-                                  ],                              
+                                  ],
                                   onChanged: (value) {
-                                    setState(() => _selectedGroundDamage = value ?? "-1");
+                                    setState(
+                                      () =>
+                                          _selectedGroundDamage = value ?? "-1",
+                                    );
                                   },
                                 ),
                               ],
@@ -934,12 +1124,42 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                FormTextfield(label: "Gesichtete Schädlinge", controller: _pest, keyboardType: TextInputType.text, maxLine: 1),
-                                FormTextfield(label: "Gesichtete Pilzkrankheit", controller: _fungus, keyboardType: TextInputType.text, maxLine: 1),
-                                FormTextfield(label: "Gesichtetes Unkraut", controller: _problemWeeds, keyboardType: TextInputType.text, maxLine: 1),
-                                FormTextfield(label: "Gesichtete Nährstoffmängel", controller: _nutrient, keyboardType: TextInputType.text, maxLine: 1),
-                                FormTextfield(label: "Anzahl pro Pflanzen", controller: _countPerPlant, keyboardType: TextInputType.number, maxLine: 1),
-                                FormTextfield(label: "Befallene Pflanzen pro Quadratmeter", controller: _plantPerQm, keyboardType: TextInputType.number, maxLine: 1),
+                                FormTextfield(
+                                  label: "Gesichtete Schädlinge",
+                                  controller: _pest,
+                                  keyboardType: TextInputType.text,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Gesichtete Pilzkrankheit",
+                                  controller: _fungus,
+                                  keyboardType: TextInputType.text,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Gesichtetes Unkraut",
+                                  controller: _problemWeeds,
+                                  keyboardType: TextInputType.text,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Gesichtete Nährstoffmängel",
+                                  controller: _nutrient,
+                                  keyboardType: TextInputType.text,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Anzahl pro Pflanzen",
+                                  controller: _countPerPlant,
+                                  keyboardType: TextInputType.number,
+                                  maxLine: 1,
+                                ),
+                                FormTextfield(
+                                  label: "Befallene Pflanzen pro Quadratmeter",
+                                  controller: _plantPerQm,
+                                  keyboardType: TextInputType.number,
+                                  maxLine: 1,
+                                ),
                               ],
                             ),
                           );
