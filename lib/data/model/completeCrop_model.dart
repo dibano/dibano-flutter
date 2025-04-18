@@ -4,6 +4,7 @@ class CompleteCrop{
   final int id;
   final int fieldId;
   final String fieldName;
+  final double? fieldSize;
   final String cropName;
   final String startDate;
   final String endDate;
@@ -14,6 +15,7 @@ class CompleteCrop{
     required this.fieldId,
     required this.cropName,
     required this.fieldName,
+    this.fieldSize,
     required this.startDate,
     required this.endDate,
     required this.cropDateId
@@ -23,7 +25,8 @@ class CompleteCrop{
     return CompleteCrop(id: completeCropMap['id'] as int,
                         fieldId: completeCropMap['fieldId'] as int,
                         cropName: completeCropMap['cropName'] as String,
-                        fieldName: completeCropMap['fieldName'] as String, 
+                        fieldName: completeCropMap['fieldName'] as String,
+                        fieldSize: completeCropMap['fieldSize'] as double?, 
                         startDate: completeCropMap['startDate'] as String,
                         endDate: completeCropMap['endDate'] as String,
                         cropDateId: completeCropMap['cropDateId'] as int,

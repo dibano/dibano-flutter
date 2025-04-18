@@ -4,12 +4,12 @@ class WorkstepActivity extends DatabaseModel{
   @override
   final int? id;
   final int workstepId;
-  final int activityId;
+  final int? activityId;
   
   WorkstepActivity({
       this.id,
       required this.workstepId,
-      required this.activityId,
+      this.activityId,
   });
 
   static Future<List<WorkstepActivity>> getAll() async{

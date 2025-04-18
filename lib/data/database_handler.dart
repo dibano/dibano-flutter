@@ -77,7 +77,7 @@ class DatabaseHandler{
           CREATE TABLE Workstep(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             cropdateId INTEGER NOT NULL,
-            description VARCHAR(200) NOT NULL,
+            description VARCHAR(200),
             date DATE NOT NULL,
             quantityPerField DOUBLE,
             quantityPerHa DOUBLE,
@@ -110,8 +110,10 @@ class DatabaseHandler{
             nutrient VARCHAR(200),
             countPerPlant DOUBLE,
             plantPerQm DOUBLE,
-            personId INTEGER NOT NULL,
-            fertilizerId INTEGER NOT NULL,
+            turning INTEGER,
+            ptoDriven INTEGER,
+            personId INTEGER,
+            fertilizerId INTEGER,
             FOREIGN KEY(cropdateId) REFERENCES CropDate(id)
             FOREIGN KEY(personId) REFERENCES Person(id)
             FOREIGN KEY(fertilizerId) REFERENCES Fertilizer(id)
@@ -168,7 +170,7 @@ class DatabaseHandler{
         await database.execute('''
           CREATE TABLE WorkstepActivity(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            activityId INTEGER NOT NULL,
+            activityId INTEGER,
             workstepId INTEGER NOT NULL,
             FOREIGN KEY(activityId) REFERENCES Activity(id),
             FOREIGN KEY(workstepId) REFERENCES Workstep(id)
@@ -183,6 +185,7 @@ class DatabaseHandler{
                   ,cd.endDate
                   ,cd.fieldId
                   ,fl.fieldName
+                  ,fl.fieldSize
                   ,cd.id AS cropDateId
             FROM Crop cr
             INNER JOIN CropDate cd
@@ -236,18 +239,20 @@ class DatabaseHandler{
               ,ws.countPerPlant
               ,ws.plantPerQm
               ,ws.fertilizerId
+              ,ws.turning
+              ,ws.ptoDriven
             FROM WorkstepActivity wa
-            INNER JOIN Workstep ws
+            left JOIN Workstep ws
             on ws.id = wa.workstepId
-            INNER JOIN Activity ac
+            left JOIN Activity ac
             on ac.id = wa.activityId
-            INNER JOIN CropDate cd
+            left JOIN CropDate cd
             on cd.id = ws.cropdateId
-            INNER JOIN Crop cp
+            left JOIN Crop cp
             on cp.id = cd.cropId
-            INNER JOIN Field fd
+            left JOIN Field fd
             on fd.id = cd.fieldId
-            INNER JOIN Person pe
+            left JOIN Person pe
             on pe.id = ws.personId
         ''');
       }
@@ -403,7 +408,7 @@ class DatabaseHandler{
     final List<Map<String, Object?>> worksteps = await db.query('Workstep');
     return [
       for (final {'id': id as int, 
-                  'description': description as String, 
+                  'description': description as String?, 
                   'quantityPerField':quantityPerField as double?,
                   'quantityPerHa':quantityPerHa as double?,
                   'nPerField':nPerField as double?,
@@ -421,9 +426,7 @@ class DatabaseHandler{
                   'germinationAbility':germinationAbility as String?, 
                   'goalQuantity':goalQuantity as double?,
                   'spray':spray as String?, 
-                  //'turning':turning as bool?, 
                   'machiningDepth':machiningDepth as double?,
-                  //'ptoDriven':ptoDriven as bool?,
                   'productName':productName as String?, 
                   'plantProtectionType':plantProtectionType as String?,
                   'actualQuantity':actualQuantity as double?,
@@ -436,9 +439,11 @@ class DatabaseHandler{
                   'countPerPlant':countPerPlant as double?,
                   'plantPerQm':plantPerQm as double?,
                   'fertilizerId':fertilizerId as int?,
-                  'personId': personId as int, 
+                  'personId': personId as int?, 
                   'cropdateId': cropDateId as int, 
-                  'date': date as String}
+                  'date': date as String,
+                  'turning':turning as int?,
+                  'ptoDriven':ptoDriven as int?,}
         in worksteps)
         Workstep(
           id: id,
@@ -460,9 +465,7 @@ class DatabaseHandler{
           germinationAbility: germinationAbility,
           goalQuantity: goalQuantity,
           spray: spray,
-          //turning: turning,
           machiningDepth: machiningDepth,
-          //ptoDriven: ptoDriven,
           productName: productName,
           plantProtectionType: plantProtectionType,
           actualQuantity: actualQuantity,
@@ -478,6 +481,8 @@ class DatabaseHandler{
           personId: personId,
           cropdateId: cropDateId,
           date: date,
+          turning: turning,
+          ptoDriven: ptoDriven,
         )
     ];  
   }

@@ -5,9 +5,9 @@ import 'package:flutter/widgets.dart';
 class TrackWorkstepsViewModel extends ChangeNotifier {
   Future<void> addWorkstepActivity(
     int cropDateId,
-    String description,
-    int personId,
-    int activityId,
+    String? description,
+    int? personId,
+    int? activityId,
     DateTime activityDate,
     double? quantityPerField,
     double? quantityPerHa,
@@ -41,6 +41,8 @@ class TrackWorkstepsViewModel extends ChangeNotifier {
     double? countPerPlant,
     double? plantPerQm,
     int? fertilizerId,
+    bool? turning,
+    bool? ptoDriven,
   ) async {
     Workstep workstep = Workstep(
       description: description,
@@ -79,6 +81,8 @@ class TrackWorkstepsViewModel extends ChangeNotifier {
       countPerPlant: countPerPlant,
       plantPerQm: plantPerQm,
       fertilizerId: fertilizerId,
+      turning: turning==true ? 1 : 0,
+      ptoDriven: ptoDriven==true ? 1 : 0,
     );
     int workstepId = await workstep.insertReturnId();
 
@@ -92,10 +96,10 @@ class TrackWorkstepsViewModel extends ChangeNotifier {
 
   Future<void> updateWorkStepActivity(
     int cropDateId,
-    String description,
-    int personId,
-    int activityId,
-    int workstepActivityId,
+    String? description,
+    int? personId,
+    int? activityId,
+    int? workstepActivityId,
     int workstepId,
     DateTime activityDate,
     double? quantityPerField,
@@ -130,6 +134,8 @@ class TrackWorkstepsViewModel extends ChangeNotifier {
     double? countPerPlant,
     double? plantPerQm,
     int? fertilizerId,
+    bool? turning,
+    bool? ptoDriven,
   ) async {
     Workstep workstep = Workstep(
       id: workstepId,
@@ -169,6 +175,8 @@ class TrackWorkstepsViewModel extends ChangeNotifier {
       countPerPlant: countPerPlant,
       plantPerQm: plantPerQm,
       fertilizerId: fertilizerId,
+      turning: turning==true ? 1 : 0,
+      ptoDriven: ptoDriven==true ? 1 : 0,
     );
     await workstep.update();
 

@@ -4,8 +4,8 @@ import 'package:dibano/data/model/database_model.dart';
 class Workstep extends DatabaseModel{
   @override
   final int? id;
-  final String description;
-  final int personId;
+  final String? description;
+  final int? personId;
   final int cropdateId;
   final String date;
   final double? quantityPerField;
@@ -26,10 +26,8 @@ class Workstep extends DatabaseModel{
   final String? germinationAbility;
   final double? goalQuantity;
   final String? spray;
-  //final bool? turning;
   final double? machiningDepth;
   final String? usedMachine;
-  //final bool? ptoDriven;
   final String? productName;
   final String? plantProtectionType;
   final double? actualQuantity;
@@ -43,11 +41,13 @@ class Workstep extends DatabaseModel{
   final double? plantPerQm;
   final int? fertilizerId;
   final dbHandler = DatabaseHandler();
-  
+  final int? turning;
+  final int? ptoDriven;
+
   Workstep({
     this.id,
-    required this.description,
-    required this.personId,
+    this.description,
+    this.personId,
     required this.cropdateId,
     required this.date,
     this.quantityPerField,
@@ -68,10 +68,8 @@ class Workstep extends DatabaseModel{
     this.germinationAbility,
     this.goalQuantity,
     this.spray,
-    //this.turning,
     this.machiningDepth,
     this.usedMachine,
-    //this.ptoDriven,
     this.productName,
     this.plantProtectionType,
     this.actualQuantity,
@@ -84,6 +82,8 @@ class Workstep extends DatabaseModel{
     this.countPerPlant,
     this.plantPerQm,
     this.fertilizerId,
+    this.turning,
+    this.ptoDriven,
   });
 
   static Future<List<Workstep>> getAll() async{
@@ -115,10 +115,8 @@ class Workstep extends DatabaseModel{
       'germinationAbility': germinationAbility,
       'goalQuantity': goalQuantity,
       'spray': spray,
-      //'turning': turning,
       'machiningDepth': machiningDepth,
       'usedMachine':  usedMachine,
-      //'ptoDriven': ptoDriven,
       'productName': productName,
       'plantProtectionType': plantProtectionType,
       'actualQuantity': actualQuantity,
@@ -134,6 +132,8 @@ class Workstep extends DatabaseModel{
       'personId': personId,
       'cropDateId': cropdateId,
       'date': date,
+      'turning': turning,
+      'ptoDriven': ptoDriven,
     };
   }
 
@@ -150,7 +150,7 @@ class Workstep extends DatabaseModel{
            'machiningDepth: $machiningDepth, productName: $productName, '
            'plantProtectionType: $plantProtectionType, actualQuantity: $actualQuantity, waterQuantityProcentage: $waterQuantityProcentage, '
            'groundDamage: $groundDamage, pest: $pest, fungal: $fungal, problemWeeds: $problemWeeds, nutrient: $nutrient, '
-           'countPerPlant: $countPerPlant, plantPerQm: $plantPerQm, fertilizerId: $fertilizerId}';
+           'countPerPlant: $countPerPlant, plantPerQm: $plantPerQm, fertilizerId: $fertilizerId, turning: $turning, ptoDriven: $ptoDriven}';
   }
 
   @override

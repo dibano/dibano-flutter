@@ -10,6 +10,7 @@ class FormTextfield extends StatelessWidget {
   final TextInputType keyboardType;
   final int maxLine;
   final FocusNode? focusNode;
+  final ValueChanged<String>? onChanged;
   const FormTextfield({
     super.key,
     required this.label,
@@ -17,6 +18,7 @@ class FormTextfield extends StatelessWidget {
     required this.keyboardType,
     required this.maxLine,
     this.focusNode,
+    this.onChanged,
   });
 
   @override
@@ -38,6 +40,7 @@ class FormTextfield extends StatelessWidget {
           keyboardType: keyboardType,
           maxLines: maxLine,
           focusNode: focusNode,
+          onChanged: onChanged,
           textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
             filled: true,

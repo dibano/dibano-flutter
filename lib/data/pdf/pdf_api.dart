@@ -13,7 +13,7 @@ import 'package:flutter/services.dart';
 
 
 class PdfApi {
-  static Future<File> generateTablePdf(List<CompleteWorkstep> completeWorksteps, List<String>? activities, List<String>? crops, List<String>? fields, List<String>? persons) async{
+  static Future<File> generateTablePdf(List<CompleteWorkstep?> completeWorksteps, List<String?>? activities, List<String?>? crops, List<String?>? fields, List<String?>? persons) async{
     final pdf = Document();
     final headers = ["Aktivität", "Kultur", "Feld", "Beschreibung", "Datum"];
     
@@ -57,7 +57,7 @@ class PdfApi {
       filterText =  "Die angewendeten Filter sind: $textActivities $textFields $textCrops $textPerson \n\n";
     }
 
-    final data = completeWorksteps.map((workstep) => [workstep.activityName, workstep.cropName, workstep.fieldName, workstep.description,DateFormat('dd.MM.yyyy').format(DateTime.parse(workstep.date))]).toList();
+    final data = completeWorksteps.map((workstep) => [workstep?.activityName ?? "", workstep?.cropName ?? "", workstep?.fieldName??"", workstep?.description??"",DateFormat('dd.MM.yyyy').format(DateTime.parse(workstep?.date??""))]).toList();
     final title = "Aktivitätenübersicht\n\n";
     final formattedDate = DateFormat('dd.MM.yyyy').format(DateTime.now());
     final text = "Die folgende Tabelle stellt detailliert die landwirtschaftlichen Aktivitäten dar, die von den Landwirten und Landwirtinnen auf ihren Feldern und in den jeweiligen Kulturen ausgeführt wurden. \n\n\n Datum: $formattedDate";

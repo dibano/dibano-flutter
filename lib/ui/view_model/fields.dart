@@ -37,5 +37,4 @@ class FieldsViewModel extends ChangeNotifier {
     }
     return false;
   }
-
 }

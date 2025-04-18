@@ -4,13 +4,13 @@ class CompleteWorkstep{
   final int id;
   final int workstepActivityId;
   final int workstepId;
-  final int activityId;
-  final int personId;
-  final String personName;
+  final int? activityId;
+  final int? personId;
+  final String? personName;
   final String fieldName;
   final String cropName;
-  final String activityName;
-  final String description;
+  final String? activityName;
+  final String? description;
   final String date;
   final double? quantityPerField;
   final double? quantityPerHa;
@@ -30,10 +30,8 @@ class CompleteWorkstep{
   final String? germinationAbility;
   final double? goalQuantity;
   final String? spray;
-  //final bool? turning;
   final double? machiningDepth;
   final String? usedMachine;
-  //final bool? ptoDriven;
   final String? productName;
   final String? plantProtectionType;
   final double? actualQuantity;
@@ -46,18 +44,20 @@ class CompleteWorkstep{
   final double? countPerPlant;
   final double? plantPerQm;
   final int? fertilizerId;
+  final int? turning;
+  final int? ptoDriven;
   
   CompleteWorkstep({
     required this.id,
     required this.workstepActivityId,
     required this.workstepId,
-    required this.activityId,
-    required this.personId,
-    required this.personName,
+    this.activityId,
+    this.personId,
+    this.personName,
     required this.fieldName,
     required this.cropName,
-    required this.activityName,
-    required this.description,
+    this.activityName,
+    this.description,
     required this.date,
     this.quantityPerField,
     this.quantityPerHa,
@@ -77,10 +77,8 @@ class CompleteWorkstep{
     this.germinationAbility,
     this.goalQuantity,
     this.spray,
-    //this.turning,
     this.machiningDepth,
     this.usedMachine,
-    //this.ptoDriven,
     this.productName,
     this.plantProtectionType,
     this.actualQuantity,
@@ -93,19 +91,21 @@ class CompleteWorkstep{
     this.countPerPlant,
     this.plantPerQm,
     this.fertilizerId,
+    this.turning,
+    this.ptoDriven,
   });
 
   factory CompleteWorkstep.fromMap(Map<String, Object?> completeWorkstepMap) {
     return CompleteWorkstep(id: completeWorkstepMap['id'] as int,
                         workstepActivityId: completeWorkstepMap['workstepActivityId'] as int,
                         workstepId: completeWorkstepMap['workstepId'] as int,
-                        activityId: completeWorkstepMap['activityId'] as int,
-                        personId: completeWorkstepMap['personId'] as int,
-                        personName: completeWorkstepMap['personName'] as String,
+                        activityId: completeWorkstepMap['activityId'] as int?,
+                        personId: completeWorkstepMap['personId'] as int?,
+                        personName: completeWorkstepMap['personName'] as String?,
                         cropName: completeWorkstepMap['cropName'] as String,
                         fieldName: completeWorkstepMap['fieldName'] as String, 
-                        activityName: completeWorkstepMap['activityName'] as String,
-                        description: completeWorkstepMap['description'] as String,
+                        activityName: completeWorkstepMap['activityName'] as String?,
+                        description: completeWorkstepMap['description'] as String?,
                         date: completeWorkstepMap['date'] as String,
                         quantityPerField: completeWorkstepMap['quantityPerField']as double?,
                         quantityPerHa: completeWorkstepMap['quantityPerHa'] as double?,
@@ -139,6 +139,8 @@ class CompleteWorkstep{
                         countPerPlant: completeWorkstepMap['countPerPlant'] as double?,
                         plantPerQm: completeWorkstepMap['plantPerQm'] as double?,
                         fertilizerId: completeWorkstepMap['fertilizerId'] as int?,
+                        turning: completeWorkstepMap['turning'] as int?,
+                        ptoDriven: completeWorkstepMap['ptoDriven'] as int?,
     );
   }
 

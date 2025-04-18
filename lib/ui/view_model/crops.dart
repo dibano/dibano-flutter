@@ -156,4 +156,12 @@ class CropsViewModel extends ChangeNotifier {
     }
     return false;
   }
+
+    double? getFieldSize(String fieldId){
+      CompleteCrop field = completeCrop.firstWhere(
+          (field) =>
+            fieldId == field.fieldId.toString()
+        );
+      return field.fieldSize;
+    }
 }

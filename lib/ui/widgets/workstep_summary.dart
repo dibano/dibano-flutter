@@ -13,10 +13,10 @@ import 'package:provider/provider.dart';
 
 class WorkstepSummary extends StatefulWidget {
   final String title;
-  final List<String>? selectedFields;
-  final List<String>? selectedActivities;
-  final List<String>? selectedPersons;
-  final List<String>? selectedCrops;
+  final List<String?>? selectedFields;
+  final List<String?>? selectedActivities;
+  final List<String?>? selectedPersons;
+  final List<String?>? selectedCrops;
   final DateTime? startDate;
   final DateTime? endDate;
   bool isFiltered;
@@ -25,10 +25,10 @@ class WorkstepSummary extends StatefulWidget {
   WorkstepSummary({
     super.key,
     required this.title,
-    this.selectedFields,
-    this.selectedActivities,
-    this.selectedPersons,
-    this.selectedCrops,
+    this.selectedFields=const [],
+    this.selectedActivities=const [],
+    this.selectedPersons=const [],
+    this.selectedCrops=const [],
     this.startDate,
     this.endDate,
     this.isFiltered = false,
@@ -40,7 +40,7 @@ class WorkstepSummary extends StatefulWidget {
 
 class _WorkstepSummaryState extends State<WorkstepSummary> {
   late List<CompleteWorkstep> _completeWorksteps;
-  late List<String> _personNames;
+  late List<String?> _personNames;
   final Map<int, bool> _checkedWorksteps = {};
 
   @override
@@ -326,7 +326,8 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                                                 countPerPlant: workstep.countPerPlant?.toString(),
                                                 plantPerQm: workstep.plantPerQm?.toString(),
                                                 nutrient: workstep.nutrient,
-                                                
+                                                turning: workstep.turning == 1?true:false,
+                                                ptoDriven: workstep.ptoDriven == 1?true:false,
                                               ),
                                         ),
                                       );
