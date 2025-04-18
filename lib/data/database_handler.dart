@@ -238,9 +238,12 @@ class DatabaseHandler{
               ,ws.countPerPlant
               ,ws.plantPerQm
               ,ws.fertilizerId
+              ,fe.fertilizerName
+              ,fe.n
+              ,fe.p
+              ,fe.k
               ,ws.turning
               ,ws.ptoDriven
-
             FROM WorkstepActivity wa
             left JOIN Workstep ws
             on ws.id = wa.workstepId
@@ -254,6 +257,8 @@ class DatabaseHandler{
             on fd.id = cd.fieldId
             left JOIN Person pe
             on pe.id = ws.personId
+            left JOIN Fertilizer fe
+            on fe.id = ws.fertilizerId
         ''');
       }
     );

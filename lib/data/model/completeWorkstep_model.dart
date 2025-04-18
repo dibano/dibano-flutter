@@ -43,6 +43,10 @@ class CompleteWorkstep{
   final String? nutrient;
   final double? countPerPlant;
   final double? plantPerQm;
+  final String? fertilizerName;
+  final double? n;
+  final double? p;
+  final double? k;
   final int? fertilizerId;
   final int? turning;
   final int? ptoDriven;
@@ -90,6 +94,10 @@ class CompleteWorkstep{
     this.nutrient,
     this.countPerPlant,
     this.plantPerQm,
+    this.fertilizerName,
+    this.n,
+    this.p,
+    this.k,
     this.fertilizerId,
     this.turning,
     this.ptoDriven,
@@ -138,6 +146,10 @@ class CompleteWorkstep{
                         nutrient: completeWorkstepMap['nutrient'] as String?,
                         countPerPlant: completeWorkstepMap['countPerPlant'] as double?,
                         plantPerQm: completeWorkstepMap['plantPerQm'] as double?,
+                        fertilizerName: completeWorkstepMap['fertilizerName'] as String?,
+                        n: completeWorkstepMap['n'] as double?,
+                        p: completeWorkstepMap['p'] as double?,
+                        k: completeWorkstepMap['k'] as double?,
                         fertilizerId: completeWorkstepMap['fertilizerId'] as int?,
                         turning: completeWorkstepMap['turning'] as int?,
                         ptoDriven: completeWorkstepMap['ptoDriven'] as int?,
