@@ -1,7 +1,5 @@
-import 'package:dibano/ui/view_model/fields.dart';
 import 'package:flutter/widgets.dart';
 import 'package:dibano/data/model/fertilizer_model.dart';
-import 'package:provider/provider.dart';
 
 class FertilizerViewModel extends ChangeNotifier {
   List<Fertilizer> _fertilizerList = [];

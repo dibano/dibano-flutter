@@ -147,12 +147,12 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
 // Zusätzliche Felder
   final TextEditingController _quantityPerFieldController = TextEditingController();
   final TextEditingController _quantityPerHaController = TextEditingController();
-  TextEditingController _nPerField = TextEditingController();
-  TextEditingController _nPerHa = TextEditingController();
-  TextEditingController _pPerField = TextEditingController();
-  TextEditingController _pPerHa = TextEditingController();
-  TextEditingController _kPerField = TextEditingController();
-  TextEditingController _kPerHa = TextEditingController();
+  final TextEditingController _nPerField = TextEditingController();
+  final TextEditingController _nPerHa = TextEditingController();
+  final TextEditingController _pPerField = TextEditingController();
+  final TextEditingController _pPerHa = TextEditingController();
+  final TextEditingController _kPerField = TextEditingController();
+  final TextEditingController _kPerHa = TextEditingController();
   final TextEditingController _tractor = TextEditingController();
   final TextEditingController _fertilizerSpreader = TextEditingController();
 
@@ -182,8 +182,6 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
   final TextEditingController _countPerPlant = TextEditingController();
   final TextEditingController _plantPerQm = TextEditingController();
   final TextEditingController _nutrient = TextEditingController();
-
-  final List<Map<String, String>> _entries = [];
 
   void _addEntry() {
     if (_selectedArea != "-1") {
@@ -531,22 +529,21 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
         if (_fieldSize != null) {
           if (double.tryParse(_quantityPerFieldController.text) != null &&
               double.tryParse(_quantityPerFieldController.text)! > 0) {
-            print("FieldSize: $_fieldSize");
             _nPerField.text =
                 (fertilizerViewModel.calcNPerField(value!) *
                         double.parse(_quantityPerFieldController.text))
                     .toString();
             _pPerField.text =
-                (fertilizerViewModel.calcPPerField(value!) *
+                (fertilizerViewModel.calcPPerField(value) *
                         double.parse(_quantityPerFieldController.text))
                     .toString();
             _kPerField.text =
-                (fertilizerViewModel.calcKPerField(value!) *
+                (fertilizerViewModel.calcKPerField(value) *
                         double.parse(_quantityPerFieldController.text))
                     .toString();
 
             _nPerHa.text =
-                fertilizerViewModel.calcNPerHa(value!, _fieldSize!).toString();
+                fertilizerViewModel.calcNPerHa(value, _fieldSize!).toString();
           }
           if (double.tryParse(_quantityPerHaController.text) != null &&
               double.tryParse(_quantityPerHaController.text)! > 0) {
@@ -555,11 +552,11 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                         double.parse(_quantityPerHaController.text))
                     .toString();
             _pPerHa.text =
-                (fertilizerViewModel.calcPPerHa(value!, _fieldSize!) *
+                (fertilizerViewModel.calcPPerHa(value, _fieldSize!) *
                         double.parse(_quantityPerHaController.text))
                     .toString();
             _kPerHa.text =
-                (fertilizerViewModel.calcKPerHa(value!, _fieldSize!) *
+                (fertilizerViewModel.calcKPerHa(value, _fieldSize!) *
                         double.parse(_quantityPerHaController.text))
                     .toString();
           }

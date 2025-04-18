@@ -110,7 +110,6 @@ class _FieldMapState extends State<FieldMap> {
   }
 
   Future<void> _launchCopyrightPage() async{
-    print("tapped");
     final Uri url = Uri.parse('https://www.openstreetmap.org/copyright');
       if (!await launchUrl(url)) {
     throw Exception('Could not launch $url');

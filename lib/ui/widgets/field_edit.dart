@@ -20,11 +20,11 @@ class FieldEdit extends StatelessWidget {
   });
 
   final String title;
-  final String fieldName;
-  final String fieldSize;
-  final String latitude;
-  final String longitude;
-  final int? fieldId;
+  String fieldName;
+  String fieldSize;
+  String latitude;
+  String longitude;
+  int? fieldId;
   bool isCreate;
 
   final TextEditingController _descriptionController = TextEditingController();
@@ -33,12 +33,11 @@ class FieldEdit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String? _longitude = longitude;
-    String? _latitude = latitude;
-    String _fieldSize = fieldSize;
-    String? _actualFieldName = fieldName;
+    /*String? _longitude = longitude;
+    String? _latitude = latitude;*/
+    String? actualFieldName = fieldName;
     _descriptionController.text = fieldName;
-    _fieldSizeController.text = _fieldSize;
+    _fieldSizeController.text = fieldSize;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNode.requestFocus();
@@ -129,13 +128,13 @@ class FieldEdit extends StatelessWidget {
                             final fieldExisting = fieldsViewModel
                                 .checkIfExisting(_descriptionController.text);
                             if (_descriptionController.text != "" && _fieldSizeController.text != "" &&
-                                (fieldExisting == false || _actualFieldName == _descriptionController.text)) {
+                                (fieldExisting == false || actualFieldName == _descriptionController.text)) {
                               if (fieldId == null) {
                                 await fieldsViewModel.addField(
                                   _descriptionController.text,
                                   _fieldSizeController.text,
-                                  _longitude,
-                                  _latitude,
+                                  longitude,
+                                  latitude,
                                 );
                                 Navigator.pop(context, true);
                               } else {
@@ -143,8 +142,8 @@ class FieldEdit extends StatelessWidget {
                                   fieldId!,
                                   _descriptionController.text,
                                   _fieldSizeController.text,
-                                  _longitude,
-                                  _latitude
+                                  longitude,
+                                  latitude
                                 );
                                 Navigator.pop(context, true);
                               }
@@ -191,10 +190,10 @@ class FieldEdit extends StatelessWidget {
                             MaterialPageRoute(builder: (context) => FieldMap(geoAdminLayer: 'ch.blw.landwirtschaftliche-nutzungsflaechen')),
                           );
                           if(result != null){
-                            _longitude = result['longitude'].toString();
-                            _latitude = result['latitude'].toString();
-                            _fieldSize = result['flaecheHa'].toString();
-                            _fieldSizeController.text = _fieldSize;
+                            longitude = result['longitude'].toString();
+                            latitude = result['latitude'].toString();
+                            fieldSize = result['flaecheHa'].toString();
+                            _fieldSizeController.text = fieldSize;
                           }
                         },
                         child: const Text('Karte anzeigen'),
