@@ -53,7 +53,7 @@ class FertilizerViewModel extends ChangeNotifier {
         (fertilizer) =>
           fertilizerId == fertilizer.id.toString(),
       );
-    return (fertilizerItem.n/fieldSize);
+    return (fertilizerItem.n*fieldSize);
   }
   
   double calcPPerField(String fertilizerId){
@@ -71,7 +71,7 @@ class FertilizerViewModel extends ChangeNotifier {
         (fertilizer) =>
           fertilizerId == fertilizer.id.toString(),
       );
-    return (fertilizerItem.p/fieldSize);
+    return (fertilizerItem.p*fieldSize);
   }
 
   double calcKPerField(String fertilizerId){
@@ -88,6 +88,6 @@ class FertilizerViewModel extends ChangeNotifier {
         (fertilizer) =>
           fertilizerId == fertilizer.id.toString(),
       );
-    return (fertilizerItem.k/fieldSize);
+    return (fertilizerItem.k*fieldSize);
   }
 }

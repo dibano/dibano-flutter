@@ -695,6 +695,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                           ),
                         ],
                         onChanged: (value) {
+                          clearFields();
                           setState(() => _selectedActivity = value ?? "-1");
                         },
                       );
@@ -718,27 +719,22 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                               keyboardType: TextInputType.number, 
                                               maxLine: 1, 
                                               onChanged: (value){ 
-                                                _selectedFertilizer = "-1"; 
-                                                _nPerField.text = "";
-                                                _nPerHa.text = "";
-                                                _pPerField.text = "";
-                                                _pPerHa.text = "";
-                                                _kPerField.text = "";
-                                                _kPerHa.text = "";
+                                                setState((){
+                                                  _selectedFertilizer = "-1"; 
+                                                  if(_quantityPerFieldController != "" && _quantityPerFieldController != null && _fieldSize != "0" && _fieldSize != null){
+                                                    _quantityPerHaController.text = (double.parse(_quantityPerFieldController.text)/_fieldSize!).toString();
+                                                  }else{
+                                                    _quantityPerHaController.text = "";
+                                                  }
+                                                  _nPerField.text = "";
+                                                  _nPerHa.text = "";
+                                                  _pPerField.text = "";
+                                                  _pPerHa.text = "";
+                                                  _kPerField.text = "";
+                                                  _kPerHa.text = "";
+                                                });
                                               }),
-                                FormTextfield(label: "Ausbringmenge pro Ha (kg)", 
-                                              controller: _quantityPerHaController, 
-                                              keyboardType: TextInputType.number, 
-                                              maxLine: 1, 
-                                              onChanged:  (value){ 
-                                                _selectedFertilizer = "-1"; 
-                                                _nPerField.text = "";
-                                                _nPerHa.text = "";
-                                                _pPerField.text = "";
-                                                _pPerHa.text = "";
-                                                _kPerField.text = "";
-                                                _kPerHa.text = "";
-                                              }),
+                                FormTextfieldDisabled(label: "Ausbringmenge pro Ha (kg)", textController: _quantityPerHaController),
                                 Consumer<FertilizerViewModel>(
                                   builder: (context, fertilizerViewModel, child) {
                                     return FormDropdown(
@@ -847,8 +843,20 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                               children: [
                                 FormTextfield(label: "Wirkstoff", controller: _plantProtectionName, keyboardType: TextInputType.text, maxLine: 1),
                                 FormTextfield(label: "Produktname", controller: _productName, keyboardType: TextInputType.text, maxLine: 1),
-                                FormTextfield(label: "Ausbringmenge pro Feld (kg)", controller: _quantityPerFieldController, keyboardType: TextInputType.number, maxLine: 1),
-                                FormTextfield(label: "Ausbringmenge pro Ha (kg)", controller: _quantityPerHaController, keyboardType: TextInputType.number, maxLine: 1),
+                                FormTextfield(label: "Ausbringmenge pro Feld (l)", 
+                                              controller: _quantityPerFieldController, 
+                                              keyboardType: TextInputType.number, 
+                                              maxLine: 1, 
+                                              onChanged: (value){ 
+                                                setState((){
+                                                  if(_quantityPerFieldController != "" && _quantityPerFieldController != null && _fieldSize != "0" && _fieldSize != null){
+                                                    _quantityPerHaController.text = (double.parse(_quantityPerFieldController.text)/_fieldSize!).toString();
+                                                  }else{
+                                                    _quantityPerHaController.text = "";
+                                                  }
+                                                });
+                                              }),
+                                FormTextfieldDisabled(label: "Ausbringmenge pro Ha (l)", textController: _quantityPerHaController),
                                 FormDropdown(
                                   label: "Beizungstyp", 
                                   value: _selectedPlantProtectionType!,                                   
