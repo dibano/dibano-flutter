@@ -240,6 +240,7 @@ class DatabaseHandler{
               ,ws.fertilizerId
               ,ws.turning
               ,ws.ptoDriven
+
             FROM WorkstepActivity wa
             left JOIN Workstep ws
             on ws.id = wa.workstepId

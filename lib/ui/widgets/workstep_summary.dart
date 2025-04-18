@@ -210,7 +210,7 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                           _completeWorksteps
                               .where(
                                 (workstep) =>
-                                    _checkedWorksteps[workstep.workstepId] ==
+                                    _checkedWorksteps[workstep.workstepId] ??
                                     true,
                               )
                               .toList();
