@@ -1,43 +1,46 @@
-import 'package:dibano/ui/view_model/fields.dart';
+import 'package:dibano/ui/view_model/fertilizer.dart';
 import 'package:dibano/ui/widgets/components/custom_alert_dialog.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
-import 'package:dibano/ui/widgets/GeoAdminViewer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class FieldEdit extends StatelessWidget {
-  FieldEdit({
+class FertilizerEdit extends StatelessWidget {
+  FertilizerEdit({
     super.key,
     required this.title,
-    this.fieldName = "",
-    this.fieldSize = "",
-    this.latitude = "",
-    this.longitude = "",
-    this.fieldId,
+    this.fertilizerName = "",
+    this.n = "",
+    this.p = "",
+    this.k = "",
+    this.fertilizerId,
     this.isCreate = false,
   });
 
   final String title;
-  String fieldName;
-  String fieldSize;
-  String latitude;
-  String longitude;
-  int? fieldId;
+  final String fertilizerName;
+  final String n;
+  final String p;
+  final String k;
+  final int? fertilizerId;
   bool isCreate;
 
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _fieldSizeController = TextEditingController();
+  final TextEditingController _nController = TextEditingController();
+  final TextEditingController _pController = TextEditingController();
+  final TextEditingController _kController = TextEditingController();
+
   final FocusNode _focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
-    /*String? _longitude = longitude;
-    String? _latitude = latitude;*/
-    String? actualFieldName = fieldName;
-    _descriptionController.text = fieldName;
-    _fieldSizeController.text = fieldSize;
+    _descriptionController.text = fertilizerName;
+    String? _actualFertilizerName = fertilizerName;
+    _nController.text = n;
+    _pController.text = p;
+    _kController.text = k;
+
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNode.requestFocus();
@@ -47,8 +50,8 @@ class FieldEdit extends StatelessWidget {
       appBar: CustomAppBar(title: title),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Consumer<FieldsViewModel>(
-          builder: (context, fieldsViewModel, child) {
+        child: Consumer<FertilizerViewModel>(
+          builder: (context, fertilizerViewModel, child) {
             return Center(
               child: Column(
                 children: <Widget>[
@@ -70,10 +73,10 @@ class FieldEdit extends StatelessWidget {
                                 builder: (BuildContext context) {
                                   return CustomAlertDialog(
                                     alertText:
-                                        "Möchtest du dieses Feld wirklich löschen?",
+                                        "Möchtest du dieses Düngmittel wirklich löschen?",
                                     alertType: AlertType.delete,
                                     onDelete: () async {
-                                      await fieldsViewModel.remove(fieldId!);
+                                      await fertilizerViewModel.remove(fertilizerId!);
                                       Navigator.pop(context, true);
                                     },
                                   );
@@ -99,21 +102,30 @@ class FieldEdit extends StatelessWidget {
                         children: <Widget>[
                           const SizedBox(height: 24),
                           FormTextfield(
-                            label: "Feldname",
+                            label: "Düngmittelname",
                             controller: _descriptionController,
                             keyboardType: TextInputType.text,
                             maxLine: 1,
                             focusNode: _focusNode,
                           ),
                           FormTextfield(
-                            label: "Feldgrösse in ha",
-                            controller: _fieldSizeController,
+                            label: "Stickstoffkonzentration (N)",
+                            controller: _nController,
                             keyboardType: TextInputType.number,
                             maxLine: 1,
                           ),
-                          Text(
-                            "Daten: © geo.admin.ch"
-                          )
+                          FormTextfield(
+                            label: "Phosphorkonzentration (P)",
+                            controller: _pController,
+                            keyboardType: TextInputType.number,
+                            maxLine: 1,
+                          ),
+                          FormTextfield(
+                            label: "Kalikonzentration (K)",
+                            controller: _kController,
+                            keyboardType: TextInputType.number,
+                            maxLine: 1,
+                          ),
                         ],
                       ),
                     ),
@@ -125,25 +137,28 @@ class FieldEdit extends StatelessWidget {
                         child: CustomButtonLarge(
                           text: "Speichern",
                           onPressed: () async {
-                            final fieldExisting = fieldsViewModel
+                            final fertilizerExisting = fertilizerViewModel
                                 .checkIfExisting(_descriptionController.text);
-                            if (_descriptionController.text != "" && _fieldSizeController.text != "" &&
-                                (fieldExisting == false || actualFieldName == _descriptionController.text)) {
-                              if (fieldId == null) {
-                                await fieldsViewModel.addField(
+                            if (_descriptionController.text != "" && 
+                                _nController.text != "" &&
+                                _pController.text != "" &&
+                                _kController.text != "" &&
+                                (fertilizerExisting == false || _actualFertilizerName == _descriptionController.text)) {
+                              if (fertilizerId == null) {
+                                await fertilizerViewModel.addFertilizer(
                                   _descriptionController.text,
-                                  _fieldSizeController.text,
-                                  longitude,
-                                  latitude,
+                                  _nController.text,
+                                  _pController.text,
+                                  _kController.text,
                                 );
                                 Navigator.pop(context, true);
                               } else {
-                                await fieldsViewModel.update(
-                                  fieldId!,
+                                await fertilizerViewModel.update(
+                                  fertilizerId!,
                                   _descriptionController.text,
-                                  _fieldSizeController.text,
-                                  longitude,
-                                  latitude
+                                  _nController.text,
+                                  _pController.text,
+                                  _kController.text,
                                 );
                                 Navigator.pop(context, true);
                               }
@@ -156,14 +171,17 @@ class FieldEdit extends StatelessWidget {
                                   );
                                 },
                               );
-                            } else if (_descriptionController.text != "" && _fieldSizeController.text != "" &&
-                                fieldExisting == true) {
+                            } else if (_descriptionController.text != "" &&
+                                       _nController.text != "" &&
+                                       _pController.text != "" &&
+                                       _kController.text != "" &&
+                                       fertilizerExisting == true) {
                               await showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return CustomAlertDialog(
                                     alertText:
-                                        "Du hast dieses Feld bereits erfasst",
+                                        "Du hast dieses Düngemittel bereits erfasst",
                                     alertType: AlertType.error,
                                   );
                                 },
@@ -182,21 +200,6 @@ class FieldEdit extends StatelessWidget {
                             }
                           },
                         ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async{
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => FieldMap(geoAdminLayer: 'ch.blw.landwirtschaftliche-nutzungsflaechen')),
-                          );
-                          if(result != null){
-                            longitude = result['longitude'].toString();
-                            latitude = result['latitude'].toString();
-                            fieldSize = result['flaecheHa'].toString();
-                            _fieldSizeController.text = fieldSize;
-                          }
-                        },
-                        child: const Text('Karte anzeigen'),
                       ),
                     ],
                   ),

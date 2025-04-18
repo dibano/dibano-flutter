@@ -15,7 +15,6 @@ class People extends StatefulWidget {
 }
 
 class _PeopleState extends State<People> {
-  final bool _initialized = false;
   @override
   void initState() {
     super.initState();

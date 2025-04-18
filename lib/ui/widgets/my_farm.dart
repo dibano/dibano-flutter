@@ -4,6 +4,7 @@ import 'package:dibano/ui/view_model/components/farm_box.dart';
 import 'package:dibano/ui/widgets/acitivities.dart';
 import 'package:dibano/ui/widgets/components/farm_boxes.dart';
 import 'package:dibano/ui/widgets/components/farm_colors.dart';
+import 'package:dibano/ui/widgets/fertilizer.dart';
 import 'package:dibano/ui/widgets/people.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/fields.dart';
@@ -73,6 +74,15 @@ class MyFarm extends StatelessWidget {
                 title: "Meine Kulturen",
                 routeWidget: Crops(title: "Meine Kulturen"),
                 color: FarmColors.grassGreen,
+              ),
+            ),
+            const SizedBox(height: 8),
+            FarmBox(
+              box: FarmContent(
+                icon: Icons.water_drop,
+                title: "Meine Düngemittel",
+                routeWidget: Fertilizer(title: "Meine Düngemittel"),
+                color: FarmColors.darkGreenIntense,
               ),
             ),
           ],

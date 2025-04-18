@@ -1,8 +1,5 @@
-import 'package:dibano/ui/view_model/activities.dart';
-import 'package:dibano/ui/view_model/fields.dart';
 import 'package:dibano/ui/widgets/components/farm_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 /*
 * Dropdown Widget

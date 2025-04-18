@@ -13,10 +13,10 @@ import 'package:provider/provider.dart';
 
 class WorkstepSummary extends StatefulWidget {
   final String title;
-  final List<String>? selectedFields;
-  final List<String>? selectedActivities;
-  final List<String>? selectedPersons;
-  final List<String>? selectedCrops;
+  final List<String?>? selectedFields;
+  final List<String?>? selectedActivities;
+  final List<String?>? selectedPersons;
+  final List<String?>? selectedCrops;
   final DateTime? startDate;
   final DateTime? endDate;
   bool isFiltered;
@@ -25,10 +25,10 @@ class WorkstepSummary extends StatefulWidget {
   WorkstepSummary({
     super.key,
     required this.title,
-    this.selectedFields,
-    this.selectedActivities,
-    this.selectedPersons,
-    this.selectedCrops,
+    this.selectedFields=const [],
+    this.selectedActivities=const [],
+    this.selectedPersons=const [],
+    this.selectedCrops=const [],
     this.startDate,
     this.endDate,
     this.isFiltered = false,
@@ -40,7 +40,7 @@ class WorkstepSummary extends StatefulWidget {
 
 class _WorkstepSummaryState extends State<WorkstepSummary> {
   late List<CompleteWorkstep> _completeWorksteps;
-  late List<String> _personNames;
+  late List<String?> _personNames;
   final Map<int, bool> _checkedWorksteps = {};
 
   @override
@@ -210,7 +210,7 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                           _completeWorksteps
                               .where(
                                 (workstep) =>
-                                    _checkedWorksteps[workstep.workstepId] ==
+                                    _checkedWorksteps[workstep.workstepId] ??
                                     true,
                               )
                               .toList();
@@ -286,23 +286,48 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                                           builder:
                                               (context) => TrackWorksteps(
                                                 title: "Tätigkeit bearbeiten",
-                                                selectedArea:
-                                                    workstep.id.toString(),
-                                                selectedPerson:
-                                                    workstep.personId
-                                                        .toString(),
-                                                selectedActivity:
-                                                    workstep.activityId
-                                                        .toString(),
-                                                description:
-                                                    workstep.description
-                                                        .toString(),
-                                                workstepActivityId:
-                                                    workstep.workstepActivityId,
+                                                selectedArea: workstep.id.toString(),
+                                                selectedCropName: workstep.cropName,
+                                                selectedActivity: workstep.activityId.toString(),
+                                                selectedPerson: workstep.personId.toString(),
+                                                selectedFertilizer: workstep.fertilizerId?.toString(),
+                                                selectedPlantProtectionType: workstep.plantProtectionType,
+                                                selectedGroundDamage: workstep.groundDamage,
+                                                description: workstep.description,
+                                                workstepActivityId: workstep.workstepActivityId,
                                                 workstepId: workstep.workstepId,
-                                                activityDate: DateTime.tryParse(
-                                                  workstep.date,
-                                                ),
+                                                activityDate: DateTime.tryParse(workstep.date),
+                                                quantityPerField: workstep.quantityPerField?.toString(),
+                                                quantityPerHa: workstep.quantityPerHa?.toString(),
+                                                nPerField: workstep.nPerField?.toString(),
+                                                nPerHa: workstep.nPerHa?.toString(),
+                                                pPerField: workstep.pPerField?.toString(),
+                                                pPerHa: workstep.pPerHa?.toString(),
+                                                kPerField: workstep.kPerField?.toString(),
+                                                kPerHa: workstep.kPerHa?.toString(),
+                                                tractor: workstep.tractor,
+                                                fertilizerSpreader: workstep.fertilizerSpreader,
+                                                seedingDepth: workstep.seedingDepth?.toString(),
+                                                seedingQuantity: workstep.seedingQuantity?.toString(),
+                                                plantProtectionName: workstep.plantProtectionName,
+                                                rowDistance: workstep.rowDistance?.toString(),
+                                                seedingDistance: workstep.seedingDistance?.toString(),
+                                                germinationAbility: workstep.germinationAbility?.toString(),
+                                                goalQuantity: workstep.goalQuantity?.toString(),
+                                                spray: workstep.spray,
+                                                machiningDepth: workstep.machiningDepth?.toString(),
+                                                usedMachine: workstep.usedMachine,
+                                                productName: workstep.productName,
+                                                actualQuantity: workstep.actualQuantity?.toString(),
+                                                waterQuantityProcentage: workstep.waterQuantityProcentage?.toString(),
+                                                pest: workstep.pest,
+                                                fungus: workstep.fungal,
+                                                problemWeeds: workstep.problemWeeds,
+                                                countPerPlant: workstep.countPerPlant?.toString(),
+                                                plantPerQm: workstep.plantPerQm?.toString(),
+                                                nutrient: workstep.nutrient,
+                                                turning: workstep.turning == 1?true:false,
+                                                ptoDriven: workstep.ptoDriven == 1?true:false,
                                               ),
                                         ),
                                       );

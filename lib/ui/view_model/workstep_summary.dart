@@ -32,7 +32,7 @@ class WorkstepSummaryViewModel extends ChangeNotifier {
         break;
       case 2:
         _completeWorksteps.sort(
-          (a, b) => a.activityName.compareTo(b.activityName),
+          (a, b) => (a.activityName ?? '').compareTo(b.activityName ?? ''),
         );
         break;
       case 3:
@@ -66,10 +66,10 @@ class WorkstepSummaryViewModel extends ChangeNotifier {
   }
 
   void filterCompleteWorkstepsByIds({
-    List<String>? selectedFields,
-    List<String>? selectedActivities,
-    List<String>? selectedCrops,
-    List<String>? selectedPersonIds,
+    List<String?>? selectedFields,
+    List<String?>? selectedActivities,
+    List<String?>? selectedCrops,
+    List<String?>? selectedPersonIds,
     DateTime? selectedStartDate,
     DateTime? selectedEndDate,
   }) {
@@ -123,10 +123,8 @@ class WorkstepSummaryViewModel extends ChangeNotifier {
           _completeWorksteps.where((workstep) {
             final lowerCaseQuery = query.toLowerCase();
 
-            return workstep.activityName.toLowerCase().contains(
-                  lowerCaseQuery,
-                ) ||
-                workstep.personName.toLowerCase().contains(lowerCaseQuery) ||
+            return (workstep.activityName?.toLowerCase().contains(lowerCaseQuery) ?? false) ||
+                (workstep.personName?.toLowerCase().contains(lowerCaseQuery) ?? false) ||
                 workstep.cropName.toLowerCase().contains(lowerCaseQuery) ||
                 workstep.fieldName.toLowerCase().contains(lowerCaseQuery) ||
                 workstep.date.toLowerCase().contains(lowerCaseQuery) ||
@@ -137,7 +135,7 @@ class WorkstepSummaryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> getPersonNameById(List<String> selectedPersonIds) {
+  List<String?> getPersonNameById(List<String?> selectedPersonIds) {
     return _completeWorksteps
         .where(
           (workstep) =>

@@ -31,10 +31,10 @@ class ActivityCardState extends State<ActivityCard> {
   @override
   Widget build(BuildContext context) {
     Activity activity = Activity(
-      description: widget.workstep.description,
+      description: widget.workstep.description ?? "",
       fieldName: widget.workstep.fieldName,
       cropName: widget.workstep.cropName,
-      activityName: widget.workstep.activityName,
+      activityName: widget.workstep.activityName ?? "",
       date: DateTime.tryParse(widget.workstep.date)!,
     );
     return Padding(

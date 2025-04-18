@@ -18,10 +18,10 @@ class _FilterDialogState extends State<FilterDialog> {
   DateTime? _startDate;
   DateTime? _endDate;
 
-  List<String> _selectedFields = [];
-  List<String> _selectedActivities = [];
-  List<String> _selectedPersons = [];
-  List<String> _selectedCrops = [];
+  final List<String> _selectedFields = [];
+  final List<String> _selectedActivities = [];
+  final List<String> _selectedPersons = [];
+  final List<String> _selectedCrops = [];
 
   @override
   void initState() {
