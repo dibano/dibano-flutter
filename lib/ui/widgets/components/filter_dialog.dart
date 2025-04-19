@@ -1,3 +1,4 @@
+import 'package:dibano/ui/view_model/fertilizer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dibano/ui/view_model/fields.dart';
@@ -22,6 +23,7 @@ class _FilterDialogState extends State<FilterDialog> {
   final List<String> _selectedActivities = [];
   final List<String> _selectedPersons = [];
   final List<String> _selectedCrops = [];
+  final List<String> _selectedFertilizers = [];
 
   @override
   void initState() {
@@ -43,6 +45,10 @@ class _FilterDialogState extends State<FilterDialog> {
       context,
       listen: false,
     );
+    final fertilizersViewModel = Provider.of<FertilizerViewModel>(
+      context,
+      listen: false,
+    );
 
     await Future.wait([
       fieldsViewModel.getFields(),
@@ -50,6 +56,7 @@ class _FilterDialogState extends State<FilterDialog> {
       cropsViewModel.getCrops(),
       cropsViewModel.getCompleteCrops(),
       activitiesViewModel.getActivities(),
+      fertilizersViewModel.getFertilizer(),
     ]);
   }
 
@@ -58,7 +65,7 @@ class _FilterDialogState extends State<FilterDialog> {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: DefaultTabController(
-        length: 5,
+        length: 5, // Anzahl der Tabs angepasst
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -68,7 +75,7 @@ class _FilterDialogState extends State<FilterDialog> {
                 Tab(icon: Icon(Icons.eco)), // Kulturen
                 Tab(icon: Icon(Icons.agriculture)), // Aktivitäten
                 Tab(icon: Icon(Icons.person)), // Mitarbeiter
-                Tab(icon: Icon(Icons.date_range)), // Datum
+                Tab(icon: Icon(Icons.water_drop)), // Düngemittel
               ],
             ),
             SizedBox(
@@ -95,12 +102,42 @@ class _FilterDialogState extends State<FilterDialog> {
                     _selectedPersons,
                     (item) => item.personName,
                   ),
-                  _buildDateTab(),
+                  _buildCheckboxList<FertilizerViewModel>(
+                    (viewModel) => viewModel.fertilizerList,
+                    _selectedFertilizers,
+                    (item) => item.fertilizerName,
+                  ),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Column(
+                children: [
+                  FormDate(
+                    label: "Datum von",
+                    placeholderDate: null,
+                    dateSelected: (date) {
+                      setState(() {
+                        _startDate = date;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 3),
+                  FormDate(
+                    label: "Datum bis",
+                    placeholderDate: null,
+                    dateSelected: (date) {
+                      setState(() {
+                        _endDate = date;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
@@ -117,6 +154,10 @@ class _FilterDialogState extends State<FilterDialog> {
                     listen: false,
                   );
                   final cropsViewModel = Provider.of<CropsViewModel>(
+                    context,
+                    listen: false,
+                  );
+                  final fertilizersViewModel = Provider.of<FertilizerViewModel>(
                     context,
                     listen: false,
                   );
@@ -143,6 +184,19 @@ class _FilterDialogState extends State<FilterDialog> {
                                           activity.id.toString() == id,
                                     )
                                     .activityName,
+                          )
+                          .toList();
+
+                  final selectedFertilizerNames =
+                      _selectedFertilizers
+                          .map(
+                            (id) =>
+                                fertilizersViewModel.fertilizerList
+                                    .firstWhere(
+                                      (fertilizer) =>
+                                          fertilizer.id.toString() == id,
+                                    )
+                                    .fertilizerName,
                           )
                           .toList();
 
@@ -180,6 +234,10 @@ class _FilterDialogState extends State<FilterDialog> {
                                 selectedCropNames.isEmpty
                                     ? null
                                     : selectedCropNames,
+                            selectedFertilizers:
+                                selectedFertilizerNames.isEmpty
+                                    ? null
+                                    : selectedFertilizerNames,
                             startDate: _startDate,
                             endDate: _endDate,
                             isFiltered: true,

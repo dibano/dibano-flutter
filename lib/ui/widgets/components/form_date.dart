@@ -32,7 +32,7 @@ class FormDateState extends State<FormDate> {
   Future<void> _selectDate(BuildContext context) async {
     DateTime? selected = await showDatePicker(
       context: context,
-      initialDate: selectedDate,
+      initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: DateTime(2100),
     );
@@ -63,11 +63,9 @@ class FormDateState extends State<FormDate> {
           readOnly: true,
           controller: TextEditingController(
             text:
-                (selectedDate?.day == null ||
-                        selectedDate?.month == null ||
-                        selectedDate?.year == null)
-                    ? "${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}"
-                    : "${selectedDate?.day}.${selectedDate?.month}.${selectedDate?.year}",
+                selectedDate != null
+                    ? "${selectedDate!.day}.${selectedDate!.month}.${selectedDate!.year}"
+                    : "",
           ),
           decoration: InputDecoration(
             filled: true,

@@ -70,6 +70,7 @@ class WorkstepSummaryViewModel extends ChangeNotifier {
     List<String?>? selectedActivities,
     List<String?>? selectedCrops,
     List<String?>? selectedPersonIds,
+    List<String?>? selectedFertilizers,
     DateTime? selectedStartDate,
     DateTime? selectedEndDate,
   }) {
@@ -91,6 +92,10 @@ class WorkstepSummaryViewModel extends ChangeNotifier {
             selectedPersonIds,
             workstep.personId.toString(),
           );
+          final matchesFertilizers = _matchesFilter(
+            selectedFertilizers,
+            workstep.fertilizerName.toString(),
+          );
 
           final workstepDate = DateTime.parse(workstep.date);
 
@@ -109,6 +114,7 @@ class WorkstepSummaryViewModel extends ChangeNotifier {
               matchesActivity &&
               matchesPerson &&
               matchesStartDate &&
+              matchesFertilizers &&
               matchesEndDate;
         }).toList();
 
@@ -123,11 +129,19 @@ class WorkstepSummaryViewModel extends ChangeNotifier {
           _completeWorksteps.where((workstep) {
             final lowerCaseQuery = query.toLowerCase();
 
-            return (workstep.activityName?.toLowerCase().contains(lowerCaseQuery) ?? false) ||
-                (workstep.personName?.toLowerCase().contains(lowerCaseQuery) ?? false) ||
+            return (workstep.activityName?.toLowerCase().contains(
+                      lowerCaseQuery,
+                    ) ??
+                    false) ||
+                (workstep.personName?.toLowerCase().contains(lowerCaseQuery) ??
+                    false) ||
                 workstep.cropName.toLowerCase().contains(lowerCaseQuery) ||
                 workstep.fieldName.toLowerCase().contains(lowerCaseQuery) ||
                 workstep.date.toLowerCase().contains(lowerCaseQuery) ||
+                (workstep.fertilizerName?.toLowerCase().contains(
+                      lowerCaseQuery,
+                    ) ??
+                    false) ||
                 (workstep.description?.toLowerCase().contains(lowerCaseQuery) ??
                     false);
           }).toList();

@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CropsEdit extends StatefulWidget {
-  CropsEdit({
+  const CropsEdit({
     super.key,
     required this.title,
     this.cropName = "",
@@ -30,19 +30,22 @@ class CropsEdit extends StatefulWidget {
   final DateTime? endDate;
   final int? fieldId;
   final int? cropDateId;
-  bool isCreate;
+  final bool isCreate;
 
   @override
   State<CropsEdit> createState() => _CropsEditState();
 }
 
 class _CropsEditState extends State<CropsEdit> {
+  final FocusNode _focusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<FieldsViewModel>(context, listen: false).getFields();
+      _focusNode.requestFocus();
     });
+    Provider.of<FieldsViewModel>(context, listen: false).getFields();
 
     setState(() {
       _startDate = widget.startDate;
@@ -121,6 +124,7 @@ class _CropsEditState extends State<CropsEdit> {
                             label: "Kulturname",
                             controller: _descriptionController,
                             keyboardType: TextInputType.text,
+                            focusNode: _focusNode,
                             maxLine: 1,
                           ),
                           FormDate(
