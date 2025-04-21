@@ -21,7 +21,7 @@ class BackupFileList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Daten wiederherstellen",
+        title: "Wiederherstellen",
         hasInfo: true,
         onInfoPressed: () => _showInfoDialog(context),
       ),
