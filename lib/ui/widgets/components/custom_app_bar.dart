@@ -1,3 +1,7 @@
+import 'package:dibano/data/backup/google_drive.dart';
+import 'package:dibano/ui/widgets/components/backup_file_list.dart';
+import 'package:dibano/ui/widgets/components/custom_alert_dialog.dart';
+import 'package:dibano/ui/widgets/components/farm_colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -53,6 +57,132 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           centerTitle: true,
           actions: <Widget>[
+            if (isHome)
+              IconButton(
+                icon: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color.fromARGB(32, 0, 77, 0),
+                  ),
+                  padding: const EdgeInsets.all(8.0),
+                  child: const Icon(Icons.settings, color: Color(0xFF004d00)),
+                ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Icon(
+                          Icons.settings,
+                          color: Colors.grey,
+                          size: 48,
+                        ),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: FarmColors.darkGreenIntense,
+                                  iconColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16.0,
+                                  ),
+                                ),
+                                icon: const Icon(Icons.cloud_upload, size: 28),
+                                label: const Text(
+                                  "Backup erstellen",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onPressed: () async {
+                                  bool success = await uploadToGoogleDrive();
+                                  Navigator.of(context).pop();
+
+                                  if (success) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return CustomAlertDialog(
+                                          alertType: AlertType.success,
+                                          alertText:
+                                              "Das Backup wurde erfolgreich hochgeladen!",
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return CustomAlertDialog(
+                                          alertType: AlertType.error,
+                                          alertText:
+                                              "Das Backup konnte nicht hochgeladen werden. Versuchen Sie es bitte später erneut.",
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: FarmColors.darkGreenIntense,
+                                  iconColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16.0,
+                                  ),
+                                ),
+                                icon: const Icon(
+                                  Icons.cloud_download,
+                                  size: 28,
+                                ),
+                                label: const Text(
+                                  "Daten wiederherstellen",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BackupFileList(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                elevation: 0,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                "Abbrechen",
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
             if (hasInfo)
               IconButton(
                 icon: Container(

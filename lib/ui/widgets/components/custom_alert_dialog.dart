@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 
-enum AlertType { info, error, success, delete }
+enum AlertType { info, error, success, delete, restore }
 
 class CustomAlertDialog extends StatelessWidget {
   final String alertText;
   final AlertType alertType;
   final VoidCallback? onDelete;
+  final VoidCallback? onRestore;
+  final bool backToParent;
 
   const CustomAlertDialog({
     super.key,
     required this.alertText,
     required this.alertType,
     this.onDelete,
+    this.onRestore,
+    this.backToParent = false,
   });
 
   Icon getAlertIcon() {
@@ -28,6 +32,8 @@ class CustomAlertDialog extends StatelessWidget {
         return Icon(Icons.check_circle, color: Colors.green, size: 48);
       case AlertType.delete:
         return Icon(Icons.delete, color: Colors.grey, size: 48);
+      case AlertType.restore:
+        return Icon(Icons.cloud_download, color: Colors.grey, size: 48);
     }
   }
 
@@ -51,6 +57,26 @@ class CustomAlertDialog extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            if (alertType == AlertType.restore)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  ),
+                  onPressed: () {
+                    if (alertType == AlertType.restore && onRestore != null) {
+                      onRestore!();
+                    }
+                  },
+                  child: const Text(
+                    "Überschreiben",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
             if (alertType == AlertType.delete)
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -83,6 +109,9 @@ class CustomAlertDialog extends StatelessWidget {
                 ),
                 onPressed: () {
                   Navigator.of(context).pop();
+                  if (backToParent) {
+                    Navigator.of(context).pop();
+                  }
                 },
                 child: Text(
                   alertType == AlertType.delete ? "Abbrechen" : "OK",
