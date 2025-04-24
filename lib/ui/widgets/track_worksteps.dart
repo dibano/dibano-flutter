@@ -661,6 +661,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                     controller: _descriptionController,
                     keyboardType: TextInputType.text,
                     maxLine: 5,
+                    enableMic: true,
                   ),
 
                   Consumer<CropsViewModel>(
