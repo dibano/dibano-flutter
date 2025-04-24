@@ -11,12 +11,17 @@ class InfoDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: title),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
-            Text(
-              text,
-              textAlign: TextAlign.center,
+            SizedBox(height: 24),
+            Card(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(text, textAlign: TextAlign.start),
+              ),
             ),
           ],
         ),

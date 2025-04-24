@@ -2,6 +2,7 @@ import 'package:dibano/ui/view_model/fields.dart';
 import 'package:dibano/ui/widgets/components/custom_alert_dialog.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
+import 'package:dibano/ui/widgets/components/farm_colors.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
 import 'package:dibano/ui/widgets/GeoAdminViewer.dart';
 import 'package:flutter/material.dart';
@@ -105,11 +106,40 @@ class FieldEdit extends StatelessWidget {
                             maxLine: 1,
                             focusNode: _focusNode,
                           ),
-                          FormTextfield(
-                            label: "Feldgrösse in ha",
-                            controller: _fieldSizeController,
-                            keyboardType: TextInputType.number,
-                            maxLine: 1,
+                          Row(
+                            children: [
+                              FormTextfield(
+                                label: "Feldgrösse in ha",
+                                controller: _fieldSizeController,
+                                keyboardType: TextInputType.number,
+                                maxLine: 1,
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: FarmColors.darkGreenIntense,
+                                  foregroundColor: Colors.white,
+                                ),
+                                onPressed: () async {
+                                  final result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => FieldMap(
+                                            geoAdminLayer:
+                                                'ch.blw.landwirtschaftliche-nutzungsflaechen',
+                                          ),
+                                    ),
+                                  );
+                                  if (result != null) {
+                                    longitude = result['longitude'].toString();
+                                    latitude = result['latitude'].toString();
+                                    fieldSize = result['flaecheHa'].toString();
+                                    _fieldSizeController.text = fieldSize;
+                                  }
+                                },
+                                child: const Text('Karte anzeigen'),
+                              ),
+                            ],
                           ),
                           Text("Daten: © geo.admin.ch"),
                         ],
@@ -184,27 +214,6 @@ class FieldEdit extends StatelessWidget {
                             }
                           },
                         ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => FieldMap(
-                                    geoAdminLayer:
-                                        'ch.blw.landwirtschaftliche-nutzungsflaechen',
-                                  ),
-                            ),
-                          );
-                          if (result != null) {
-                            longitude = result['longitude'].toString();
-                            latitude = result['latitude'].toString();
-                            fieldSize = result['flaecheHa'].toString();
-                            _fieldSizeController.text = fieldSize;
-                          }
-                        },
-                        child: const Text('Karte anzeigen'),
                       ),
                     ],
                   ),
