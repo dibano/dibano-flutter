@@ -29,14 +29,14 @@ class DatabaseHandler{
         await database.execute('''
           CREATE TABLE Person(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            personName VARCHAR(50) NOT NULL UNIQUE
+            personName VARCHAR(500) NOT NULL UNIQUE
           )
         ''');
 
         await database.execute('''
           CREATE TABLE Field(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            fieldName VARCHAR(50) NOT NULL UNIQUE,
+            fieldName VARCHAR(500) NOT NULL UNIQUE,
             fieldSize DOUBLE NOT NULL,
             longitude DOUBLE,
             latitude DOUBLE
@@ -46,7 +46,7 @@ class DatabaseHandler{
         await database.execute('''
           CREATE TABLE Fertilizer(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            fertilizerName VARCHAR(50) NOT NULL UNIQUE,
+            fertilizerName VARCHAR(500) NOT NULL UNIQUE,
             n DOUBLE NOT NULL,
             p DOUBLE NOT NULL,
             k DOUBLE NOT NULL
@@ -56,7 +56,7 @@ class DatabaseHandler{
         await database.execute('''
           CREATE TABLE Crop(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            cropName VARCHAR(50) NOT NULL
+            cropName VARCHAR(500) NOT NULL
           )
         ''');
 
@@ -76,7 +76,7 @@ class DatabaseHandler{
           CREATE TABLE Workstep(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             cropdateId INTEGER NOT NULL,
-            description VARCHAR(200),
+            description VARCHAR(500),
             date DATE NOT NULL,
             quantityPerField DOUBLE,
             quantityPerHa DOUBLE,
@@ -86,27 +86,27 @@ class DatabaseHandler{
             pPerHa DOUBLE,
             kPerField DOUBLE,
             kPerHa DOUBLE,
-            tractor VARCHAR(200),
-            fertilizerSpreader VARCHAR(200),
+            tractor VARCHAR(500),
+            fertilizerSpreader VARCHAR(500),
             seedingDepth DOUBLE,
             seedingQuantity DOUBLE,
-            plantProtectionName VARCHAR(200),
+            plantProtectionName VARCHAR(500),
             rowDistance DOUBLE,
             seedingDistance DOUBLE,
-            germinationAbility VARCHAR(200),
+            germinationAbility VARCHAR(500),
             goalQuantity DOUBLE,
-            spray VARCHAR(200),
+            spray VARCHAR(500),
             machiningDepth DOUBLE,
-            usedMachine VARCHAR(200),
-            productName VARCHAR(200),
-            plantProtectionType VARCHAR(200),
+            usedMachine VARCHAR(500),
+            productName VARCHAR(500),
+            plantProtectionType VARCHAR(500),
             actualQuantity DOUBLE,
             waterQuantityProcentage DOUBLE,
-            groundDamage VARCHAR(200),
-            pest VARCHAR(200),
-            fungal VARCHAR(200),
-            problemWeeds VARCHAR(200),
-            nutrient VARCHAR(200),
+            groundDamage VARCHAR(500),
+            pest VARCHAR(500),
+            fungal VARCHAR(500),
+            problemWeeds VARCHAR(500),
+            nutrient VARCHAR(500),
             countPerPlant DOUBLE,
             plantPerQm DOUBLE,
             turning INTEGER,
@@ -122,7 +122,7 @@ class DatabaseHandler{
         await database.execute('''
           CREATE TABLE Activity(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            activityName VARCHAR(50) NOT NULL UNIQUE
+            activityName VARCHAR(500) NOT NULL UNIQUE
           )
         ''');
 

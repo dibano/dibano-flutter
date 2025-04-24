@@ -128,6 +128,7 @@ class FormTextfield extends StatefulWidget {
           focusNode: widget.focusNode,
           onChanged: widget.onChanged,
           textCapitalization: TextCapitalization.sentences,
+          maxLength: 500,
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
