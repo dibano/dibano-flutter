@@ -20,7 +20,7 @@ class PdfApi {
       "Düngen (flüssig)": ["Aktivität", "Kultur", "Feld", "Beschreibung", "Datum", "Ausbringmehnge/Feld", "Ausbringmenge/Ha", "Düngemittel", "N", "P", "K", "N/Feld", "N/Ha", "P/Feld", "P/Ha", "K/Feld", "K/Ha","Verwendeter Traktor", "Verwendeter Düngerstreuer"],
       "Saat": ["Aktivität", "Kultur", "Feld", "Beschreibung", "Datum","Saattiefe (cm)", "Saatmenge (Körner/Quadratmeter)", "Reihenabstand", "Abstand Körner in Reihe", "Keimfähigkeit", "Ziel Auflaufmenge", "Verwendeter Traktor", "Verwendete Spritze"],
       "Bodenbearbeitung": ["Aktivität", "Kultur", "Feld", "Beschreibung", "Datum","Wendend", "Bearbeittiefe", "Verwendeter Traktor", "Verwendete Maschine"],
-      "Saatbearbeitung": ["Aktivität", "Kultur", "Feld", "Beschreibung", "Datum","Bearbeittiefe", "Verwendeter Traktor", "Verwendete Maschine", "Zapfwellenbetrieben"],
+      "Saatbeetbearbeitung": ["Aktivität", "Kultur", "Feld", "Beschreibung", "Datum","Bearbeittiefe", "Verwendeter Traktor", "Verwendete Maschine", "Zapfwellenbetrieben"],
       "Anwendung Pflanzenschutzmittel": ["Aktivität", "Kultur", "Feld", "Beschreibung", "Datum","Wirkstoff", "Aufbringmenge/Feld (l)", "Wirkstofftyp"],
       "Ernte": ["Aktivität", "Kultur", "Feld", "Beschreibung", "Datum","Ertrag (dt/Ha)", "Wassergehalt (%)", "Bodenschaden"],
       "Kontrolle": ["Aktivität", "Kultur", "Feld", "Beschreibung", "Datum","Gesichtete Schädlinge", "Gesichtete Pilzkrankheit", "Gesichtete Problemunkräuter", "Gesichtete Nährstoffmängel", "Anzahl/Pflanze", "Befallene Pflanze / Quadratmeter"],

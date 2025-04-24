@@ -157,11 +157,24 @@ class CropsViewModel extends ChangeNotifier {
     return false;
   }
 
-    double? getFieldSize(String fieldId){
-      CompleteCrop field = completeCrop.firstWhere(
-          (field) =>
-            fieldId == field.fieldId.toString()
-        );
+  double? getFieldSize(String fieldId){
+    CompleteCrop field = completeCrop.firstWhere(
+        (field) =>
+          fieldId == field.fieldId.toString(),
+          orElse: ()=> CompleteCrop(
+            id: -1,
+            fieldId: -1,
+            fieldName: "unbekannt",
+            cropName: "unbekannt",
+            startDate:"unbekannt",
+            endDate:"unbekannt",
+            cropDateId:-1,
+          )
+      );
+    if(field.fieldId!=-1){
       return field.fieldSize;
+    }else{
+      return 0;
     }
+  }
 }

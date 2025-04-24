@@ -42,6 +42,7 @@ class FormTextfield extends StatelessWidget {
           focusNode: focusNode,
           onChanged: onChanged,
           textCapitalization: TextCapitalization.sentences,
+          maxLength: 500,
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,

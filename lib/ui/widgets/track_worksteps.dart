@@ -727,8 +727,8 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                   onChanged: (value) {
                                     setState(() {
                                       _selectedFertilizer = "-1";
-                                      if (_quantityPerFieldController != "" &&
-                                          _quantityPerFieldController != null &&
+                                      if (_quantityPerFieldController.text != "" &&
+                                          _quantityPerFieldController.text != null &&
                                           _fieldSize != "0" &&
                                           _fieldSize != null) {
                                         _quantityPerHaController.text =
@@ -739,6 +739,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                                     _fieldSize!)
                                                 .toString();
                                       } else {
+                                        _quantityPerFieldController.text = "";
                                         _quantityPerHaController.text = "";
                                       }
                                       _nPerField.text = "";
@@ -882,7 +883,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                   maxLine: 1,
                                 ),
                                 FormTextfield(
-                                  label: "Ziel Auflaufmenge",
+                                  label: "Ziel Auflaufmeng (Anzahl)",
                                   controller: _goalQuantity,
                                   keyboardType: TextInputType.number,
                                   maxLine: 1,
@@ -910,20 +911,20 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 FormTextfield(
-                                  label: "Bearbeittiefe",
+                                  label: "Bearbeittiefe (cm)",
                                   controller: _machiningDepth,
                                   keyboardType: TextInputType.number,
                                   maxLine: 1,
                                 ),
                                 FormTextfield(
                                   label: "Verwendeter Traktor",
-                                  controller: _seedingQuantity,
+                                  controller: _tractor,
                                   keyboardType: TextInputType.text,
                                   maxLine: 1,
                                 ),
                                 FormTextfield(
                                   label: "Verwendete Maschine",
-                                  controller: _seedingDepth,
+                                  controller: _usedMachine,
                                   keyboardType: TextInputType.text,
                                   maxLine: 1,
                                 ),
@@ -948,7 +949,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 FormTextfield(
-                                  label: "Bearbeittiefe",
+                                  label: "Bearbeittiefe (cm)",
                                   controller: _machiningDepth,
                                   keyboardType: TextInputType.number,
                                   maxLine: 1,
@@ -1091,17 +1092,23 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                     DropdownMenuItem(
                                       value: "0",
                                       child: Text(
-                                        "Kleine Schäden (kaum sichtbar) ",
+                                        "Kein Schaden vorhanden",
                                       ),
                                     ),
                                     DropdownMenuItem(
                                       value: "1",
                                       child: Text(
-                                        "Mittlere Schädem (gut sichtbar)",
+                                        "Kleine Schäden (kaum sichtbar) ",
                                       ),
                                     ),
                                     DropdownMenuItem(
                                       value: "2",
+                                      child: Text(
+                                        "Mittlere Schädem (gut sichtbar)",
+                                      ),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: "3",
                                       child: Text(
                                         "Grosse Schäden (tiefe Gräben)",
                                       ),
@@ -1125,37 +1132,37 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 FormTextfield(
-                                  label: "Gesichtete Schädlinge",
+                                  label: "Gesichtete Schädlinge (Art)",
                                   controller: _pest,
                                   keyboardType: TextInputType.text,
                                   maxLine: 1,
                                 ),
                                 FormTextfield(
-                                  label: "Gesichtete Pilzkrankheit",
+                                  label: "Gesichtete Pilzkrankheit (Art)",
                                   controller: _fungus,
                                   keyboardType: TextInputType.text,
                                   maxLine: 1,
                                 ),
                                 FormTextfield(
-                                  label: "Gesichtetes Unkraut",
+                                  label: "Gesichtetes Unkraut (Art)",
                                   controller: _problemWeeds,
                                   keyboardType: TextInputType.text,
                                   maxLine: 1,
                                 ),
                                 FormTextfield(
-                                  label: "Gesichtete Nährstoffmängel",
+                                  label: "Gesichtete Nährstoffmängel (Art)",
                                   controller: _nutrient,
                                   keyboardType: TextInputType.text,
                                   maxLine: 1,
                                 ),
                                 FormTextfield(
-                                  label: "Anzahl pro Pflanzen",
+                                  label: "Anzahl pro Pflanzen (Anzahl)",
                                   controller: _countPerPlant,
                                   keyboardType: TextInputType.number,
                                   maxLine: 1,
                                 ),
                                 FormTextfield(
-                                  label: "Befallene Pflanzen pro Quadratmeter",
+                                  label: "Befallene Pflanzen pro Quadratmeter (Anzahl)",
                                   controller: _plantPerQm,
                                   keyboardType: TextInputType.number,
                                   maxLine: 1,
