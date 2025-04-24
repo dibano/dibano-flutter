@@ -883,7 +883,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                   maxLine: 1,
                                 ),
                                 FormTextfield(
-                                  label: "Ziel Auflaufmeng (Anzahl)",
+                                  label: "Ziel Auflaufmenge (Anzahl)",
                                   controller: _goalQuantity,
                                   keyboardType: TextInputType.number,
                                   maxLine: 1,
