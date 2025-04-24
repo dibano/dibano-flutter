@@ -37,18 +37,26 @@ class Info extends StatelessWidget {
           children: <Widget>[
             const SizedBox(height: 24),
             const SizedBox(height: 16),
-            const CustomTitle(text: 'Schnittstellen'),
+            const CustomTitle(text: 'Vorgehen'),
             DetailCard(
-              detail: Detail(name: "AGATE", isInfo: true),
+              detail: Detail(
+                name: "Wie muss ich vorgehen?",
+                isInfo: true,
+              ),
               onTap: () async {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => InfoDetail(title: "AGATE"),
+                    builder:
+                        (context) =>
+                            InfoDetail(title: "Vorgehen"),
                   ),
                 );
               },
             ),
+            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+            const CustomTitle(text: 'Schnittstellen'),
             DetailCard(
               detail: Detail(
                 name: "Bundesamt für Landwirtschaft",
@@ -66,23 +74,23 @@ class Info extends StatelessWidget {
               },
             ),
             DetailCard(
-              detail: Detail(name: "GIS", isInfo: true),
+              detail: Detail(name: "map.geo.admin", isInfo: true),
               onTap: () async {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => InfoDetail(title: "GIS"),
+                    builder: (context) => InfoDetail(title: "map.geo.admin"),
                   ),
                 );
               },
             ),
             DetailCard(
-              detail: Detail(name: "HODUFLU", isInfo: true),
+              detail: Detail(name: "OpenStreetMap.org", isInfo: true),
               onTap: () async {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => InfoDetail(title: "HODUFLU"),
+                    builder: (context) => InfoDetail(title: "OpenStreetMap.org"),
                   ),
                 );
               },
@@ -111,6 +119,19 @@ class Info extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => InfoDetail(title: "Über uns"),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            const CustomTitle(text: 'Datenschutz'),
+            DetailCard(
+              detail: Detail(name: "Wie werden deine Daten geschützt?", isInfo: true),
+              onTap: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => InfoDetail(title: "Datenschutz"),
                   ),
                 );
               },
