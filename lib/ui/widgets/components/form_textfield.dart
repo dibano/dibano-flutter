@@ -78,13 +78,14 @@ class _FormTextFieldState extends State<FormTextfield> {
   }
 
   void _startListening() {
+    String oldText = widget.controller.text;
     if (permissionStatus != "PermissionStatus.denied" &&
         permissionStatus != null) {
       _speechToText.listen(
         localeId: 'de_DE',
         onResult: (result) {
           setState(() {
-            widget.controller.text = result.recognizedWords;
+            widget.controller.text = '$oldText ${result.recognizedWords}';
             if (widget.onChanged != null) {
               widget.onChanged!(widget.controller.text);
             }
