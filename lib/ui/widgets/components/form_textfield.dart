@@ -29,73 +29,76 @@ class FormTextfield extends StatefulWidget {
   _FormTextFieldState createState() => new _FormTextFieldState();
 }
 
-  class _FormTextFieldState extends State<FormTextfield>{
+class _FormTextFieldState extends State<FormTextfield> {
   late speech.SpeechToText _speechToText;
   bool? _isListeningMoment = false;
   String? permissionStatus;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    if(widget.enableMic == true){
+    if (widget.enableMic == true) {
       _speechToText = speech.SpeechToText();
       _initSpeech();
     }
   }
 
-  Future<void> _initSpeech() async{
+  Future<void> _initSpeech() async {
     var permissionState = await Permission.microphone.status;
     permissionStatus = permissionState.toString();
-    if(!permissionState.isGranted){
+    if (!permissionState.isGranted) {
       permissionState = await Permission.microphone.request();
+      permissionStatus = permissionState.toString();
     }
     bool open = await _speechToText.initialize(
-      onStatus: (status){
-        if(status=="notListening" || status == "done"){
+      onStatus: (status) {
+        if (status == "notListening" || status == "done") {
           setState(() {
             _isListeningMoment = false;
           });
         }
       },
-      onError: (e){
+      onError: (e) {
         setState(() {
-            _isListeningMoment = false;
-          });
+          _isListeningMoment = false;
+        });
         showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return CustomAlertDialog(
-            alertText:"Beim Verwenden des Mikrofones gab es einen Fehler.",
-            alertType: AlertType.error,
-          );
-        },
-      );
-      }
+          context: context,
+          builder: (BuildContext context) {
+            return CustomAlertDialog(
+              alertText: "Beim Verwenden des Mikrofones gab es einen Fehler.",
+              alertType: AlertType.error,
+            );
+          },
+        );
+      },
     );
     var locales = await _speechToText.locales();
     debugPrint('Supported locales: $locales');
   }
 
-  void _startListening(){
-    if(permissionStatus != "PermissionStatus.denied" && permissionStatus != null){
+  void _startListening() {
+    if (permissionStatus != "PermissionStatus.denied" &&
+        permissionStatus != null) {
       _speechToText.listen(
         localeId: 'de_DE',
-        onResult: (result){
-          setState((){
+        onResult: (result) {
+          setState(() {
             widget.controller.text = result.recognizedWords;
-            if(widget.onChanged!=null){
+            if (widget.onChanged != null) {
               widget.onChanged!(widget.controller.text);
             }
           });
         },
       );
       setState(() => _isListeningMoment = true);
-    }else{
+    } else {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return CustomAlertDialog(
-            alertText:"Sie müssen in ihren Telefoneinstellungen das Mikrofon für Dibano freigeben, bevor Sie es verwenden können.",
+            alertText:
+                "Sie müssen in ihren Telefoneinstellungen das Mikrofon für Dibano freigeben, bevor Sie es verwenden können.",
             alertType: AlertType.error,
           );
         },
@@ -103,10 +106,11 @@ class FormTextfield extends StatefulWidget {
     }
   }
 
-  void _stopListening(){
+  void _stopListening() {
     _speechToText.stop();
     setState(() => _isListeningMoment = false);
   }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -150,13 +154,19 @@ class FormTextfield extends StatefulWidget {
               vertical: 12.0,
               horizontal: 16.0,
             ),
-            suffixIcon: widget.enableMic!?IconButton(
-              icon:Icon(
-                _isListeningMoment! ? Icons.mic : Icons.mic_none,
-                color: FarmColors.darkGreenIntense,
-              ),
-              onPressed: _isListeningMoment!?_stopListening:_startListening,
-            ) :null,
+            suffixIcon:
+                widget.enableMic!
+                    ? IconButton(
+                      icon: Icon(
+                        _isListeningMoment! ? Icons.mic : Icons.mic_none,
+                        color: FarmColors.darkGreenIntense,
+                      ),
+                      onPressed:
+                          _isListeningMoment!
+                              ? _stopListening
+                              : _startListening,
+                    )
+                    : null,
           ),
         ),
         const SizedBox(height: 15),

@@ -545,22 +545,19 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
               (fertilizerViewModel.calcKPerField(value) *
                       double.parse(_quantityPerFieldController.text))
                   .toString();
-
-          _nPerHa.text =
-              fertilizerViewModel.calcNPerHa(value, _fieldSize!).toString();
         }
         if (double.tryParse(_quantityPerHaController.text) != null &&
             double.tryParse(_quantityPerHaController.text)! > 0) {
           _nPerHa.text =
-              (fertilizerViewModel.calcNPerHa(value!, _fieldSize!) *
+              (fertilizerViewModel.getN(value!) *
                       double.parse(_quantityPerHaController.text))
                   .toString();
           _pPerHa.text =
-              (fertilizerViewModel.calcPPerHa(value, _fieldSize!) *
+              (fertilizerViewModel.getP(value) *
                       double.parse(_quantityPerHaController.text))
                   .toString();
           _kPerHa.text =
-              (fertilizerViewModel.calcKPerHa(value, _fieldSize!) *
+              (fertilizerViewModel.getK(value) *
                       double.parse(_quantityPerHaController.text))
                   .toString();
         }
