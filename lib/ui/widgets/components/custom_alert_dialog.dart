@@ -72,7 +72,7 @@ class CustomAlertDialog extends StatelessWidget {
                     }
                   },
                   child: const Text(
-                    "Überschreiben",
+                    "Ersetzen",
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -103,7 +103,11 @@ class CustomAlertDialog extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
+                  backgroundColor:
+                      (alertType == AlertType.delete ||
+                              alertType == AlertType.restore)
+                          ? Colors.grey
+                          : Colors.green,
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 ),
@@ -114,7 +118,10 @@ class CustomAlertDialog extends StatelessWidget {
                   }
                 },
                 child: Text(
-                  alertType == AlertType.delete ? "Abbrechen" : "OK",
+                  (alertType == AlertType.delete ||
+                          alertType == AlertType.restore)
+                      ? "Abbrechen"
+                      : "OK",
                   style: const TextStyle(color: Colors.white),
                 ),
               ),

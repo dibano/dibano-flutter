@@ -579,6 +579,14 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
               children: [
                 Consumer<FieldsViewModel>(
                   builder: (context, fieldsViewModel, child) {
+                    if (fieldsViewModel.fields.isEmpty) {
+                      return const Center(
+                        child: Warn(
+                          warnText:
+                              "Keine Felder gefunden! Bitte erfassen Sie zuerst Felder und Kulturen unter \"Mein Bauernhof\".",
+                        ),
+                      );
+                    }
                     return FormDropdown(
                       label: "Feld",
                       value: _selectedArea!,
@@ -646,10 +654,9 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                     _cropController.text == "unbekannt") ...[
                   Warn(
                     warnText:
-                        "Keine Kultur zur Feldauswahl und Datumauswahl gefunden!",
+                        "Keine Kultur zur Feldauswahl und Datumauswahl gefunden! Bitte erfassen Sie zuerst eine Kultur zum gewählten Feld und Datum unter \"Mein Bauernhof\".",
                   ),
                 ],
-
                 if (_activityDate != null &&
                     _selectedArea != "-1" &&
                     _cropController.text != "unbekannt") ...[
