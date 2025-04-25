@@ -545,22 +545,19 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
               (fertilizerViewModel.calcKPerField(value) *
                       double.parse(_quantityPerFieldController.text))
                   .toString();
-
-          _nPerHa.text =
-              fertilizerViewModel.calcNPerHa(value, _fieldSize!).toString();
         }
         if (double.tryParse(_quantityPerHaController.text) != null &&
             double.tryParse(_quantityPerHaController.text)! > 0) {
           _nPerHa.text =
-              (fertilizerViewModel.calcNPerHa(value!, _fieldSize!) *
+              (fertilizerViewModel.getN(value!) *
                       double.parse(_quantityPerHaController.text))
                   .toString();
           _pPerHa.text =
-              (fertilizerViewModel.calcPPerHa(value, _fieldSize!) *
+              (fertilizerViewModel.getP(value) *
                       double.parse(_quantityPerHaController.text))
                   .toString();
           _kPerHa.text =
-              (fertilizerViewModel.calcKPerHa(value, _fieldSize!) *
+              (fertilizerViewModel.getK(value) *
                       double.parse(_quantityPerHaController.text))
                   .toString();
         }
@@ -728,8 +725,10 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                   onChanged: (value) {
                                     setState(() {
                                       _selectedFertilizer = "-1";
-                                      if (_quantityPerFieldController.text != "" &&
-                                          _quantityPerFieldController.text != null &&
+                                      if (_quantityPerFieldController.text !=
+                                              "" &&
+                                          _quantityPerFieldController.text !=
+                                              null &&
                                           _fieldSize != "0" &&
                                           _fieldSize != null) {
                                         _quantityPerHaController.text =
@@ -930,6 +929,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                   maxLine: 1,
                                 ),
                                 CheckboxListTile(
+                                  contentPadding: EdgeInsets.zero,
                                   title: Text("Wendend"),
                                   value: _turning,
                                   onChanged: (bool? newTurningValue) {
@@ -937,11 +937,13 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                       _turning = newTurningValue ?? false;
                                     });
                                   },
+                                  controlAffinity:
+                                      ListTileControlAffinity.trailing,
                                 ),
+                                SizedBox(height: 12),
                               ],
                             ),
                           );
-
                         case "5": //Saatbeetbearbeitung
                           //clearFields();
                           return Padding(
@@ -968,6 +970,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                   maxLine: 1,
                                 ),
                                 CheckboxListTile(
+                                  contentPadding: EdgeInsets.zero,
                                   title: Text("Zapftriebwellenbetrieben"),
                                   value: _ptoDriven,
                                   onChanged: (bool? newPtoValue) {
@@ -975,7 +978,10 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                       _ptoDriven = newPtoValue ?? false;
                                     });
                                   },
+                                  controlAffinity:
+                                      ListTileControlAffinity.trailing,
                                 ),
+                                SizedBox(height: 12),
                               ],
                             ),
                           );
@@ -1092,9 +1098,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                     ),
                                     DropdownMenuItem(
                                       value: "0",
-                                      child: Text(
-                                        "Kein Schaden vorhanden",
-                                      ),
+                                      child: Text("Kein Schaden vorhanden"),
                                     ),
                                     DropdownMenuItem(
                                       value: "1",
@@ -1163,7 +1167,8 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                   maxLine: 1,
                                 ),
                                 FormTextfield(
-                                  label: "Befallene Pflanzen pro Quadratmeter (Anzahl)",
+                                  label:
+                                      "Befallene Pflanzen pro Quadratmeter (Anzahl)",
                                   controller: _plantPerQm,
                                   keyboardType: TextInputType.number,
                                   maxLine: 1,
