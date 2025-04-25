@@ -108,16 +108,23 @@ class FieldEdit extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              FormTextfield(
-                                label: "Feldgrösse in ha",
-                                controller: _fieldSizeController,
-                                keyboardType: TextInputType.number,
-                                maxLine: 1,
+                              Expanded(
+                                child: FormTextfield(
+                                  label: "Feldgrösse in ha",
+                                  controller: _fieldSizeController,
+                                  keyboardType: TextInputType.number,
+                                  maxLine: 1,
+                                ),
                               ),
+                              const SizedBox(width: 16),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: FarmColors.darkGreenIntense,
                                   foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0,
+                                    vertical: 12.0,
+                                  ),
                                 ),
                                 onPressed: () async {
                                   final result = await Navigator.push(
