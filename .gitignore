@@ -1,3 +1,10 @@
 /.idea
 /.dart_tool
 /build
+
+# Generated Files
+.flutter-plugins
+.flutter-plugins-dependencies
+
+#llm-models
+/assets/llm-models
