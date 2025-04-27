@@ -14,19 +14,17 @@ class Crop extends DatabaseModel{
   static Future<List<Crop>> getAll() async{
     return await DatabaseModel.dbHandler.crops();
   }
-  
-  // Convert a Dog into a Map. The keys must correspond to the names of the
-  // columns in the database.
+
+  // keys correspond to the names of the columns in the database.
   @override
   Map<String, Object?> toMap() {
     return {
-      'id': id, 
+      'id': id,
       'cropName': cropName
     };
   }
 
-  // Implement toString to make it easier to see information about
-  // each dog when using the print statement.
+  // for debugging and testing, i.e. with the print statement
   @override
   String toString() {
     return 'crop{id: $id, cropName: $cropName}';

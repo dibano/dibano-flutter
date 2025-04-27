@@ -12,22 +12,23 @@ class Activity extends DatabaseModel{
 
   static Future<List<Activity>> getAll() async{
     return await DatabaseModel.dbHandler.activity();
-  }  
+  }
+
   // keys correspond to the names of the columns in the database.
   @override
   Map<String, Object?> toMap() {
     return {
-      'id': id, 
+      'id': id,
       'activityName': activityName
     };
   }
 
-  // For debugging and testing, i.e. with the print statement
+  // for debugging and testing, i.e. with the print statement
   @override
   String toString() {
     return 'activity{id: $id, activityName: $activityName}';
   }
-  
+
   @override
   String get tableName => 'Activity';
 
