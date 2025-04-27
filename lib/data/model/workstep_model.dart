@@ -90,8 +90,7 @@ class Workstep extends DatabaseModel{
     return await DatabaseModel.dbHandler.worksteps();
   }
 
-  // Convert a Dog into a Map. The keys must correspond to the names of the
-  // columns in the database.
+  // keys correspond to the names of the columns in the database
   @override
   Map<String, Object?> toMap() {
     return {
@@ -137,8 +136,7 @@ class Workstep extends DatabaseModel{
     };
   }
 
-  // Implement toString to make it easier to see information about
-  // each dog when using the print statement.
+  // for debugging and testing, i.e. with the print statement
   @override
   String toString() {
     return 'Workstep{id: $id, description: $description, personId: $personId, cropDateId: $cropdateId, date: $date, '
