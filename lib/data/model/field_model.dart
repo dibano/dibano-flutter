@@ -21,12 +21,11 @@ class Field extends DatabaseModel{
     return await DatabaseModel.dbHandler.fields();
   }
 
-  // Convert a Dog into a Map. The keys must correspond to the names of the
-  // columns in the database.
+  // keys correspond to the names of the columns in the database
   @override
   Map<String, Object?> toMap() {
     return {
-      'id': id, 
+      'id': id,
       'fieldName': fieldName,
       'fieldSize': fieldSize,
       'longitude': longitude,
@@ -35,13 +34,12 @@ class Field extends DatabaseModel{
     };
   }
 
-  // Implement toString to make it easier to see information about
-  // each dog when using the print statement.
+  // for debugging and testing, i.e. with the print statement
   @override
   String toString() {
     return 'Field{id: $id, fieldName: $fieldName, fieldSize: $fieldSize, longitude: $longitude, latitude: $latitude}';
   }
-  
+
   @override
   String get tableName => table;
 
