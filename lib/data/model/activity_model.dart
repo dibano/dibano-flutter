@@ -13,8 +13,7 @@ class Activity extends DatabaseModel{
   static Future<List<Activity>> getAll() async{
     return await DatabaseModel.dbHandler.activity();
   }  
-  // Convert a Dog into a Map. The keys must correspond to the names of the
-  // columns in the database.
+  // keys correspond to the names of the columns in the database.
   @override
   Map<String, Object?> toMap() {
     return {
@@ -23,8 +22,7 @@ class Activity extends DatabaseModel{
     };
   }
 
-  // Implement toString to make it easier to see information about
-  // each dog when using the print statement.
+  // For debugging and testing, i.e. with the print statement
   @override
   String toString() {
     return 'activity{id: $id, activityName: $activityName}';
