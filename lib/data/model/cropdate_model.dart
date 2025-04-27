@@ -7,7 +7,7 @@ class CropDate extends DatabaseModel{
   final String endDate;
   final int cropId;
   final int fieldId;
-  
+
   CropDate({
       this.id,
       required this.startDate,
@@ -15,25 +15,24 @@ class CropDate extends DatabaseModel{
       required this.cropId,
       required this.fieldId,
   });
-  
+
   static Future<List<CropDate>> getAll() async{
     return await DatabaseModel.dbHandler.cropDates();
   }
-  // Convert a Dog into a Map. The keys must correspond to the names of the
-  // columns in the database.
+
+  // keys correspond to the names of the columns in the database
   @override
   Map<String, Object?> toMap() {
     return {
-      'id': id, 
-      'startDate': startDate, 
-      'endDate': endDate, 
-      'cropId': cropId, 
-      'fieldId': fieldId, 
+      'id': id,
+      'startDate': startDate,
+      'endDate': endDate,
+      'cropId': cropId,
+      'fieldId': fieldId,
     };
   }
 
-  // Implement toString to make it easier to see information about
-  // each dog when using the print statement.
+  // for debugging and testing, i.e. with the print statement
   @override
   String toString() {
     return 'cropDate{id: $id, startDate: $startDate, endDate: $endDate, cropId: $cropId, fieldId: $fieldId}';

@@ -14,7 +14,7 @@ class Activity extends DatabaseModel{
     return await DatabaseModel.dbHandler.activity();
   }
 
-  // keys correspond to the names of the columns in the database.
+  // keys correspond to the names of the columns in the database
   @override
   Map<String, Object?> toMap() {
     return {
