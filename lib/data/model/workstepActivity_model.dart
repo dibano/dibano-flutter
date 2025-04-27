@@ -5,7 +5,7 @@ class WorkstepActivity extends DatabaseModel{
   final int? id;
   final int workstepId;
   final int? activityId;
-  
+
   WorkstepActivity({
       this.id,
       required this.workstepId,
@@ -14,20 +14,19 @@ class WorkstepActivity extends DatabaseModel{
 
   static Future<List<WorkstepActivity>> getAll() async{
     return await DatabaseModel.dbHandler.workstepActivities();
-  }  
-  // Convert a Dog into a Map. The keys must correspond to the names of the
-  // columns in the database.
+  }
+
+  // keys correspond to the names of the columns in the database
   @override
   Map<String, Object?> toMap() {
     return {
-      'id': id, 
-      'workstepId': workstepId, 
-      'activityId': activityId, 
+      'id': id,
+      'workstepId': workstepId,
+      'activityId': activityId,
     };
   }
 
-  // Implement toString to make it easier to see information about
-  // each dog when using the print statement.
+  // for debugging and testing, i.e. with the print statement
   @override
   String toString() {
     return 'workstepActivity{id: $id, workstepId: $workstepId, activityId: $activityId';
