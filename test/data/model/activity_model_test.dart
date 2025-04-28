@@ -1,5 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dibano/data/model/activity_model.dart';
+import 'package:dibano/data/model/database_model.dart';
+import 'package:dibano/data/database_handler.dart';
+import 'package:mocktail/mocktail.dart';
+
+// Create a mock class for DBHandler
+class MockDBHandler extends Mock implements DatabaseHandler {}
 
 void main() {
   group('Activity', () {
@@ -33,8 +39,24 @@ void main() {
       expect(activity.tableName, 'Activity');
     });
 
-    test('getAll: returns all Activities that are saved in the database', () {
-        // TODO: implement this test
-    }, skip: 'Not yet implemented, as it requires mocking DBHandler');
+    test('getAll: returns all Activities that are saved in the database', () async {
+      final mockDBHandler = MockDBHandler();
+      final testActivities = [
+        Activity(id: 1, activityName: 'Plowing'),
+        Activity(id: 2, activityName: 'Seeding'),
+        Activity(id: 3, activityName: 'Harvesting')
+      ];
+      DatabaseModel.dbHandler = mockDBHandler;
+      when(() => mockDBHandler.activity()).thenAnswer((_) async => testActivities);
+
+      final result = await Activity.getAll();
+
+      verify(() => mockDBHandler.activity()).called(1);
+      expect(result, equals(testActivities));
+      expect(result.length, 3);
+      expect(result[0].activityName, 'Plowing');
+      expect(result[1].activityName, 'Seeding');
+      expect(result[2].activityName, 'Harvesting');
+    });
   });
 }

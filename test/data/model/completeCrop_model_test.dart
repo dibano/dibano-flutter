@@ -1,5 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dibano/data/model/completeCrop_model.dart';
+import 'package:dibano/data/model/database_model.dart';
+import 'package:dibano/data/database_handler.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockDBHandler extends Mock implements DatabaseHandler {}
 
 void main() {
   group('CompleteCrop', () {
@@ -118,7 +123,38 @@ void main() {
     });
 
     test('getCompleteCrops returns list from dbHandler', () async {
-      // TODO: implement this test
-    }, skip: 'Not yet implemented, as it requires mocking DBHandler');
+      final mockDBHandler = MockDBHandler();
+      final testCompleteCrops = [
+        CompleteCrop(
+          id: 1,
+          fieldId: 101,
+          cropName: 'Wheat',
+          fieldName: 'North Field',
+          fieldSize: 10.5,
+          startDate: '2023-01-01',
+          endDate: '2023-12-31',
+          cropDateId: 201
+        ),
+        CompleteCrop(
+          id: 2,
+          fieldId: 102,
+          cropName: 'Corn',
+          fieldName: 'South Field',
+          startDate: '2023-03-15',
+          endDate: '2023-10-31',
+          cropDateId: 202
+        )
+      ];
+      DatabaseModel.dbHandler = mockDBHandler;
+      when(() => mockDBHandler.completeCrops()).thenAnswer((_) async => testCompleteCrops);
+
+      final result = await CompleteCrop.getCompleteCrops();
+
+      verify(() => mockDBHandler.completeCrops()).called(1);
+      expect(result, equals(testCompleteCrops));
+      expect(result.length, 2);
+      expect(result[0].cropName, 'Wheat');
+      expect(result[1].fieldName, 'South Field');
+    });
   });
 }

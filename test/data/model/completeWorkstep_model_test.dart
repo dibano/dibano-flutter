@@ -1,5 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dibano/data/model/completeWorkstep_model.dart';
+import 'package:dibano/data/model/database_model.dart';
+import 'package:dibano/data/database_handler.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockDBHandler extends Mock implements DatabaseHandler {}
 
 void main() {
   group('CompleteWorkstep', () {
@@ -371,7 +376,7 @@ void main() {
       expect(workstep.ptoDriven, isNull);
     });
 
-        test('fromMap: TypeError is thrown if incorrect map is provided', () {
+    test('fromMap: TypeError is thrown if incorrect map is provided', () {
       final map = {
         'id': 3,
         'workstepId': 5,
@@ -383,9 +388,41 @@ void main() {
       expect(() => CompleteWorkstep.fromMap(map), throwsA(isA<TypeError>()));
     });
 
-
     test('getCompleteWorksteps returns list from dbHandler', () async {
-    // TODO: implement this test
-    }, skip: 'Not yet implemented, as it requires mocking DBHandler');
+      final mockDBHandler = MockDBHandler();
+      final testWorksteps = [
+        CompleteWorkstep(
+          id: 1,
+          workstepActivityId: 101,
+          workstepId: 201,
+          fieldName: 'North Field',
+          cropName: 'Wheat',
+          date: '2023-05-15',
+          activityName: 'Plowing'
+        ),
+        CompleteWorkstep(
+          id: 2,
+          workstepActivityId: 102,
+          workstepId: 202,
+          fieldName: 'South Field',
+          cropName: 'Corn',
+          date: '2023-06-20',
+          activityName: 'Seeding',
+          personName: 'John Doe',
+          usedMachine: 'Tractor X9000'
+        )
+      ];
+      DatabaseModel.dbHandler = mockDBHandler;
+      when(() => mockDBHandler.completeWorksteps()).thenAnswer((_) async => testWorksteps);
+
+      final result = await CompleteWorkstep.getCompleteWorksteps();
+
+      verify(() => mockDBHandler.completeWorksteps()).called(1);
+      expect(result, equals(testWorksteps));
+      expect(result.length, 2);
+      expect(result[0].activityName, 'Plowing');
+      expect(result[1].personName, 'John Doe');
+      expect(result[1].usedMachine, 'Tractor X9000');
+    });
   });
 }

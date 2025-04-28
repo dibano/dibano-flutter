@@ -1,5 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dibano/data/model/field_model.dart';
+import 'package:dibano/data/model/database_model.dart';
+import 'package:dibano/data/database_handler.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockDBHandler extends Mock implements DatabaseHandler {}
 
 void main() {
   group('Field', () {
@@ -75,8 +80,24 @@ void main() {
       expect(Field.table, 'Field');
     });
 
-    test('getAll: returns all Fields that are saved in the database', () {
-      // TODO: implement this test
-    }, skip: 'Not yet implemented, as it requires mocking DBHandler');
+    test('getAll: returns all Fields that are saved in the database', () async {
+      final mockDBHandler = MockDBHandler();
+      final testFields = [
+        Field(id: 1, fieldName: 'North Plot', fieldSize: 5.5, longitude: 13.404954, latitude: 52.520008),
+        Field(id: 2, fieldName: 'South Plot', fieldSize: 3.2),
+        Field(id: 3, fieldName: 'West Plot', fieldSize: 4.7, longitude: 10.123456, latitude: 51.987654)
+      ];
+      DatabaseModel.dbHandler = mockDBHandler;
+      when(() => mockDBHandler.fields()).thenAnswer((_) async => testFields);
+
+      final result = await Field.getAll();
+
+      verify(() => mockDBHandler.fields()).called(1);
+      expect(result, equals(testFields));
+      expect(result.length, 3);
+      expect(result[0].fieldName, 'North Plot');
+      expect(result[1].fieldSize, 3.2);
+      expect(result[2].longitude, 10.123456);
+    });
   });
 }

@@ -1,5 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dibano/data/model/crop_model.dart';
+import 'package:dibano/data/model/database_model.dart';
+import 'package:dibano/data/database_handler.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockDBHandler extends Mock implements DatabaseHandler {}
 
 void main() {
   group('Crop', () {
@@ -36,7 +41,23 @@ void main() {
     });
 
     test('getAll returns list from dbHandler', () async {
-      // TODO: implement this test
-    }, skip: 'Not yet implemented, as it requires mocking DBHandler');
+      final mockDBHandler = MockDBHandler();
+      final testCrops = [
+        Crop(id: 1, cropName: 'Wheat'),
+        Crop(id: 2, cropName: 'Corn'),
+        Crop(id: 3, cropName: 'Barley')
+      ];
+      DatabaseModel.dbHandler = mockDBHandler;
+      when(() => mockDBHandler.crops()).thenAnswer((_) async => testCrops);
+
+      final result = await Crop.getAll();
+
+      verify(() => mockDBHandler.crops()).called(1);
+      expect(result, equals(testCrops));
+      expect(result.length, 3);
+      expect(result[0].cropName, 'Wheat');
+      expect(result[1].cropName, 'Corn');
+      expect(result[2].cropName, 'Barley');
+    });
   });
 }

@@ -1,5 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dibano/data/model/person_model.dart';
+import 'package:dibano/data/model/database_model.dart';
+import 'package:dibano/data/database_handler.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockDBHandler extends Mock implements DatabaseHandler {}
 
 void main() {
   group('Person', () {
@@ -38,8 +43,24 @@ void main() {
       expect(person.tableName, 'Person');
     });
 
-    test('getAll: returns all Persons that are saved in the database', () {
-      // TODO: implement this test
-    }, skip: 'Not yet implemented, as it requires mocking DBHandler');
+    test('getAll: returns all Persons that are saved in the database', () async {
+      final mockDBHandler = MockDBHandler();
+      final testPersons = [
+        Person(id: 1, personName: 'John Doe'),
+        Person(id: 2, personName: 'Jane Smith'),
+        Person(id: 3, personName: 'Alice Johnson')
+      ];
+      DatabaseModel.dbHandler = mockDBHandler;
+      when(() => mockDBHandler.person()).thenAnswer((_) async => testPersons);
+
+      final result = await Person.getAll();
+
+      verify(() => mockDBHandler.person()).called(1);
+      expect(result, equals(testPersons));
+      expect(result.length, 3);
+      expect(result[0].personName, 'John Doe');
+      expect(result[1].personName, 'Jane Smith');
+      expect(result[2].personName, 'Alice Johnson');
+    });
   });
 }

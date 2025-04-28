@@ -1,5 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dibano/data/model/workstep_model.dart';
+import 'package:dibano/data/model/database_model.dart';
+import 'package:dibano/data/database_handler.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockDBHandler extends Mock implements DatabaseHandler {}
 
 void main() {
   group('Workstep', () {
@@ -124,8 +129,43 @@ void main() {
       expect(workstep.tableName, 'Workstep');
     });
 
-    test('getAll: returns all Worksteps that are saved in the database', () {
-      // TODO: implement this test
-    }, skip: 'Not yet implemented, as it requires mocking DBHandler');
+    test('getAll: returns all Worksteps that are saved in the database', () async {
+      final mockDBHandler = MockDBHandler();
+      final testWorksteps = [
+        Workstep(
+          id: 1,
+          description: 'Fertilization',
+          personId: 5,
+          cropdateId: 2,
+          date: '2023-07-20',
+          usedMachine: 'Tractor'
+        ),
+        Workstep(
+          id: 2,
+          description: 'Sowing',
+          cropdateId: 3,
+          date: '2023-08-10',
+          seedingDepth: 3.5
+        ),
+        Workstep(
+          id: 3,
+          description: 'Harvesting',
+          cropdateId: 4,
+          date: '2023-10-15',
+          actualQuantity: 8200.0
+        )
+      ];
+      DatabaseModel.dbHandler = mockDBHandler;
+      when(() => mockDBHandler.worksteps()).thenAnswer((_) async => testWorksteps);
+
+      final result = await Workstep.getAll();
+
+      verify(() => mockDBHandler.worksteps()).called(1);
+      expect(result, equals(testWorksteps));
+      expect(result.length, 3);
+      expect(result[0].description, 'Fertilization');
+      expect(result[1].seedingDepth, 3.5);
+      expect(result[2].actualQuantity, 8200.0);
+    });
   });
 }

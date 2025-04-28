@@ -1,5 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dibano/data/model/workstepActivity_model.dart';
+import 'package:dibano/data/model/database_model.dart';
+import 'package:dibano/data/database_handler.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockDBHandler extends Mock implements DatabaseHandler {}
 
 void main() {
   group('WorkstepActivity', () {
@@ -57,8 +62,24 @@ void main() {
       expect(workstepActivity.tableName, 'WorkstepActivity');
     });
 
-    test('getAll: returns all WorkstepActivities that are saved in the database', () {
-      // TODO: implement this test
-    }, skip: 'Not yet implemented, as it requires mocking DBHandler');
+    test('getAll: returns all WorkstepActivities that are saved in the database', () async {
+      final mockDBHandler = MockDBHandler();
+      final testWorkstepActivities = [
+        WorkstepActivity(id: 1, workstepId: 101, activityId: 201),
+        WorkstepActivity(id: 2, workstepId: 102, activityId: 202),
+        WorkstepActivity(id: 3, workstepId: 103, activityId: null)
+      ];
+      DatabaseModel.dbHandler = mockDBHandler;
+      when(() => mockDBHandler.workstepActivities()).thenAnswer((_) async => testWorkstepActivities);
+
+      final result = await WorkstepActivity.getAll();
+
+      verify(() => mockDBHandler.workstepActivities()).called(1);
+      expect(result, equals(testWorkstepActivities));
+      expect(result.length, 3);
+      expect(result[0].workstepId, 101);
+      expect(result[1].activityId, 202);
+      expect(result[2].activityId, null);
+    });
   });
 }
