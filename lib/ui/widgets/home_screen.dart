@@ -2,6 +2,7 @@ import 'package:dibano/ui/view_model/button_data.dart';
 import 'package:dibano/ui/view_model/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key, required this.title});
@@ -32,7 +33,7 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   _buildFullWidthButton(context, "Meine Tätigkeiten"),
                   const SizedBox(height: 8),
-                  _buildFullWidthButton(context, "Tätigkeiten erfassen"),
+                  _buildFullWidthButton(context, AppLocalizations.of(context)!.activity_document),
                 ],
               ),
             ),

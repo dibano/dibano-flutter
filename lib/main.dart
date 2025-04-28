@@ -12,6 +12,7 @@ import 'package:dibano/ui/widgets/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,12 +45,9 @@ class Dibano extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: FarmColors.darkGreen),
       ),
       home: HomeScreen(title: 'Home'),
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: [const Locale('de', 'DE')],
-      locale: const Locale('de', 'DE'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('de', 'CH'),
     );
   }
 }
