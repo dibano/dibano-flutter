@@ -45,171 +45,188 @@ class FertilizerEdit extends StatelessWidget {
       _focusNode.requestFocus();
     });
 
-    return Scaffold(
-      appBar: CustomAppBar(title: title),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Consumer<FertilizerViewModel>(
-          builder: (context, fertilizerViewModel, child) {
-            return Center(
-              child: Column(
-                children: <Widget>[
-                  if (!isCreate)
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, Object? result) async {
+        showDialog(
+          context: context,
+          builder:
+              (context) => CustomAlertDialog(
+                alertText:
+                    "Möchten Sie die Seite verlassen, ohne zu speichern?",
+                alertType: AlertType.shouldLeave,
+                onDelete: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+        );
+      },
+      child: Scaffold(
+        appBar: CustomAppBar(title: title, messageOnLeave: true),
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Consumer<FertilizerViewModel>(
+            builder: (context, fertilizerViewModel, child) {
+              return Center(
+                child: Column(
+                  children: <Widget>[
+                    if (!isCreate)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Flexible(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                shape: const CircleBorder(),
+                                elevation: 2,
+                                padding: const EdgeInsets.all(8.0),
+                              ),
+                              onPressed: () async {
+                                bool? confirmDelete = await showDialog<bool>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomAlertDialog(
+                                      alertText:
+                                          "Möchtest du dieses Düngmittel wirklich löschen?",
+                                      alertType: AlertType.delete,
+                                      onDelete: () async {
+                                        await fertilizerViewModel.remove(
+                                          fertilizerId!,
+                                        );
+                                        Navigator.pop(context, true);
+                                      },
+                                    );
+                                  },
+                                );
+                                if (confirmDelete == true) {
+                                  Navigator.pop(context, true);
+                                }
+                              },
+                              child: const Icon(
+                                Icons.delete,
+                                size: 28,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    const SizedBox(height: 24),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            const SizedBox(height: 24),
+                            FormTextfield(
+                              label: "Düngmittelname",
+                              controller: _descriptionController,
+                              keyboardType: TextInputType.text,
+                              maxLine: 1,
+                              focusNode: _focusNode,
+                            ),
+                            FormTextfield(
+                              label: "Stickstoffkonzentration (N)",
+                              controller: _nController,
+                              keyboardType: TextInputType.number,
+                              maxLine: 1,
+                            ),
+                            FormTextfield(
+                              label: "Phosphorkonzentration (P)",
+                              controller: _pController,
+                              keyboardType: TextInputType.number,
+                              maxLine: 1,
+                            ),
+                            FormTextfield(
+                              label: "Kalikonzentration (K)",
+                              controller: _kController,
+                              keyboardType: TextInputType.number,
+                              maxLine: 1,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Flexible(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                              shape: const CircleBorder(),
-                              elevation: 2,
-                              padding: const EdgeInsets.all(8.0),
-                            ),
+                          child: CustomButtonLarge(
+                            text: "Speichern",
                             onPressed: () async {
-                              bool? confirmDelete = await showDialog<bool>(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return CustomAlertDialog(
-                                    alertText:
-                                        "Möchtest du dieses Düngmittel wirklich löschen?",
-                                    alertType: AlertType.delete,
-                                    onDelete: () async {
-                                      await fertilizerViewModel.remove(
-                                        fertilizerId!,
-                                      );
-                                      Navigator.pop(context, true);
-                                    },
+                              final fertilizerExisting = fertilizerViewModel
+                                  .checkIfExisting(_descriptionController.text);
+                              if (_descriptionController.text != "" &&
+                                  _nController.text != "" &&
+                                  _pController.text != "" &&
+                                  _kController.text != "" &&
+                                  (fertilizerExisting == false ||
+                                      _actualFertilizerName ==
+                                          _descriptionController.text)) {
+                                if (fertilizerId == null) {
+                                  await fertilizerViewModel.addFertilizer(
+                                    _descriptionController.text,
+                                    _nController.text,
+                                    _pController.text,
+                                    _kController.text,
                                   );
-                                },
-                              );
-                              if (confirmDelete == true) {
-                                Navigator.pop(context, true);
+                                  Navigator.pop(context, true);
+                                } else {
+                                  await fertilizerViewModel.update(
+                                    fertilizerId!,
+                                    _descriptionController.text,
+                                    _nController.text,
+                                    _pController.text,
+                                    _kController.text,
+                                  );
+                                  Navigator.pop(context, true);
+                                }
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return CustomAlertDialog(
+                                      alertText: "Erfolgreich gespeichert!",
+                                      alertType: AlertType.success,
+                                    );
+                                  },
+                                );
+                              } else if (_descriptionController.text != "" &&
+                                  _nController.text != "" &&
+                                  _pController.text != "" &&
+                                  _kController.text != "" &&
+                                  fertilizerExisting == true) {
+                                await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomAlertDialog(
+                                      alertText:
+                                          "Du hast dieses Düngemittel bereits erfasst",
+                                      alertType: AlertType.error,
+                                    );
+                                  },
+                                );
+                              } else {
+                                await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomAlertDialog(
+                                      alertText:
+                                          "Alle Felder müssen ausgefüllt sein!",
+                                      alertType: AlertType.error,
+                                    );
+                                  },
+                                );
                               }
                             },
-                            child: const Icon(
-                              Icons.delete,
-                              size: 28,
-                              color: Colors.white,
-                            ),
                           ),
                         ),
                       ],
                     ),
-                  const SizedBox(height: 24),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          const SizedBox(height: 24),
-                          FormTextfield(
-                            label: "Düngmittelname",
-                            controller: _descriptionController,
-                            keyboardType: TextInputType.text,
-                            maxLine: 1,
-                            focusNode: _focusNode,
-                          ),
-                          FormTextfield(
-                            label: "Stickstoffkonzentration (N)",
-                            controller: _nController,
-                            keyboardType: TextInputType.number,
-                            maxLine: 1,
-                          ),
-                          FormTextfield(
-                            label: "Phosphorkonzentration (P)",
-                            controller: _pController,
-                            keyboardType: TextInputType.number,
-                            maxLine: 1,
-                          ),
-                          FormTextfield(
-                            label: "Kalikonzentration (K)",
-                            controller: _kController,
-                            keyboardType: TextInputType.number,
-                            maxLine: 1,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Flexible(
-                        child: CustomButtonLarge(
-                          text: "Speichern",
-                          onPressed: () async {
-                            final fertilizerExisting = fertilizerViewModel
-                                .checkIfExisting(_descriptionController.text);
-                            if (_descriptionController.text != "" &&
-                                _nController.text != "" &&
-                                _pController.text != "" &&
-                                _kController.text != "" &&
-                                (fertilizerExisting == false ||
-                                    _actualFertilizerName ==
-                                        _descriptionController.text)) {
-                              if (fertilizerId == null) {
-                                await fertilizerViewModel.addFertilizer(
-                                  _descriptionController.text,
-                                  _nController.text,
-                                  _pController.text,
-                                  _kController.text,
-                                );
-                                Navigator.pop(context, true);
-                              } else {
-                                await fertilizerViewModel.update(
-                                  fertilizerId!,
-                                  _descriptionController.text,
-                                  _nController.text,
-                                  _pController.text,
-                                  _kController.text,
-                                );
-                                Navigator.pop(context, true);
-                              }
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return CustomAlertDialog(
-                                    alertText: "Erfolgreich gespeichert!",
-                                    alertType: AlertType.success,
-                                  );
-                                },
-                              );
-                            } else if (_descriptionController.text != "" &&
-                                _nController.text != "" &&
-                                _pController.text != "" &&
-                                _kController.text != "" &&
-                                fertilizerExisting == true) {
-                              await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return CustomAlertDialog(
-                                    alertText:
-                                        "Du hast dieses Düngemittel bereits erfasst",
-                                    alertType: AlertType.error,
-                                  );
-                                },
-                              );
-                            } else {
-                              await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return CustomAlertDialog(
-                                    alertText:
-                                        "Alle Felder müssen ausgefüllt sein!",
-                                    alertType: AlertType.error,
-                                  );
-                                },
-                              );
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

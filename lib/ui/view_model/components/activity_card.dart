@@ -23,15 +23,17 @@ class Activity {
 
     final List<String> parts = [];
 
+    if (activityName.isNotEmpty) {
+      parts.add(activityName);
+    }
+
     if (description.isNotEmpty) {
       parts.add(description);
     }
     if (cropName.isNotEmpty) {
       parts.add('$cropName auf $fieldName');
     }
-    if (activityName.isNotEmpty) {
-      parts.add(activityName);
-    }
+
     if (fertilizerName != null && fertilizerName!.isNotEmpty) {
       parts.add(fertilizerName!);
     }

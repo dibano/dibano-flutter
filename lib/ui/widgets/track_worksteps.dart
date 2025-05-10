@@ -283,7 +283,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
         _selectedCulture = "-1";
         _selectedPerson = "-1";
         clearFields();
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => WorkstepSummary(title: "Meine Tätigkeiten"),
@@ -567,667 +567,694 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        appBar: CustomAppBar(title: widget.title),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Consumer<FieldsViewModel>(
-                  builder: (context, fieldsViewModel, child) {
-                    if (fieldsViewModel.fields.isEmpty) {
-                      return const Center(
-                        child: Warn(
-                          warnText:
-                              "Keine Felder gefunden! Bitte erfassen Sie zuerst Felder und Kulturen unter \"Mein Bauernhof\".",
-                        ),
-                      );
-                    }
-                    return FormDropdown(
-                      label: "Feld",
-                      value: _selectedArea!,
-                      items: [
-                        DropdownMenuItem(
-                          value: "-1",
-                          child: Text("Ort wählen"),
-                        ),
-                        ...fieldsViewModel.fields.map(
-                          (fields) => DropdownMenuItem(
-                            value: fields.id.toString(),
-                            child: Text(fields.fieldName),
-                          ),
-                        ),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          final cropsViewModel = Provider.of<CropsViewModel>(
-                            context,
-                            listen: false,
-                          );
-                          _selectedArea = value ?? "-1";
-                          if (_selectedArea != "-1") {
-                            _fieldSelected = true;
-                            _fieldSize = cropsViewModel.getFieldSize(
-                              _selectedArea!,
-                            );
-                          } else {
-                            _fieldSelected = false;
-                          }
-                          if (_fieldSelected) {
-                            selectedCropName = cropsViewModel.getCropName(
-                              int.parse(_selectedArea.toString()),
-                              _activityDate!,
-                            );
-                            _cropController.text = selectedCropName.toString();
-                          }
-                        });
-                      },
-                    );
-                  },
-                ),
-                Consumer<CropsViewModel>(
-                  builder: (context, cropsViewModel, child) {
-                    return FormDate(
-                      label: "Datum",
-                      placeholderDate: _activityDate,
-                      dateSelected: (date) {
-                        setState(() {
-                          _activityDate = date;
-                          if (_fieldSelected) {
-                            selectedCropName = cropsViewModel.getCropName(
-                              int.parse(_selectedArea.toString()),
-                              _activityDate!,
-                            );
-                            _cropController.text = selectedCropName.toString();
-                          }
-                        });
-                      },
-                    );
-                  },
-                ),
-                if (_activityDate != null &&
-                    _selectedArea != "-1" &&
-                    _cropController.text == "unbekannt") ...[
-                  Warn(
-                    warnText:
-                        "Keine Kultur zur Feldauswahl und Datumauswahl gefunden! Bitte erfassen Sie zuerst eine Kultur zum gewählten Feld und Datum unter \"Mein Bauernhof\".",
-                  ),
-                ],
-                if (_activityDate != null &&
-                    _selectedArea != "-1" &&
-                    _cropController.text != "unbekannt") ...[
-                  FormTextfield(
-                    label: "Beschreibung",
-                    controller: _descriptionController,
-                    keyboardType: TextInputType.text,
-                    maxLine: 5,
-                    enableMic: true,
-                  ),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, Object? result) async {
+        showDialog(
+          context: context,
+          builder:
+              (context) => CustomAlertDialog(
+                alertText:
+                    "Möchten Sie die Seite verlassen, ohne zu speichern?",
+                alertType: AlertType.shouldLeave,
+                onDelete: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+        );
+      },
 
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          appBar: CustomAppBar(title: widget.title, messageOnLeave: true),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Consumer<FieldsViewModel>(
+                    builder: (context, fieldsViewModel, child) {
+                      if (fieldsViewModel.fields.isEmpty) {
+                        return const Center(
+                          child: Warn(
+                            warnText:
+                                "Keine Felder gefunden! Bitte erfassen Sie zuerst Felder und Kulturen unter \"Mein Bauernhof\".",
+                          ),
+                        );
+                      }
+                      return FormDropdown(
+                        label: "Feld",
+                        value: _selectedArea!,
+                        items: [
+                          DropdownMenuItem(
+                            value: "-1",
+                            child: Text("Ort wählen"),
+                          ),
+                          ...fieldsViewModel.fields.map(
+                            (fields) => DropdownMenuItem(
+                              value: fields.id.toString(),
+                              child: Text(fields.fieldName),
+                            ),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            final cropsViewModel = Provider.of<CropsViewModel>(
+                              context,
+                              listen: false,
+                            );
+                            _selectedArea = value ?? "-1";
+                            if (_selectedArea != "-1") {
+                              _fieldSelected = true;
+                              _fieldSize = cropsViewModel.getFieldSize(
+                                _selectedArea!,
+                              );
+                            } else {
+                              _fieldSelected = false;
+                            }
+                            if (_fieldSelected) {
+                              selectedCropName = cropsViewModel.getCropName(
+                                int.parse(_selectedArea.toString()),
+                                _activityDate!,
+                              );
+                              _cropController.text =
+                                  selectedCropName.toString();
+                            }
+                          });
+                        },
+                      );
+                    },
+                  ),
                   Consumer<CropsViewModel>(
                     builder: (context, cropsViewModel, child) {
-                      return FormTextfieldDisabled(
-                        label: "Kultur",
-                        textController: _cropController,
+                      return FormDate(
+                        label: "Datum",
+                        placeholderDate: _activityDate,
+                        dateSelected: (date) {
+                          setState(() {
+                            _activityDate = date;
+                            if (_fieldSelected) {
+                              selectedCropName = cropsViewModel.getCropName(
+                                int.parse(_selectedArea.toString()),
+                                _activityDate!,
+                              );
+                              _cropController.text =
+                                  selectedCropName.toString();
+                            }
+                          });
+                        },
                       );
                     },
                   ),
+                  if (_activityDate != null &&
+                      _selectedArea != "-1" &&
+                      _cropController.text == "unbekannt") ...[
+                    Warn(
+                      warnText:
+                          "Keine Kultur zur Feldauswahl und Datumauswahl gefunden! Bitte erfassen Sie zuerst eine Kultur zum gewählten Feld und Datum unter \"Mein Bauernhof\".",
+                    ),
+                  ],
+                  if (_activityDate != null &&
+                      _selectedArea != "-1" &&
+                      _cropController.text != "unbekannt") ...[
+                    FormTextfield(
+                      label: "Beschreibung",
+                      controller: _descriptionController,
+                      keyboardType: TextInputType.text,
+                      maxLine: 5,
+                      enableMic: true,
+                    ),
 
-                  Consumer<ActivitiesViewModel>(
-                    builder: (context, activitiesViewModel, child) {
-                      return FormDropdown(
-                        label: "Aktivität",
-                        value: _selectedActivity!,
-                        createNewView: ActivitiesEdit(
-                          title: "Aktivität erstellen",
-                          isCreate: true,
-                        ),
-                        onCreateNew: (context) async {
-                          await Provider.of<ActivitiesViewModel>(
-                            context,
-                            listen: false,
-                          ).getActivities();
-                        },
-                        items: [
-                          DropdownMenuItem(
-                            value: "-1",
-                            child: Text("Aktivität wählen"),
+                    Consumer<CropsViewModel>(
+                      builder: (context, cropsViewModel, child) {
+                        return FormTextfieldDisabled(
+                          label: "Kultur",
+                          textController: _cropController,
+                        );
+                      },
+                    ),
+
+                    Consumer<ActivitiesViewModel>(
+                      builder: (context, activitiesViewModel, child) {
+                        return FormDropdown(
+                          label: "Aktivität",
+                          value: _selectedActivity!,
+                          createNewView: ActivitiesEdit(
+                            title: "Aktivität erstellen",
+                            isCreate: true,
                           ),
-                          ...activitiesViewModel.activities.map(
-                            (activity) => DropdownMenuItem(
-                              value: activity.id.toString(),
-                              child: Text(activity.activityName),
+                          onCreateNew: (context) async {
+                            await Provider.of<ActivitiesViewModel>(
+                              context,
+                              listen: false,
+                            ).getActivities();
+                          },
+                          items: [
+                            DropdownMenuItem(
+                              value: "-1",
+                              child: Text("Aktivität wählen"),
                             ),
-                          ),
-                        ],
-                        onChanged: (value) {
-                          clearFields();
-                          setState(() => _selectedActivity = value ?? "-1");
-                        },
-                      );
-                    },
-                  ),
+                            ...activitiesViewModel.activities.map(
+                              (activity) => DropdownMenuItem(
+                                value: activity.id.toString(),
+                                child: Text(activity.activityName),
+                              ),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            clearFields();
+                            setState(() => _selectedActivity = value ?? "-1");
+                          },
+                        );
+                      },
+                    ),
 
-                  Builder(
-                    builder: (context) {
-                      Widget additionalWidget;
-                      switch (_selectedActivity) {
-                        case "1": // Düngen körner
-                        case "2":
-                          //clearFields();
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                FormTextfield(
-                                  label: "Ausbringmenge pro Feld (kg)",
-                                  controller: _quantityPerFieldController,
-                                  keyboardType: TextInputType.number,
-                                  maxLine: 1,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _selectedFertilizer = "-1";
-                                      if (_quantityPerFieldController.text !=
-                                              "" &&
-                                          _quantityPerFieldController.text !=
-                                              null &&
-                                          _fieldSize != "0" &&
-                                          _fieldSize != null) {
-                                        _quantityPerHaController.text =
-                                            (double.parse(
-                                                      _quantityPerFieldController
-                                                          .text,
-                                                    ) /
-                                                    _fieldSize!)
-                                                .toString();
-                                      } else {
-                                        _quantityPerFieldController.text = "";
-                                        _quantityPerHaController.text = "";
-                                      }
-                                      _nPerField.text = "";
-                                      _nPerHa.text = "";
-                                      _pPerField.text = "";
-                                      _pPerHa.text = "";
-                                      _kPerField.text = "";
-                                      _kPerHa.text = "";
-                                    });
-                                  },
-                                ),
-                                FormTextfieldDisabled(
-                                  label: "Ausbringmenge pro Ha (kg)",
-                                  textController: _quantityPerHaController,
-                                ),
-                                Consumer<FertilizerViewModel>(
-                                  builder: (
-                                    context,
-                                    fertilizerViewModel,
-                                    child,
-                                  ) {
-                                    return FormDropdown(
-                                      label: "Düngemittel",
-                                      value: _selectedFertilizer!,
-                                      createNewView: FertilizerEdit(
-                                        title: "Düngemittel erstellen",
-                                        isCreate: true,
-                                      ),
-                                      onCreateNew: (context) async {
-                                        await Provider.of<FertilizerViewModel>(
-                                          context,
-                                          listen: false,
-                                        ).getFertilizer();
-                                      },
-                                      items: [
-                                        DropdownMenuItem(
-                                          value: "-1",
-                                          child: Text("Düngemittel wählen"),
+                    Builder(
+                      builder: (context) {
+                        Widget additionalWidget;
+                        switch (_selectedActivity) {
+                          case "1": // Düngen körner
+                          case "2":
+                            //clearFields();
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FormTextfield(
+                                    label: "Ausbringmenge pro Feld (kg)",
+                                    controller: _quantityPerFieldController,
+                                    keyboardType: TextInputType.number,
+                                    maxLine: 1,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _selectedFertilizer = "-1";
+                                        if (_quantityPerFieldController.text !=
+                                                "" &&
+                                            _quantityPerFieldController.text !=
+                                                null &&
+                                            _fieldSize != "0" &&
+                                            _fieldSize != null) {
+                                          _quantityPerHaController.text =
+                                              (double.parse(
+                                                        _quantityPerFieldController
+                                                            .text,
+                                                      ) /
+                                                      _fieldSize!)
+                                                  .toString();
+                                        } else {
+                                          _quantityPerFieldController.text = "";
+                                          _quantityPerHaController.text = "";
+                                        }
+                                        _nPerField.text = "";
+                                        _nPerHa.text = "";
+                                        _pPerField.text = "";
+                                        _pPerHa.text = "";
+                                        _kPerField.text = "";
+                                        _kPerHa.text = "";
+                                      });
+                                    },
+                                  ),
+                                  FormTextfieldDisabled(
+                                    label: "Ausbringmenge pro Ha (kg)",
+                                    textController: _quantityPerHaController,
+                                  ),
+                                  Consumer<FertilizerViewModel>(
+                                    builder: (
+                                      context,
+                                      fertilizerViewModel,
+                                      child,
+                                    ) {
+                                      return FormDropdown(
+                                        label: "Düngemittel",
+                                        value: _selectedFertilizer!,
+                                        createNewView: FertilizerEdit(
+                                          title: "Düngemittel erstellen",
+                                          isCreate: true,
                                         ),
-                                        ...fertilizerViewModel.fertilizerList
-                                            .map(
-                                              (fertilizer) => DropdownMenuItem(
-                                                value: fertilizer.id.toString(),
-                                                child: Text(
-                                                  fertilizer.fertilizerName,
+                                        onCreateNew: (context) async {
+                                          await Provider.of<
+                                            FertilizerViewModel
+                                          >(
+                                            context,
+                                            listen: false,
+                                          ).getFertilizer();
+                                        },
+                                        items: [
+                                          DropdownMenuItem(
+                                            value: "-1",
+                                            child: Text("Düngemittel wählen"),
+                                          ),
+                                          ...fertilizerViewModel.fertilizerList
+                                              .map(
+                                                (
+                                                  fertilizer,
+                                                ) => DropdownMenuItem(
+                                                  value:
+                                                      fertilizer.id.toString(),
+                                                  child: Text(
+                                                    fertilizer.fertilizerName,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                      ],
-                                      onChanged: (value) {
-                                        setState(() {
-                                          reloadCalculatedFields(
-                                            value,
-                                            fertilizerViewModel,
-                                          );
-                                        });
-                                      },
-                                    );
-                                  },
-                                ),
-                                FormTextfieldDisabled(
-                                  label: "N pro Feld",
-                                  textController: _nPerField,
-                                ),
-                                FormTextfieldDisabled(
-                                  label: "N pro Ha",
-                                  textController: _nPerHa,
-                                ),
-                                FormTextfieldDisabled(
-                                  label: "K pro Feld",
-                                  textController: _pPerField,
-                                ),
-                                FormTextfieldDisabled(
-                                  label: "K pro Ha",
-                                  textController: _pPerHa,
-                                ),
-                                FormTextfieldDisabled(
-                                  label: "P pro Feld",
-                                  textController: _kPerField,
-                                ),
-                                FormTextfieldDisabled(
-                                  label: "P pro Ha",
-                                  textController: _kPerHa,
-                                ),
-                                FormTextfield(
-                                  label: "Verwendeter Traktor",
-                                  controller: _tractor,
-                                  keyboardType: TextInputType.text,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Verwendeter Düngerstreuer",
-                                  controller: _fertilizerSpreader,
-                                  keyboardType: TextInputType.text,
-                                  maxLine: 1,
-                                ),
-                              ],
-                            ),
-                          );
-                        case "3": //saat
-                          //clearFields();
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                FormTextfield(
-                                  label: "Saattiefe (cm)",
-                                  controller: _seedingDepth,
-                                  keyboardType: TextInputType.number,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Saatmenge (Körner / Quadratmeter)",
-                                  controller: _seedingQuantity,
-                                  keyboardType: TextInputType.number,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Beizung",
-                                  controller: _plantProtectionName,
-                                  keyboardType: TextInputType.text,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Reihenabstand (cm)",
-                                  controller: _rowDistance,
-                                  keyboardType: TextInputType.number,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Abstand Körner in einer Reihe (cm)",
-                                  controller: _seedingDistance,
-                                  keyboardType: TextInputType.number,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Keimfähigkeit",
-                                  controller: _germinationAbility,
-                                  keyboardType: TextInputType.text,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Ziel Auflaufmenge (Anzahl)",
-                                  controller: _goalQuantity,
-                                  keyboardType: TextInputType.number,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Verwendeter Traktor",
-                                  controller: _tractor,
-                                  keyboardType: TextInputType.text,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Verwendete Spritze",
-                                  controller: _spray,
-                                  keyboardType: TextInputType.text,
-                                  maxLine: 1,
-                                ),
-                              ],
-                            ),
-                          );
-                        case "4": //bodenbearbeitung
-                          //clearFields();
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                FormTextfield(
-                                  label: "Bearbeittiefe (cm)",
-                                  controller: _machiningDepth,
-                                  keyboardType: TextInputType.number,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Verwendeter Traktor",
-                                  controller: _tractor,
-                                  keyboardType: TextInputType.text,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Verwendete Maschine",
-                                  controller: _usedMachine,
-                                  keyboardType: TextInputType.text,
-                                  maxLine: 1,
-                                ),
-                                CheckboxListTile(
-                                  contentPadding: EdgeInsets.zero,
-                                  title: Text("Wendend"),
-                                  value: _turning,
-                                  onChanged: (bool? newTurningValue) {
-                                    setState(() {
-                                      _turning = newTurningValue ?? false;
-                                    });
-                                  },
-                                  controlAffinity:
-                                      ListTileControlAffinity.trailing,
-                                ),
-                                SizedBox(height: 12),
-                              ],
-                            ),
-                          );
-                        case "5": //Saatbeetbearbeitung
-                          //clearFields();
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                FormTextfield(
-                                  label: "Bearbeittiefe (cm)",
-                                  controller: _machiningDepth,
-                                  keyboardType: TextInputType.number,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Verwendeter Traktor",
-                                  controller: _tractor,
-                                  keyboardType: TextInputType.text,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Verwendete Maschine",
-                                  controller: _usedMachine,
-                                  keyboardType: TextInputType.text,
-                                  maxLine: 1,
-                                ),
-                                CheckboxListTile(
-                                  contentPadding: EdgeInsets.zero,
-                                  title: Text("Zapftriebwellenbetrieben"),
-                                  value: _ptoDriven,
-                                  onChanged: (bool? newPtoValue) {
-                                    setState(() {
-                                      _ptoDriven = newPtoValue ?? false;
-                                    });
-                                  },
-                                  controlAffinity:
-                                      ListTileControlAffinity.trailing,
-                                ),
-                                SizedBox(height: 12),
-                              ],
-                            ),
-                          );
-                        case "6": //PSM
-                          //clearFields();
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                FormTextfield(
-                                  label: "Wirkstoff",
-                                  controller: _plantProtectionName,
-                                  keyboardType: TextInputType.text,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Produktname",
-                                  controller: _productName,
-                                  keyboardType: TextInputType.text,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Ausbringmenge pro Feld (l)",
-                                  controller: _quantityPerFieldController,
-                                  keyboardType: TextInputType.number,
-                                  maxLine: 1,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      if (_quantityPerFieldController != "" &&
-                                          _quantityPerFieldController != null &&
-                                          _fieldSize != "0" &&
-                                          _fieldSize != null) {
-                                        _quantityPerHaController.text =
-                                            (double.parse(
-                                                      _quantityPerFieldController
-                                                          .text,
-                                                    ) /
-                                                    _fieldSize!)
-                                                .toString();
-                                      } else {
-                                        _quantityPerHaController.text = "";
-                                      }
-                                    });
-                                  },
-                                ),
-                                FormTextfieldDisabled(
-                                  label: "Ausbringmenge pro Ha (l)",
-                                  textController: _quantityPerHaController,
-                                ),
-                                FormDropdown(
-                                  label: "Beizungstyp",
-                                  value: _selectedPlantProtectionType!,
-                                  items: [
-                                    DropdownMenuItem(
-                                      value: "-1",
-                                      child: Text("Beizungstyp wählen"),
-                                    ),
-                                    DropdownMenuItem(
-                                      value: "0",
-                                      child: Text("Fungizid"),
-                                    ),
-                                    DropdownMenuItem(
-                                      value: "1",
-                                      child: Text("Insektizid"),
-                                    ),
-                                    DropdownMenuItem(
-                                      value: "2",
-                                      child: Text("Herbizid"),
-                                    ),
-                                    DropdownMenuItem(
-                                      value: "3",
-                                      child: Text("Kombination"),
-                                    ),
-                                  ],
-                                  onChanged: (value) {
-                                    setState(
-                                      () =>
-                                          _selectedPlantProtectionType =
-                                              value ?? "-1",
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
+                                        ],
+                                        onChanged: (value) {
+                                          setState(() {
+                                            reloadCalculatedFields(
+                                              value,
+                                              fertilizerViewModel,
+                                            );
+                                          });
+                                        },
+                                      );
+                                    },
+                                  ),
+                                  FormTextfieldDisabled(
+                                    label: "N pro Feld",
+                                    textController: _nPerField,
+                                  ),
+                                  FormTextfieldDisabled(
+                                    label: "N pro Ha",
+                                    textController: _nPerHa,
+                                  ),
+                                  FormTextfieldDisabled(
+                                    label: "K pro Feld",
+                                    textController: _pPerField,
+                                  ),
+                                  FormTextfieldDisabled(
+                                    label: "K pro Ha",
+                                    textController: _pPerHa,
+                                  ),
+                                  FormTextfieldDisabled(
+                                    label: "P pro Feld",
+                                    textController: _kPerField,
+                                  ),
+                                  FormTextfieldDisabled(
+                                    label: "P pro Ha",
+                                    textController: _kPerHa,
+                                  ),
+                                  FormTextfield(
+                                    label: "Verwendeter Traktor",
+                                    controller: _tractor,
+                                    keyboardType: TextInputType.text,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Verwendeter Düngerstreuer",
+                                    controller: _fertilizerSpreader,
+                                    keyboardType: TextInputType.text,
+                                    maxLine: 1,
+                                  ),
+                                ],
+                              ),
+                            );
+                          case "3": //saat
+                            //clearFields();
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FormTextfield(
+                                    label: "Saattiefe (cm)",
+                                    controller: _seedingDepth,
+                                    keyboardType: TextInputType.number,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Saatmenge (Körner / Quadratmeter)",
+                                    controller: _seedingQuantity,
+                                    keyboardType: TextInputType.number,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Beizung",
+                                    controller: _plantProtectionName,
+                                    keyboardType: TextInputType.text,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Reihenabstand (cm)",
+                                    controller: _rowDistance,
+                                    keyboardType: TextInputType.number,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Abstand Körner in einer Reihe (cm)",
+                                    controller: _seedingDistance,
+                                    keyboardType: TextInputType.number,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Keimfähigkeit",
+                                    controller: _germinationAbility,
+                                    keyboardType: TextInputType.text,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Ziel Auflaufmenge (Anzahl)",
+                                    controller: _goalQuantity,
+                                    keyboardType: TextInputType.number,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Verwendeter Traktor",
+                                    controller: _tractor,
+                                    keyboardType: TextInputType.text,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Verwendete Spritze",
+                                    controller: _spray,
+                                    keyboardType: TextInputType.text,
+                                    maxLine: 1,
+                                  ),
+                                ],
+                              ),
+                            );
+                          case "4": //bodenbearbeitung
+                            //clearFields();
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FormTextfield(
+                                    label: "Bearbeittiefe (cm)",
+                                    controller: _machiningDepth,
+                                    keyboardType: TextInputType.number,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Verwendeter Traktor",
+                                    controller: _tractor,
+                                    keyboardType: TextInputType.text,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Verwendete Maschine",
+                                    controller: _usedMachine,
+                                    keyboardType: TextInputType.text,
+                                    maxLine: 1,
+                                  ),
+                                  CheckboxListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    title: Text("Wendend"),
+                                    value: _turning,
+                                    onChanged: (bool? newTurningValue) {
+                                      setState(() {
+                                        _turning = newTurningValue ?? false;
+                                      });
+                                    },
+                                    controlAffinity:
+                                        ListTileControlAffinity.trailing,
+                                  ),
+                                  SizedBox(height: 12),
+                                ],
+                              ),
+                            );
+                          case "5": //Saatbeetbearbeitung
+                            //clearFields();
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FormTextfield(
+                                    label: "Bearbeittiefe (cm)",
+                                    controller: _machiningDepth,
+                                    keyboardType: TextInputType.number,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Verwendeter Traktor",
+                                    controller: _tractor,
+                                    keyboardType: TextInputType.text,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Verwendete Maschine",
+                                    controller: _usedMachine,
+                                    keyboardType: TextInputType.text,
+                                    maxLine: 1,
+                                  ),
+                                  CheckboxListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    title: Text("Zapftriebwellenbetrieben"),
+                                    value: _ptoDriven,
+                                    onChanged: (bool? newPtoValue) {
+                                      setState(() {
+                                        _ptoDriven = newPtoValue ?? false;
+                                      });
+                                    },
+                                    controlAffinity:
+                                        ListTileControlAffinity.trailing,
+                                  ),
+                                  SizedBox(height: 12),
+                                ],
+                              ),
+                            );
+                          case "6": //PSM
+                            //clearFields();
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FormTextfield(
+                                    label: "Wirkstoff",
+                                    controller: _plantProtectionName,
+                                    keyboardType: TextInputType.text,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Produktname",
+                                    controller: _productName,
+                                    keyboardType: TextInputType.text,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Ausbringmenge pro Feld (l)",
+                                    controller: _quantityPerFieldController,
+                                    keyboardType: TextInputType.number,
+                                    maxLine: 1,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if (_quantityPerFieldController != "" &&
+                                            _quantityPerFieldController !=
+                                                null &&
+                                            _fieldSize != "0" &&
+                                            _fieldSize != null) {
+                                          _quantityPerHaController.text =
+                                              (double.parse(
+                                                        _quantityPerFieldController
+                                                            .text,
+                                                      ) /
+                                                      _fieldSize!)
+                                                  .toString();
+                                        } else {
+                                          _quantityPerHaController.text = "";
+                                        }
+                                      });
+                                    },
+                                  ),
+                                  FormTextfieldDisabled(
+                                    label: "Ausbringmenge pro Ha (l)",
+                                    textController: _quantityPerHaController,
+                                  ),
+                                  FormDropdown(
+                                    label: "Beizungstyp",
+                                    value: _selectedPlantProtectionType!,
+                                    items: [
+                                      DropdownMenuItem(
+                                        value: "-1",
+                                        child: Text("Beizungstyp wählen"),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "0",
+                                        child: Text("Fungizid"),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "1",
+                                        child: Text("Insektizid"),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "2",
+                                        child: Text("Herbizid"),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "3",
+                                        child: Text("Kombination"),
+                                      ),
+                                    ],
+                                    onChanged: (value) {
+                                      setState(
+                                        () =>
+                                            _selectedPlantProtectionType =
+                                                value ?? "-1",
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
 
-                        case "7": //Ernte
-                          //clearFields();
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                FormTextfield(
-                                  label: "Ertrag (dt/ha)",
-                                  controller: _actualQuantity,
-                                  keyboardType: TextInputType.number,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Wassergehalt (%)",
-                                  controller: _waterQuantityProcentage,
-                                  keyboardType: TextInputType.number,
-                                  maxLine: 1,
-                                ),
-                                FormDropdown(
-                                  label: "Bodenschaden",
-                                  value: _selectedGroundDamage!,
-                                  items: [
-                                    DropdownMenuItem(
-                                      value: "-1",
-                                      child: Text("Bodenschaden wählen"),
-                                    ),
-                                    DropdownMenuItem(
-                                      value: "0",
-                                      child: Text("Kein Schaden vorhanden"),
-                                    ),
-                                    DropdownMenuItem(
-                                      value: "1",
-                                      child: Text(
-                                        "Kleine Schäden (kaum sichtbar) ",
+                          case "7": //Ernte
+                            //clearFields();
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FormTextfield(
+                                    label: "Ertrag (dt/ha)",
+                                    controller: _actualQuantity,
+                                    keyboardType: TextInputType.number,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Wassergehalt (%)",
+                                    controller: _waterQuantityProcentage,
+                                    keyboardType: TextInputType.number,
+                                    maxLine: 1,
+                                  ),
+                                  FormDropdown(
+                                    label: "Bodenschaden",
+                                    value: _selectedGroundDamage!,
+                                    items: [
+                                      DropdownMenuItem(
+                                        value: "-1",
+                                        child: Text("Bodenschaden wählen"),
                                       ),
-                                    ),
-                                    DropdownMenuItem(
-                                      value: "2",
-                                      child: Text(
-                                        "Mittlere Schädem (gut sichtbar)",
+                                      DropdownMenuItem(
+                                        value: "0",
+                                        child: Text("Kein Schaden vorhanden"),
                                       ),
-                                    ),
-                                    DropdownMenuItem(
-                                      value: "3",
-                                      child: Text(
-                                        "Grosse Schäden (tiefe Gräben)",
+                                      DropdownMenuItem(
+                                        value: "1",
+                                        child: Text(
+                                          "Kleine Schäden (kaum sichtbar) ",
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                  onChanged: (value) {
-                                    setState(
-                                      () =>
-                                          _selectedGroundDamage = value ?? "-1",
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
-                        case "8": //Kontrolle
-                          //clearFields();
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                FormTextfield(
-                                  label: "Gesichtete Schädlinge (Art)",
-                                  controller: _pest,
-                                  keyboardType: TextInputType.text,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Gesichtete Pilzkrankheit (Art)",
-                                  controller: _fungus,
-                                  keyboardType: TextInputType.text,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Gesichtetes Unkraut (Art)",
-                                  controller: _problemWeeds,
-                                  keyboardType: TextInputType.text,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Gesichtete Nährstoffmängel (Art)",
-                                  controller: _nutrient,
-                                  keyboardType: TextInputType.text,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label: "Anzahl pro Pflanzen (Anzahl)",
-                                  controller: _countPerPlant,
-                                  keyboardType: TextInputType.number,
-                                  maxLine: 1,
-                                ),
-                                FormTextfield(
-                                  label:
-                                      "Befallene Pflanzen pro Quadratmeter (Anzahl)",
-                                  controller: _plantPerQm,
-                                  keyboardType: TextInputType.number,
-                                  maxLine: 1,
-                                ),
-                              ],
-                            ),
-                          );
-                        default:
-                          //clearFields();
-                          additionalWidget = const SizedBox.shrink();
-                          break;
-                      }
-                      return additionalWidget;
-                    },
-                  ),
+                                      DropdownMenuItem(
+                                        value: "2",
+                                        child: Text(
+                                          "Mittlere Schädem (gut sichtbar)",
+                                        ),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "3",
+                                        child: Text(
+                                          "Grosse Schäden (tiefe Gräben)",
+                                        ),
+                                      ),
+                                    ],
+                                    onChanged: (value) {
+                                      setState(
+                                        () =>
+                                            _selectedGroundDamage =
+                                                value ?? "-1",
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          case "8": //Kontrolle
+                            //clearFields();
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FormTextfield(
+                                    label: "Gesichtete Schädlinge (Art)",
+                                    controller: _pest,
+                                    keyboardType: TextInputType.text,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Gesichtete Pilzkrankheit (Art)",
+                                    controller: _fungus,
+                                    keyboardType: TextInputType.text,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Gesichtetes Unkraut (Art)",
+                                    controller: _problemWeeds,
+                                    keyboardType: TextInputType.text,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Gesichtete Nährstoffmängel (Art)",
+                                    controller: _nutrient,
+                                    keyboardType: TextInputType.text,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label: "Anzahl pro Pflanzen (Anzahl)",
+                                    controller: _countPerPlant,
+                                    keyboardType: TextInputType.number,
+                                    maxLine: 1,
+                                  ),
+                                  FormTextfield(
+                                    label:
+                                        "Befallene Pflanzen pro Quadratmeter (Anzahl)",
+                                    controller: _plantPerQm,
+                                    keyboardType: TextInputType.number,
+                                    maxLine: 1,
+                                  ),
+                                ],
+                              ),
+                            );
+                          default:
+                            //clearFields();
+                            additionalWidget = const SizedBox.shrink();
+                            break;
+                        }
+                        return additionalWidget;
+                      },
+                    ),
 
-                  Consumer<PersonViewModel>(
-                    builder: (context, personViewModel, child) {
-                      return FormDropdown(
-                        label: "Person",
-                        value: _selectedPerson!,
-                        createNewView: PersonEdit(
-                          title: "Person erstellen",
-                          isCreate: true,
-                        ),
-                        onCreateNew: (context) async {
-                          await Provider.of<PersonViewModel>(
-                            context,
-                            listen: false,
-                          ).getPerson();
-                        },
-                        items: [
-                          DropdownMenuItem(
-                            value: "-1",
-                            child: Text("Person wählen"),
+                    Consumer<PersonViewModel>(
+                      builder: (context, personViewModel, child) {
+                        return FormDropdown(
+                          label: "Mitarbeiter",
+                          value: _selectedPerson!,
+                          createNewView: PersonEdit(
+                            title: "Person erstellen",
+                            isCreate: true,
                           ),
-                          ...personViewModel.personList.map(
-                            (person) => DropdownMenuItem(
-                              value: person.id.toString(),
-                              child: Text(person.personName),
+                          onCreateNew: (context) async {
+                            await Provider.of<PersonViewModel>(
+                              context,
+                              listen: false,
+                            ).getPerson();
+                          },
+                          items: [
+                            DropdownMenuItem(
+                              value: "-1",
+                              child: Text("Mitarbeiter wählen"),
                             ),
-                          ),
-                        ],
-                        onChanged: (value) {
-                          setState(() => _selectedPerson = value ?? "-1");
-                        },
-                      );
-                    },
-                  ),
-                  CustomButtonLarge(onPressed: _addEntry, text: "Speichern"),
+                            ...personViewModel.personList.map(
+                              (person) => DropdownMenuItem(
+                                value: person.id.toString(),
+                                child: Text(person.personName),
+                              ),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            setState(() => _selectedPerson = value ?? "-1");
+                          },
+                        );
+                      },
+                    ),
+                    CustomButtonLarge(onPressed: _addEntry, text: "Speichern"),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),

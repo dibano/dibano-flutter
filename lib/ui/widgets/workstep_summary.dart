@@ -20,7 +20,7 @@ class WorkstepSummary extends StatefulWidget {
   final DateTime? startDate;
   final DateTime? endDate;
   bool isFiltered;
-  final String? searchString;
+  String? searchString;
   final List<String?>? selectedFertilizers;
 
   WorkstepSummary({
@@ -34,7 +34,7 @@ class WorkstepSummary extends StatefulWidget {
     this.startDate,
     this.endDate,
     this.isFiltered = false,
-    this.searchString,
+    this.searchString = "",
   });
 
   @override
@@ -45,6 +45,13 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
   late List<CompleteWorkstep> _completeWorksteps;
   late List<String?> _personNames;
   final Map<int, bool> _checkedWorksteps = {};
+
+  @override
+  void dispose() {
+    widget.isFiltered = false;
+    widget.searchString = null;
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -97,12 +104,12 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+                enabledBorder: OutlineInputBorder(
                   borderSide: const BorderSide(
                     color: FarmColors.darkGreenIntense,
                     width: 1.5,
                   ),
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
@@ -197,63 +204,72 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
                         ),
                       ],
                 ),
-                if (!widget.isFiltered)
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: FarmColors.darkGreenIntense,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 12.0,
-                      ),
-                    ),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return FilterDialog();
-                        },
-                      );
-                    },
-                    child: const Text(
-                      "Filtern und Exportieren",
-                      style: TextStyle(fontSize: 16.0),
+                const SizedBox(width: 10.0),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: FarmColors.darkGreenIntense,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 12.0,
                     ),
                   ),
-                if (widget.isFiltered)
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: FarmColors.darkGreenIntense,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 12.0,
-                      ),
-                    ),
-                    onPressed: () async {
-                      final checkedWorksteps =
-                          _completeWorksteps
-                              .where(
-                                (workstep) =>
-                                    _checkedWorksteps[workstep.workstepId] ??
-                                    true,
-                              )
-                              .toList();
-                      final pdf = await PdfApi.generateTablePdf(
-                        checkedWorksteps,
-                        widget.selectedActivities,
-                        widget.selectedCrops,
-                        widget.selectedFields,
-                        _personNames,
-                      );
-                      SavePdf.openPdf(pdf);
-                    },
-                    child: const Icon(
-                      Icons.picture_as_pdf,
-                      color: Colors.white,
-                      size: 32.0,
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return FilterDialog();
+                      },
+                    );
+                  },
+                  child: const Text(
+                    "Filtern",
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                ),
+                const SizedBox(width: 16.0),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        widget.isFiltered
+                            ? FarmColors.darkGreenIntense
+                            : Colors.grey,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 12.0,
                     ),
                   ),
+                  onPressed:
+                      widget.isFiltered
+                          ? () async {
+                            final checkedWorksteps =
+                                _completeWorksteps
+                                    .where(
+                                      (workstep) =>
+                                          _checkedWorksteps[workstep
+                                              .workstepId] ??
+                                          true,
+                                    )
+                                    .toList();
+
+                            final pdf = await PdfApi.generateTablePdf(
+                              checkedWorksteps,
+                              widget.selectedActivities,
+                              widget.selectedCrops,
+                              widget.selectedFields,
+                              _personNames,
+                            );
+
+                            SavePdf.openPdf(pdf);
+                          }
+                          : null,
+                  child: const Icon(
+                    Icons.picture_as_pdf,
+                    color: Colors.white,
+                    size: 32.0,
+                  ),
+                ),
               ],
             ),
           ),
@@ -451,7 +467,7 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final result = await Navigator.push(
+          final result = await Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => TrackWorksteps(title: "Tätigkeit erfassen"),
