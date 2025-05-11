@@ -8,12 +8,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool hasInfo;
   final Function()? onInfoPressed;
+  final bool messageOnLeave;
 
   const CustomAppBar({
     super.key,
     required this.title,
     this.hasInfo = false,
     this.onInfoPressed,
+    this.messageOnLeave = false,
   });
 
   @override
@@ -41,8 +43,27 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         color: Color(0xFF004d00),
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
+                    onPressed: () async {
+                      if (messageOnLeave) {
+                        final shouldLeave = await showDialog(
+                          context: context,
+                          builder:
+                              (context) => CustomAlertDialog(
+                                alertText:
+                                    "Möchten Sie die Seite verlassen, ohne zu speichern?",
+                                alertType: AlertType.shouldLeave,
+                                onDelete: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                        );
+
+                        if (shouldLeave == true) {
+                          Navigator.of(context).pop();
+                        }
+                      } else {
+                        Navigator.of(context).pop();
+                      }
                     },
                   )
                   : null,

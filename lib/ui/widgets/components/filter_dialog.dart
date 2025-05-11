@@ -65,7 +65,7 @@ class _FilterDialogState extends State<FilterDialog> {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: DefaultTabController(
-        length: 5, // Anzahl der Tabs angepasst
+        length: 5,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -114,24 +114,54 @@ class _FilterDialogState extends State<FilterDialog> {
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: Column(
                 children: [
-                  FormDate(
-                    label: "Datum von",
-                    placeholderDate: null,
-                    dateSelected: (date) {
-                      setState(() {
-                        _startDate = date;
-                      });
-                    },
+                  Row(
+                    children: [
+                      Expanded(
+                        child: FormDate(
+                          key: ValueKey(_startDate),
+                          label: "Datum von",
+                          placeholderDate: _startDate,
+                          dateSelected: (date) {
+                            setState(() {
+                              _startDate = date;
+                            });
+                          },
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _startDate = null;
+                          });
+                        },
+                        icon: const Icon(Icons.cancel, color: Colors.grey),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 3),
-                  FormDate(
-                    label: "Datum bis",
-                    placeholderDate: null,
-                    dateSelected: (date) {
-                      setState(() {
-                        _endDate = date;
-                      });
-                    },
+                  Row(
+                    children: [
+                      Expanded(
+                        child: FormDate(
+                          key: ValueKey(_endDate),
+                          label: "Datum bis",
+                          placeholderDate: _endDate,
+                          dateSelected: (date) {
+                            setState(() {
+                              _endDate = date;
+                            });
+                          },
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _endDate = null;
+                          });
+                        },
+                        icon: const Icon(Icons.cancel, color: Colors.grey),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -212,7 +242,7 @@ class _FilterDialogState extends State<FilterDialog> {
                           )
                           .toList();
 
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder:

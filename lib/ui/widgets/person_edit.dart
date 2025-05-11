@@ -31,137 +31,155 @@ class PersonEdit extends StatelessWidget {
       _focusNode.requestFocus();
     });
 
-    return Scaffold(
-      appBar: CustomAppBar(title: title),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Consumer<PersonViewModel>(
-          builder: (context, personViewModel, child) {
-            return Center(
-              child: Column(
-                children: <Widget>[
-                  if (!isCreate)
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, Object? result) async {
+        showDialog(
+          context: context,
+          builder:
+              (context) => CustomAlertDialog(
+                alertText:
+                    "Möchten Sie die Seite verlassen, ohne zu speichern?",
+                alertType: AlertType.shouldLeave,
+                onDelete: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+        );
+      },
+
+      child: Scaffold(
+        appBar: CustomAppBar(title: title, messageOnLeave: true),
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Consumer<PersonViewModel>(
+            builder: (context, personViewModel, child) {
+              return Center(
+                child: Column(
+                  children: <Widget>[
+                    if (!isCreate)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Flexible(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                shape: const CircleBorder(),
+                                elevation: 2,
+                                padding: const EdgeInsets.all(8.0),
+                              ),
+                              onPressed: () async {
+                                bool? confirmDelete = await showDialog<bool>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomAlertDialog(
+                                      alertText:
+                                          "Möchtest du diesen Mitarbeiter wirklich löschen?",
+                                      alertType: AlertType.delete,
+                                      onDelete: () async {
+                                        await personViewModel.remove(personId!);
+                                        Navigator.pop(context, true);
+                                      },
+                                    );
+                                  },
+                                );
+                                if (confirmDelete == true) {
+                                  Navigator.pop(context, true);
+                                }
+                              },
+                              child: const Icon(
+                                Icons.delete,
+                                size: 28,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    const SizedBox(height: 24),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            const SizedBox(height: 24),
+                            FormTextfield(
+                              label: "Name des Mitarbeiters",
+                              controller: _descriptionController,
+                              keyboardType: TextInputType.text,
+                              maxLine: 1,
+                              focusNode: _focusNode,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Flexible(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                              shape: const CircleBorder(),
-                              elevation: 2,
-                              padding: const EdgeInsets.all(8.0),
-                            ),
+                          child: CustomButtonLarge(
+                            text: "Speichern",
                             onPressed: () async {
-                              bool? confirmDelete = await showDialog<bool>(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return CustomAlertDialog(
-                                    alertText:
-                                        "Möchtest du diesen Mitarbeiter wirklich löschen?",
-                                    alertType: AlertType.delete,
-                                    onDelete: () async {
-                                      await personViewModel.remove(personId!);
-                                      Navigator.pop(context, true);
-                                    },
+                              final personExisting = personViewModel
+                                  .checkIfExisting(_descriptionController.text);
+                              if (_descriptionController.text != "" &&
+                                  personExisting == false) {
+                                if (personId == null) {
+                                  await personViewModel.add(
+                                    _descriptionController.text,
                                   );
-                                },
-                              );
-                              if (confirmDelete == true) {
-                                Navigator.pop(context, true);
+                                  Navigator.pop(context, true);
+                                } else {
+                                  await personViewModel.update(
+                                    personId!,
+                                    _descriptionController.text,
+                                  );
+                                  Navigator.pop(context, true);
+                                }
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return CustomAlertDialog(
+                                      alertText: "Erfolgreich gespeichert!",
+                                      alertType: AlertType.success,
+                                    );
+                                  },
+                                );
+                              } else if (_descriptionController.text != "" &&
+                                  personExisting == true) {
+                                await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomAlertDialog(
+                                      alertText:
+                                          "Du hast diese Person bereits erfasst",
+                                      alertType: AlertType.error,
+                                    );
+                                  },
+                                );
+                              } else {
+                                await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomAlertDialog(
+                                      alertText:
+                                          "Der Personenname muss ausgefüllt sein!",
+                                      alertType: AlertType.error,
+                                    );
+                                  },
+                                );
                               }
                             },
-                            child: const Icon(
-                              Icons.delete,
-                              size: 28,
-                              color: Colors.white,
-                            ),
                           ),
                         ),
                       ],
                     ),
-                  const SizedBox(height: 24),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          const SizedBox(height: 24),
-                          FormTextfield(
-                            label: "Name des Mitarbeiters",
-                            controller: _descriptionController,
-                            keyboardType: TextInputType.text,
-                            maxLine: 1,
-                            focusNode: _focusNode,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Flexible(
-                        child: CustomButtonLarge(
-                          text: "Speichern",
-                          onPressed: () async {
-                            final personExisting = personViewModel
-                                .checkIfExisting(_descriptionController.text);
-                            if (_descriptionController.text != "" &&
-                                personExisting == false) {
-                              if (personId == null) {
-                                await personViewModel.add(
-                                  _descriptionController.text,
-                                );
-                                Navigator.pop(context, true);
-                              } else {
-                                await personViewModel.update(
-                                  personId!,
-                                  _descriptionController.text,
-                                );
-                                Navigator.pop(context, true);
-                              }
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return CustomAlertDialog(
-                                    alertText: "Erfolgreich gespeichert!",
-                                    alertType: AlertType.success,
-                                  );
-                                },
-                              );
-                            } else if (_descriptionController.text != "" &&
-                                personExisting == true) {
-                              await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return CustomAlertDialog(
-                                    alertText:
-                                        "Du hast diese Person bereits erfasst",
-                                    alertType: AlertType.error,
-                                  );
-                                },
-                              );
-                            } else {
-                              await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return CustomAlertDialog(
-                                    alertText:
-                                        "Der Personenname muss ausgefüllt sein!",
-                                    alertType: AlertType.error,
-                                  );
-                                },
-                              );
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

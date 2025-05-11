@@ -18,7 +18,7 @@ class Info extends StatelessWidget {
       builder: (BuildContext context) {
         return CustomAlertDialog(
           alertText:
-              "Auf dieser Seite finden Sie allgemeine Informationen zur App, zu den Schnittstellen und zu Dibano.",
+              "Auf dieser Seite finden Sie allgemeine Informationen zur App, zu den Schnittstellen und zu Dibano. \n\nVersion 2.2.1",
           alertType: AlertType.info,
         );
       },

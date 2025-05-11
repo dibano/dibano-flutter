@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum AlertType { info, error, success, delete, restore }
+enum AlertType { info, error, success, delete, restore, shouldLeave }
 
 class CustomAlertDialog extends StatelessWidget {
   final String alertText;
@@ -34,6 +34,8 @@ class CustomAlertDialog extends StatelessWidget {
         return Icon(Icons.delete, color: Colors.grey, size: 48);
       case AlertType.restore:
         return Icon(Icons.cloud_download, color: Colors.grey, size: 48);
+      case AlertType.shouldLeave:
+        return Icon(Icons.warning, color: Colors.grey, size: 48);
     }
   }
 
@@ -77,7 +79,8 @@ class CustomAlertDialog extends StatelessWidget {
                   ),
                 ),
               ),
-            if (alertType == AlertType.delete)
+            if (alertType == AlertType.delete ||
+                alertType == AlertType.shouldLeave)
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
@@ -87,13 +90,17 @@ class CustomAlertDialog extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   ),
                   onPressed: () {
-                    if (alertType == AlertType.delete && onDelete != null) {
+                    if ((alertType == AlertType.delete && onDelete != null) ||
+                        (alertType == AlertType.shouldLeave &&
+                            onDelete != null)) {
                       onDelete!();
                     }
                     Navigator.of(context).pop();
                   },
-                  child: const Text(
-                    "Löschen",
+                  child: Text(
+                    alertType == AlertType.shouldLeave
+                        ? "Verlassen"
+                        : "Löschen",
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -105,7 +112,8 @@ class CustomAlertDialog extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
                       (alertType == AlertType.delete ||
-                              alertType == AlertType.restore)
+                              alertType == AlertType.restore ||
+                              alertType == AlertType.shouldLeave)
                           ? Colors.grey
                           : Colors.green,
                   elevation: 0,
@@ -119,7 +127,8 @@ class CustomAlertDialog extends StatelessWidget {
                 },
                 child: Text(
                   (alertType == AlertType.delete ||
-                          alertType == AlertType.restore)
+                          alertType == AlertType.restore ||
+                          alertType == AlertType.shouldLeave)
                       ? "Abbrechen"
                       : "OK",
                   style: const TextStyle(color: Colors.white),
