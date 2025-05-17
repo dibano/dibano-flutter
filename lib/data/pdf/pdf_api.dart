@@ -21,7 +21,7 @@ class PdfApi {
       "Saat": ["Aktivität", "Kultur", "Feld", "Beschreibung", "Datum","Saattiefe (cm)", "Saatmenge (Körner/Quadratmeter)", "Reihenabstand", "Abstand Körner in Reihe", "Keimfähigkeit", "Ziel Auflaufmenge", "Verwendeter Traktor", "Verwendete Spritze"],
       "Bodenbearbeitung": ["Aktivität", "Kultur", "Feld", "Beschreibung", "Datum","Wendend", "Bearbeittiefe", "Verwendeter Traktor", "Verwendete Maschine"],
       "Saatbeetbearbeitung": ["Aktivität", "Kultur", "Feld", "Beschreibung", "Datum","Bearbeittiefe", "Verwendeter Traktor", "Verwendete Maschine", "Zapfwellenbetrieben"],
-      "Anwendung Pflanzenschutzmittel": ["Aktivität", "Kultur", "Feld", "Beschreibung", "Datum","Wirkstoff", "Aufbringmenge/Feld (l)", "Wirkstofftyp"],
+      "Anwendung Pflanzenschutzmittel": ["Aktivität", "Kultur", "Feld", "Beschreibung", "Datum","Wirkstoff", "Aufbringmenge/Feld (l)", "Ausbringmenge pro Ha (l)", "Wirkstofftyp"],
       "Ernte": ["Aktivität", "Kultur", "Feld", "Beschreibung", "Datum","Ertrag (dt/Ha)", "Wassergehalt (%)", "Bodenschaden"],
       "Kontrolle": ["Aktivität", "Kultur", "Feld", "Beschreibung", "Datum","Gesichtete Schädlinge", "Gesichtete Pilzkrankheit", "Gesichtete Problemunkräuter", "Gesichtete Nährstoffmängel", "Anzahl/Pflanze", "Befallene Pflanze / Quadratmeter"],
     };
@@ -108,144 +108,182 @@ class PdfApi {
                     switch(activity.key){
                       case "Eigene Aktivitäten":
                         return [
-                          workstep.activityName,
-                          workstep.cropName,
-                          workstep.fieldName,
-                          workstep.description,
-                          workstep.date,
+                          workstep.activityName ?? "",
+                          workstep.cropName ?? "",
+                          workstep.fieldName ?? "",
+                          workstep.description ?? "",
+                          workstep.date ?? "",
                         ];
                       case "Düngen (Körner)":
                         return[
-                          workstep.activityName,
-                          workstep.cropName,
-                          workstep.fieldName,
-                          workstep.description,
-                          workstep.date,
-                          workstep.quantityPerField,
-                          workstep.quantityPerHa,
-                          workstep.fertilizerName,
-                          workstep.n,
-                          workstep.p,
-                          workstep.k,
-                          workstep.nPerField,
-                          workstep.nPerHa,
-                          workstep.pPerField,
-                          workstep.pPerHa,
-                          workstep.kPerField,
-                          workstep.kPerHa,
-                          workstep.tractor,
-                          workstep.fertilizerSpreader
+                          workstep.activityName ?? "",
+                          workstep.cropName ?? "",
+                          workstep.fieldName ?? "",
+                          workstep.description ?? "",
+                          workstep.date ?? "",
+                          workstep.quantityPerField ?? "",
+                          workstep.quantityPerHa ?? "",
+                          workstep.fertilizerName ?? "",
+                          workstep.n ?? "",
+                          workstep.p ?? "",
+                          workstep.k ?? "",
+                          workstep.nPerField ?? "",
+                          workstep.nPerHa ?? "",
+                          workstep.pPerField ?? "",
+                          workstep.pPerHa ?? "",
+                          workstep.kPerField ?? "",
+                          workstep.kPerHa ?? "",
+                          workstep.tractor ?? "",
+                          workstep.fertilizerSpreader ?? ""
                         ];
                       case "Düngen (flüssig)":
                         return[
-                          workstep.activityName,
-                          workstep.cropName,
-                          workstep.fieldName,
-                          workstep.description,
-                          workstep.date,
-                          workstep.quantityPerField,
-                          workstep.quantityPerHa,
-                          workstep.fertilizerName,
-                          workstep.n,
-                          workstep.p,
-                          workstep.k,
-                          workstep.nPerField,
-                          workstep.nPerHa,
-                          workstep.pPerField,
-                          workstep.pPerHa,
-                          workstep.kPerField,
-                          workstep.kPerHa,
-                          workstep.tractor,
-                          workstep.fertilizerSpreader
+                          workstep.activityName ?? "",
+                          workstep.cropName ?? "",
+                          workstep.fieldName ?? "",
+                          workstep.description ?? "",
+                          workstep.date ?? "",
+                          workstep.quantityPerField ?? "",
+                          workstep.quantityPerHa ?? "",
+                          workstep.fertilizerName ?? "",
+                          workstep.n ?? "",
+                          workstep.p ?? "",
+                          workstep.k ?? "",
+                          workstep.nPerField ?? "",
+                          workstep.nPerHa ?? "",
+                          workstep.pPerField ?? "",
+                          workstep.pPerHa ?? "",
+                          workstep.kPerField ?? "",
+                          workstep.kPerHa ?? "",
+                          workstep.tractor ?? "",
+                          workstep.fertilizerSpreader ?? "",
                         ];
                       case "Saat":
                         return[
-                          workstep.activityName,
-                          workstep.cropName,
-                          workstep.fieldName,
-                          workstep.description,
-                          workstep.date,
-                          workstep.seedingDepth,
-                          workstep.seedingQuantity,
-                          workstep.plantProtectionName,
-                          workstep.rowDistance,
-                          workstep.seedingDistance,
-                          workstep.germinationAbility,
-                          workstep.goalQuantity,
-                          workstep.tractor,
-                          workstep.spray
+                          workstep.activityName ?? "",
+                          workstep.cropName ?? "",
+                          workstep.fieldName ?? "",
+                          workstep.description ?? "",
+                          workstep.date ?? "",
+                          workstep.seedingDepth ?? "",
+                          workstep.seedingQuantity ?? "",
+                          workstep.rowDistance ?? "",
+                          workstep.seedingDistance ?? "",
+                          workstep.germinationAbility ?? "",
+                          workstep.goalQuantity ?? "",
+                          workstep.tractor ?? "",
+                          workstep.spray ?? ""
                         ];
 
                       case "Bodenbearbeitung":
                         return[
-                          workstep.activityName,
-                          workstep.cropName,
-                          workstep.fieldName,
-                          workstep.description,
-                          workstep.date,
-                          workstep.turning,
-                          workstep.machiningDepth,
-                          workstep.tractor,
-                          workstep.usedMachine
+                          workstep.activityName ?? "",
+                          workstep.cropName ?? "",
+                          workstep.fieldName ?? "",
+                          workstep.description ?? "",
+                          workstep.date ?? "",
+                          workstep.turning ?? "",
+                          workstep.machiningDepth ?? "",
+                          workstep.tractor ?? "",
+                          workstep.usedMachine ?? ""
                         ];
 
                       case "Saatbeetbearbeitung":
                         return[
-                          workstep.activityName,
-                          workstep.cropName,
-                          workstep.fieldName,
-                          workstep.description,
-                          workstep.date,
-                          workstep.machiningDepth,
-                          workstep.tractor,
-                          workstep.usedMachine,
-                          workstep.ptoDriven
+                          workstep.activityName ?? "",
+                          workstep.cropName ?? "",
+                          workstep.fieldName ?? "",
+                          workstep.description ?? "",
+                          workstep.date ?? "",
+                          workstep.machiningDepth ?? "",
+                          workstep.tractor ?? "",
+                          workstep.usedMachine ?? "",
+                          workstep.ptoDriven ?? ""
                         ];
-
                       case "Anwendung Pflanzenschutzmittel":
+                        String plantProtectionTypeText;
+                        switch(workstep.plantProtectionType){
+                          case "-1":
+                            plantProtectionTypeText = "";
+                            break;
+                          case "0":
+                            plantProtectionTypeText = "Fungizid";
+                            break;
+                          case "1":
+                            plantProtectionTypeText = "Insektizid";
+                            break;
+                          case "2":
+                            plantProtectionTypeText = "Herbizid";
+                            break;
+                          case "3":
+                            plantProtectionTypeText = "Kombination";
+                            break;
+                          default:
+                            plantProtectionTypeText = "";
+                        }
                         return[
-                          workstep.activityName,
-                          workstep.cropName,
-                          workstep.fieldName,
-                          workstep.description,
-                          workstep.date,
-                          workstep.plantProtectionName,
-                          workstep.quantityPerField,
-                          workstep.quantityPerHa,
-                          workstep.plantProtectionType
+                          workstep.activityName ?? "",
+                          workstep.cropName ?? "",
+                          workstep.fieldName ?? "",
+                          workstep.description ?? "",
+                          workstep.date ?? "",
+                          workstep.plantProtectionName ?? "",
+                          workstep.quantityPerField ?? "",
+                          workstep.quantityPerHa ?? "",
+                          plantProtectionTypeText,
                         ];
                       case "Ernte":
+                        String groundDamageText;
+                        switch(workstep.groundDamage){
+                          case "-1":
+                            groundDamageText = "";
+                            break;
+                          case "0":
+                            groundDamageText = "Kein Schaden vorhanden";
+                            break;
+                          case "1":
+                            groundDamageText = "Kleine Schäden (kaum sichtbar)";
+                            break;
+                          case "2":
+                            groundDamageText = "Mittlere Schäden (gut sichtbar)";
+                            break;
+                          case "3":
+                            groundDamageText = "Grosse Schäden (tiefe Gräben)";
+                            break;
+                          default:
+                            groundDamageText = "";
+                        }
                         return[
-                          workstep.activityName,
-                          workstep.cropName,
-                          workstep.fieldName,
-                          workstep.description,
-                          workstep.date,
-                          workstep.actualQuantity,
-                          workstep.waterQuantityProcentage,
-                          workstep.groundDamage
+                          workstep.activityName ?? "",
+                          workstep.cropName ?? "",
+                          workstep.fieldName ?? "",
+                          workstep.description ?? "",
+                          workstep.date ?? "",
+                          workstep.actualQuantity ?? "",
+                          workstep.waterQuantityProcentage ?? "",
+                          groundDamageText,
                         ];
                       case "Kontrolle":
                         return[
-                          workstep.activityName,
-                          workstep.cropName,
-                          workstep.fieldName,
-                          workstep.description,
-                          workstep.date,
-                          workstep.pest,
-                          workstep.fungal,
-                          workstep.problemWeeds,
-                          workstep.nutrient,
-                          workstep.countPerPlant,
-                          workstep.plantPerQm,
+                          workstep.activityName ?? "",
+                          workstep.cropName ?? "",
+                          workstep.fieldName ?? "",
+                          workstep.description ?? "",
+                          workstep.date ?? "",
+                          workstep.pest ?? "",
+                          workstep.fungal ?? "",
+                          workstep.problemWeeds ?? "",
+                          workstep.nutrient ?? "",
+                          workstep.countPerPlant ?? "",
+                          workstep.plantPerQm ?? "",
                         ];
                       default:
                       return[
-                        workstep.activityName,
-                        workstep.cropName,
-                        workstep.fieldName,
-                        workstep.description,
-                        workstep.date,
+                        workstep.activityName ?? "",
+                        workstep.cropName ?? "",
+                        workstep.fieldName ?? "",
+                        workstep.description ?? "",
+                        workstep.date ?? "",
                       ];
                     }
                   }).toList(),
@@ -262,6 +300,9 @@ class PdfApi {
         },
       ),
     );
-    return SavePdf.savePdf(name: 'test_pdf.pdf', pdf: pdf);
+    final customDateString = DateTime.now();
+    final customFormat = DateFormat('yyyyMMdd').format(customDateString);
+
+    return SavePdf.savePdf(name: 'Dibano_' + customFormat +'.pdf', pdf: pdf);
   }
 }

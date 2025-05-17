@@ -11,7 +11,6 @@ class Info extends StatelessWidget {
   const Info({super.key, required this.title});
 
   final String title;
-
   void _showInfoDialog(BuildContext context) {
     showDialog(
       context: context,

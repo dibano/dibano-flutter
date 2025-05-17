@@ -37,7 +37,7 @@ class _PeopleState extends State<People> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: <Widget>[
-                        for (var person in peopleViewModel.personList)
+                        for (var person in peopleViewModel.personList.where((person) => person.deleted == 0))
                           DetailCard(
                             detail: Detail(
                               name: person.personName,

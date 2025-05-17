@@ -4,10 +4,12 @@ class Person extends DatabaseModel{
   @override
   final int? id;
   final String personName;
+  int deleted;
 
   Person({
       this.id,
-      required this.personName
+      required this.personName,
+      required this.deleted
   });
 
   static Future<List<Person>> getAll() async{
@@ -19,14 +21,15 @@ class Person extends DatabaseModel{
   Map<String, Object?> toMap() {
     return {
       'id': id,
-      'personName': personName
+      'personName': personName,
+      'deleted':deleted
     };
   }
 
   // for debugging and testing, i.e. with the print statement
   @override
   String toString() {
-    return 'person{id: $id, personName: $personName}';
+    return 'person{id: $id, personName: $personName, deleted: $deleted}';
   }
 
   @override

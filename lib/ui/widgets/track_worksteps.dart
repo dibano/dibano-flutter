@@ -1,3 +1,4 @@
+import 'package:dibano/data/model/person_model.dart';
 import 'package:dibano/ui/view_model/crops.dart';
 import 'package:dibano/ui/view_model/fertilizer.dart';
 import 'package:dibano/ui/view_model/fields.dart';
@@ -8,6 +9,7 @@ import 'package:dibano/ui/widgets/activities_edit.dart';
 import 'package:dibano/ui/widgets/components/custom_alert_dialog.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
+import 'package:dibano/ui/widgets/components/form_numberfield.dart';
 import 'package:dibano/ui/widgets/fertilizer_edit.dart';
 import 'package:dibano/ui/widgets/person_edit.dart';
 import 'package:dibano/ui/widgets/workstep_summary.dart';
@@ -570,18 +572,20 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
-        showDialog(
-          context: context,
-          builder:
-              (context) => CustomAlertDialog(
-                alertText:
-                    "Möchten Sie die Seite verlassen, ohne zu speichern?",
-                alertType: AlertType.shouldLeave,
-                onDelete: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-        );
+        if(!didPop){
+          showDialog(
+            context: context,
+            builder:
+                (context) => CustomAlertDialog(
+                  alertText:
+                      "Möchten Sie die Seite verlassen, ohne zu speichern?",
+                  alertType: AlertType.shouldLeave,
+                  onDelete: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+          );
+        }
       },
 
       child: GestureDetector(
@@ -685,6 +689,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                       keyboardType: TextInputType.text,
                       maxLine: 5,
                       enableMic: true,
+                      maxLength: 500,
                     ),
 
                     Consumer<CropsViewModel>(
@@ -743,18 +748,18 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  FormTextfield(
+                                  FormNumberField(
                                     label: "Ausbringmenge pro Feld (kg)",
                                     controller: _quantityPerFieldController,
-                                    keyboardType: TextInputType.number,
                                     maxLine: 1,
                                     onChanged: (value) {
+                                      final replacedValue = value.replaceAll(',', '.');
+                                      _quantityPerFieldController.text = replacedValue;
+                                      _quantityPerFieldController.selection = TextSelection.fromPosition(TextPosition(offset: replacedValue.length),);
                                       setState(() {
                                         _selectedFertilizer = "-1";
                                         if (_quantityPerFieldController.text !=
                                                 "" &&
-                                            _quantityPerFieldController.text !=
-                                                null &&
                                             _fieldSize != "0" &&
                                             _fieldSize != null) {
                                           _quantityPerHaController.text =
@@ -877,17 +882,26 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  FormTextfield(
+                                  FormNumberField(
                                     label: "Saattiefe (cm)",
                                     controller: _seedingDepth,
-                                    keyboardType: TextInputType.number,
                                     maxLine: 1,
+                                    onChanged: (value){ 
+                                      final replacedValue = value.replaceAll(',', '.');
+                                      _seedingDepth.text = replacedValue;
+                                      _seedingDepth.selection = TextSelection.fromPosition(TextPosition(offset: replacedValue.length),);
+                                    }
+
                                   ),
-                                  FormTextfield(
+                                  FormNumberField(
                                     label: "Saatmenge (Körner / Quadratmeter)",
                                     controller: _seedingQuantity,
-                                    keyboardType: TextInputType.number,
                                     maxLine: 1,
+                                    onChanged: (value){ 
+                                      final replacedValue = value.replaceAll(',', '.');
+                                      _seedingQuantity.text = replacedValue;
+                                      _seedingQuantity.selection = TextSelection.fromPosition(TextPosition(offset: replacedValue.length),);
+                                    }
                                   ),
                                   FormTextfield(
                                     label: "Beizung",
@@ -895,17 +909,25 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                     keyboardType: TextInputType.text,
                                     maxLine: 1,
                                   ),
-                                  FormTextfield(
+                                  FormNumberField(
                                     label: "Reihenabstand (cm)",
                                     controller: _rowDistance,
-                                    keyboardType: TextInputType.number,
                                     maxLine: 1,
+                                    onChanged: (value){ 
+                                      final replacedValue = value.replaceAll(',', '.');
+                                      _rowDistance.text = replacedValue;
+                                      _rowDistance.selection = TextSelection.fromPosition(TextPosition(offset: replacedValue.length),);
+                                    }
                                   ),
-                                  FormTextfield(
+                                  FormNumberField(
                                     label: "Abstand Körner in einer Reihe (cm)",
                                     controller: _seedingDistance,
-                                    keyboardType: TextInputType.number,
                                     maxLine: 1,
+                                    onChanged: (value){ 
+                                      final replacedValue = value.replaceAll(',', '.');
+                                      _seedingDistance.text = replacedValue;
+                                      _seedingDistance.selection = TextSelection.fromPosition(TextPosition(offset: replacedValue.length),);
+                                    }
                                   ),
                                   FormTextfield(
                                     label: "Keimfähigkeit",
@@ -913,11 +935,15 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                     keyboardType: TextInputType.text,
                                     maxLine: 1,
                                   ),
-                                  FormTextfield(
+                                  FormNumberField(
                                     label: "Ziel Auflaufmenge (Anzahl)",
                                     controller: _goalQuantity,
-                                    keyboardType: TextInputType.number,
                                     maxLine: 1,
+                                    onChanged: (value){ 
+                                      final replacedValue = value.replaceAll(',', '.');
+                                      _goalQuantity.text = replacedValue;
+                                      _goalQuantity.selection = TextSelection.fromPosition(TextPosition(offset: replacedValue.length),);
+                                    }
                                   ),
                                   FormTextfield(
                                     label: "Verwendeter Traktor",
@@ -941,11 +967,15 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  FormTextfield(
+                                  FormNumberField(
                                     label: "Bearbeittiefe (cm)",
                                     controller: _machiningDepth,
-                                    keyboardType: TextInputType.number,
                                     maxLine: 1,
+                                    onChanged: (value){ 
+                                      final replacedValue = value.replaceAll(',', '.');
+                                      _machiningDepth.text = replacedValue;
+                                      _machiningDepth.selection = TextSelection.fromPosition(TextPosition(offset: replacedValue.length),);
+                                    }
                                   ),
                                   FormTextfield(
                                     label: "Verwendeter Traktor",
@@ -982,11 +1012,15 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  FormTextfield(
+                                  FormNumberField(
                                     label: "Bearbeittiefe (cm)",
                                     controller: _machiningDepth,
-                                    keyboardType: TextInputType.number,
                                     maxLine: 1,
+                                    onChanged: (value){ 
+                                      final replacedValue = value.replaceAll(',', '.');
+                                      _machiningDepth.text = replacedValue;
+                                      _machiningDepth.selection = TextSelection.fromPosition(TextPosition(offset: replacedValue.length),);
+                                    }
                                   ),
                                   FormTextfield(
                                     label: "Verwendeter Traktor",
@@ -1035,16 +1069,16 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                     keyboardType: TextInputType.text,
                                     maxLine: 1,
                                   ),
-                                  FormTextfield(
+                                  FormNumberField(
                                     label: "Ausbringmenge pro Feld (l)",
                                     controller: _quantityPerFieldController,
-                                    keyboardType: TextInputType.number,
                                     maxLine: 1,
                                     onChanged: (value) {
+                                      final replacedValue = value.replaceAll(',', '.');
+                                      _quantityPerFieldController.text = replacedValue;
+                                      _quantityPerFieldController.selection = TextSelection.fromPosition(TextPosition(offset: replacedValue.length),);
                                       setState(() {
-                                        if (_quantityPerFieldController != "" &&
-                                            _quantityPerFieldController !=
-                                                null &&
+                                        if (_quantityPerFieldController.text != "" &&
                                             _fieldSize != "0" &&
                                             _fieldSize != null) {
                                           _quantityPerHaController.text =
@@ -1108,17 +1142,25 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  FormTextfield(
+                                  FormNumberField(
                                     label: "Ertrag (dt/ha)",
                                     controller: _actualQuantity,
-                                    keyboardType: TextInputType.number,
                                     maxLine: 1,
+                                    onChanged: (value){ 
+                                        final replacedValue = value.replaceAll(',', '.');
+                                        _actualQuantity.text = replacedValue;
+                                        _actualQuantity.selection = TextSelection.fromPosition(TextPosition(offset: replacedValue.length),);
+                                      }
                                   ),
-                                  FormTextfield(
+                                  FormNumberField(
                                     label: "Wassergehalt (%)",
                                     controller: _waterQuantityProcentage,
-                                    keyboardType: TextInputType.number,
                                     maxLine: 1,
+                                    onChanged: (value){ 
+                                        final replacedValue = value.replaceAll(',', '.');
+                                        _waterQuantityProcentage.text = replacedValue;
+                                        _waterQuantityProcentage.selection = TextSelection.fromPosition(TextPosition(offset: replacedValue.length),);
+                                      }
                                   ),
                                   FormDropdown(
                                     label: "Bodenschaden",
@@ -1141,7 +1183,7 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                       DropdownMenuItem(
                                         value: "2",
                                         child: Text(
-                                          "Mittlere Schädem (gut sichtbar)",
+                                          "Mittlere Schäden (gut sichtbar)",
                                         ),
                                       ),
                                       DropdownMenuItem(
@@ -1193,18 +1235,26 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                                     keyboardType: TextInputType.text,
                                     maxLine: 1,
                                   ),
-                                  FormTextfield(
+                                  FormNumberField(
                                     label: "Anzahl pro Pflanzen (Anzahl)",
                                     controller: _countPerPlant,
-                                    keyboardType: TextInputType.number,
                                     maxLine: 1,
+                                    onChanged: (value){ 
+                                        final replacedValue = value.replaceAll(',', '.');
+                                        _countPerPlant.text = replacedValue;
+                                        _countPerPlant.selection = TextSelection.fromPosition(TextPosition(offset: replacedValue.length),);
+                                      }
                                   ),
-                                  FormTextfield(
+                                  FormNumberField(
                                     label:
                                         "Befallene Pflanzen pro Quadratmeter (Anzahl)",
                                     controller: _plantPerQm,
-                                    keyboardType: TextInputType.number,
                                     maxLine: 1,
+                                    onChanged: (value){ 
+                                        final replacedValue = value.replaceAll(',', '.');
+                                        _plantPerQm.text = replacedValue;
+                                        _plantPerQm.selection = TextSelection.fromPosition(TextPosition(offset: replacedValue.length),);
+                                      }
                                   ),
                                 ],
                               ),
@@ -1220,6 +1270,14 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
 
                     Consumer<PersonViewModel>(
                       builder: (context, personViewModel, child) {
+                        final activePersons = personViewModel.activePersonList;
+                        final selectedId = int.tryParse(_selectedPerson ?? "-1");
+                        final selectedPerson = personViewModel.getPersonById(selectedId ?? -1);
+
+                        final List <Person> dropdownPersons = [
+                          ...activePersons,
+                          if(selectedPerson != null && selectedPerson.deleted == 1 && !activePersons.contains(selectedPerson))selectedPerson,
+                        ];
                         return FormDropdown(
                           label: "Mitarbeiter",
                           value: _selectedPerson!,
@@ -1238,8 +1296,8 @@ class _TrackWorkstepsState extends State<TrackWorksteps> {
                               value: "-1",
                               child: Text("Mitarbeiter wählen"),
                             ),
-                            ...personViewModel.personList.map(
-                              (person) => DropdownMenuItem(
+                            ...dropdownPersons.map(
+                              (Person person) => DropdownMenuItem(
                                 value: person.id.toString(),
                                 child: Text(person.personName),
                               ),

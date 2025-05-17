@@ -2,6 +2,7 @@ import 'package:dibano/ui/view_model/fertilizer.dart';
 import 'package:dibano/ui/widgets/components/custom_alert_dialog.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
+import 'package:dibano/ui/widgets/components/form_numberfield.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -48,18 +49,20 @@ class FertilizerEdit extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
-        showDialog(
-          context: context,
-          builder:
-              (context) => CustomAlertDialog(
-                alertText:
-                    "Möchten Sie die Seite verlassen, ohne zu speichern?",
-                alertType: AlertType.shouldLeave,
-                onDelete: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-        );
+        if(!didPop){
+          showDialog(
+            context: context,
+            builder:
+                (context) => CustomAlertDialog(
+                  alertText:
+                      "Möchten Sie die Seite verlassen, ohne zu speichern?",
+                  alertType: AlertType.shouldLeave,
+                  onDelete: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+          );
+        }
       },
       child: Scaffold(
         appBar: CustomAppBar(title: title, messageOnLeave: true),
@@ -125,23 +128,36 @@ class FertilizerEdit extends StatelessWidget {
                               maxLine: 1,
                               focusNode: _focusNode,
                             ),
-                            FormTextfield(
+                            FormNumberField(
                               label: "Stickstoffkonzentration (N)",
                               controller: _nController,
-                              keyboardType: TextInputType.number,
                               maxLine: 1,
+                              onChanged: (value){ 
+                                      final replacedValue = value.replaceAll(',', '.');
+                                      _nController.text = replacedValue;
+                                      _nController.selection = TextSelection.fromPosition(TextPosition(offset: replacedValue.length),);
+                                    }
                             ),
-                            FormTextfield(
+                            FormNumberField(
                               label: "Phosphorkonzentration (P)",
                               controller: _pController,
-                              keyboardType: TextInputType.number,
                               maxLine: 1,
+                              onChanged: (value){ 
+                                      final replacedValue = value.replaceAll(',', '.');
+                                      _pController.text = replacedValue;
+                                      _pController.selection = TextSelection.fromPosition(TextPosition(offset: replacedValue.length),);
+                                    }
+
                             ),
-                            FormTextfield(
+                            FormNumberField(
                               label: "Kalikonzentration (K)",
                               controller: _kController,
-                              keyboardType: TextInputType.number,
                               maxLine: 1,
+                              onChanged: (value){ 
+                                      final replacedValue = value.replaceAll(',', '.');
+                                      _kController.text = replacedValue;
+                                      _kController.selection = TextSelection.fromPosition(TextPosition(offset: replacedValue.length),);
+                                    }
                             ),
                           ],
                         ),

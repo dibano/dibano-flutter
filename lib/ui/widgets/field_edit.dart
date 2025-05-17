@@ -3,6 +3,7 @@ import 'package:dibano/ui/widgets/components/custom_alert_dialog.dart';
 import 'package:dibano/ui/widgets/components/custom_app_bar.dart';
 import 'package:dibano/ui/widgets/components/custom_button_large.dart';
 import 'package:dibano/ui/widgets/components/farm_colors.dart';
+import 'package:dibano/ui/widgets/components/form_numberfield.dart';
 import 'package:dibano/ui/widgets/components/form_textfield.dart';
 import 'package:dibano/ui/widgets/GeoAdminViewer.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,20 @@ class FieldEdit extends StatelessWidget {
   final TextEditingController _fieldSizeController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
+  void _showInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomAlertDialog(
+          alertText:
+              "Sie können hier ein Feld erfassen. Geben Sie einen Feldnamen ein. Anschliessend können Sie entweder einfach die grösse des Feldes eintragen, oder sie können über \"Karte anzeigen\" anschliessend auf ein Feld klicken. Die grösse wird dann automatisch erfasst und kann bei bedarf noch angepasst werden.",
+          alertType: AlertType.info,
+        );
+      },
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     /*String? _longitude = longitude;
@@ -47,26 +62,39 @@ class FieldEdit extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
-        showDialog(
-          context: context,
-          builder:
-              (context) => CustomAlertDialog(
-                alertText:
-                    "Möchten Sie die Seite verlassen, ohne zu speichern?",
-                alertType: AlertType.shouldLeave,
-                onDelete: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-        );
+        if(!didPop){
+          showDialog(
+            context: context,
+            builder:
+                (context) => CustomAlertDialog(
+                  alertText:
+                      "Möchten Sie die Seite verlassen, ohne zu speichern?",
+                  alertType: AlertType.shouldLeave,
+                  onDelete: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+          );
+        }
       },
 
       child: Scaffold(
-        appBar: CustomAppBar(title: title, messageOnLeave: true),
+        appBar: CustomAppBar(
+          title: title, 
+          messageOnLeave: true,
+          hasInfo: true,
+          onInfoPressed: () => _showInfoDialog(context),
+        ),
         body: Padding(
           padding: const EdgeInsets.all(16),
           child: Consumer<FieldsViewModel>(
             builder: (context, fieldsViewModel, child) {
+              double? lastLatitude;
+              double? lastLongitude;
+              if(fieldsViewModel.fieldCoordinates.isNotEmpty){
+                lastLatitude = fieldsViewModel.fieldCoordinates.last["latitude"];
+                lastLongitude = fieldsViewModel.fieldCoordinates.last["longitude"];
+              }
               return Center(
                 child: Column(
                   children: <Widget>[
@@ -126,46 +154,90 @@ class FieldEdit extends StatelessWidget {
                             Row(
                               children: [
                                 Expanded(
-                                  child: FormTextfield(
+                                  child: FormNumberField(
                                     label: "Feldgrösse in ha",
                                     controller: _fieldSizeController,
-                                    keyboardType: TextInputType.number,
                                     maxLine: 1,
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        FarmColors.darkGreenIntense,
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                      vertical: 12.0,
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    final result = await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) => FieldMap(
-                                              geoAdminLayer:
-                                                  'ch.blw.landwirtschaftliche-nutzungsflaechen',
-                                            ),
-                                      ),
-                                    );
-                                    if (result != null) {
-                                      longitude =
-                                          result['longitude'].toString();
-                                      latitude = result['latitude'].toString();
-                                      fieldSize =
-                                          result['flaecheHa'].toString();
-                                      _fieldSizeController.text = fieldSize;
+                                    onChanged: (value){ 
+                                      final replacedValue = value.replaceAll(',', '.');
+                                      _fieldSizeController.text = replacedValue;
+                                      _fieldSizeController.selection = TextSelection.fromPosition(TextPosition(offset: replacedValue.length),);
                                     }
-                                  },
-                                  child: const Text('Karte anzeigen'),
+
+                                  ),
                                 ),
+                                if(lastLatitude != null && lastLongitude != null && lastLatitude != 0 && lastLongitude != 0)...{
+                                  const SizedBox(width: 16),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          FarmColors.darkGreenIntense,
+                                      foregroundColor: Colors.white,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0,
+                                        vertical: 12.0,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      final result = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => FieldMap(
+                                                geoAdminLayer:
+                                                    'ch.blw.landwirtschaftliche-nutzungsflaechen',
+                                                    latitude: fieldsViewModel.fieldCoordinates.last["latitude"],
+                                                    longitude: fieldsViewModel.fieldCoordinates.last["longitude"],
+                                
+                                              ),
+                                        ),
+                                      );
+                                      if (result != null) {
+                                        longitude =
+                                            result['longitude'].toString();
+                                        latitude = result['latitude'].toString();
+                                        fieldSize =
+                                            result['flaecheHa'].toString();
+                                        _fieldSizeController.text = fieldSize;
+                                      }
+                                  },
+                                    child: const Text('Karte anzeigen'),
+                                  ),
+                                }else...{
+                                  const SizedBox(width: 16),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          FarmColors.darkGreenIntense,
+                                      foregroundColor: Colors.white,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0,
+                                        vertical: 12.0,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      final result = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => FieldMap(
+                                                geoAdminLayer:
+                                                    'ch.blw.landwirtschaftliche-nutzungsflaechen',
+                                              ),
+                                        ),
+                                      );
+                                      if (result != null) {
+                                        longitude =
+                                            result['longitude'].toString();
+                                        latitude = result['latitude'].toString();
+                                        fieldSize =
+                                            result['flaecheHa'].toString();
+                                        _fieldSizeController.text = fieldSize;
+                                      }
+                                  },
+                                    child: const Text('Karte anzeigen'),
+                                  ),
+                                }
                               ],
                             ),
                             Text("Daten: © geo.admin.ch"),

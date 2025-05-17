@@ -24,12 +24,13 @@ class DatabaseHandler{
   ///**************************************************************************
     return openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: (database, version) async{
         await database.execute('''
           CREATE TABLE Person(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            personName VARCHAR(500) NOT NULL UNIQUE
+            personName VARCHAR(500) NOT NULL UNIQUE,
+            deleted INTEGER DEFAULT 0
           )
         ''');
 
@@ -153,7 +154,7 @@ class DatabaseHandler{
 
         await database.execute('''
           INSERT INTO Activity(activityName)
-          VALUES ('Anwedung Pflanzenschutzmittel');
+          VALUES ('Anwendung Pflanzenschutzmittel');
         ''');
 
         await database.execute('''
@@ -260,6 +261,11 @@ class DatabaseHandler{
             left JOIN Fertilizer fe
             on fe.id = ws.fertilizerId
         ''');
+      },
+      onUpgrade: (db, oldVersion, newVersion) async{
+        if(oldVersion < 2){
+          await db.execute('ALTER TABLE Person ADD COLUMN deleted INTEGER DEFAULT 0');
+        }
       }
     );
   }
@@ -382,9 +388,12 @@ class DatabaseHandler{
     final db = await database;
     final List<Map<String, Object?>> personMaps = await db.query('Person');
     return [
-      for (final {'id': id as int, 'personName': personName as String}
+      for (final {'id': id as int, 'personName': personName as String, 'deleted':deleted as int}
           in personMaps)
-        Person(id: id, personName: personName),
+        Person(
+          id: id, 
+          personName: deleted == 1 ? '$personName (gelöscht)': personName, 
+          deleted: deleted),
     ];
   }
 
