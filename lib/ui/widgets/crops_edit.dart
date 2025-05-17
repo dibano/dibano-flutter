@@ -66,18 +66,20 @@ class _CropsEditState extends State<CropsEdit> {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
-        showDialog(
-          context: context,
-          builder:
-              (context) => CustomAlertDialog(
-                alertText:
-                    "Möchten Sie die Seite verlassen, ohne zu speichern?",
-                alertType: AlertType.shouldLeave,
-                onDelete: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-        );
+        if(!didPop){
+          showDialog(
+            context: context,
+            builder:
+                (context) => CustomAlertDialog(
+                  alertText:
+                      "Möchten Sie die Seite verlassen, ohne zu speichern?",
+                  alertType: AlertType.shouldLeave,
+                  onDelete: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+          );
+        }
       },
 
       child: Scaffold(

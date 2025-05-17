@@ -10,7 +10,14 @@ import 'package:url_launcher/url_launcher.dart';
 
 class FieldMap extends StatefulWidget {
   final String geoAdminLayer;
-  const FieldMap({Key? key, required this.geoAdminLayer}) : super(key: key);
+  final double? longitude;
+  final double? latitude;
+  const FieldMap({
+    Key? key, 
+    required this.geoAdminLayer,
+    this.longitude = 47.3667,
+    this.latitude = 8.5500,
+    }) : super(key: key);
 
   @override
   _FieldMapState createState() => _FieldMapState();
@@ -128,8 +135,8 @@ class _FieldMapState extends State<FieldMap> {
             FlutterMap(
               mapController: _mapController,
               options: MapOptions(
-                initialCenter: LatLng(47.000, 8.6033),
-                initialZoom: 15.0,
+                initialCenter: LatLng(widget.longitude??47.3667, widget.latitude??8.5500),
+                initialZoom: 13.0,
                 onTap: (tapPosition, latlng) => _onTap(latlng),
               ),
               children: [

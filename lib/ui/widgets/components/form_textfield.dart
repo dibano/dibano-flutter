@@ -15,6 +15,7 @@ class FormTextfield extends StatefulWidget {
   final FocusNode? focusNode;
   final ValueChanged<String>? onChanged;
   final bool? enableMic;
+  final int? maxLength;
   const FormTextfield({
     super.key,
     required this.label,
@@ -24,6 +25,7 @@ class FormTextfield extends StatefulWidget {
     this.focusNode,
     this.onChanged,
     this.enableMic = false,
+    this.maxLength = 50,
   });
   @override
   _FormTextFieldState createState() => new _FormTextFieldState();
@@ -133,7 +135,7 @@ class _FormTextFieldState extends State<FormTextfield> {
           focusNode: widget.focusNode,
           onChanged: widget.onChanged,
           textCapitalization: TextCapitalization.sentences,
-          maxLength: 500,
+          maxLength: widget.maxLength,
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
@@ -161,6 +163,7 @@ class _FormTextFieldState extends State<FormTextfield> {
                       icon: Icon(
                         _isListeningMoment! ? Icons.mic : Icons.mic_none,
                         color: FarmColors.darkGreenIntense,
+                        size: 35,
                       ),
                       onPressed:
                           _isListeningMoment!
