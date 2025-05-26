@@ -32,7 +32,7 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   _buildFullWidthButton(context, "Meine Tätigkeiten"),
                   const SizedBox(height: 8),
-                  _buildFullWidthButton(context, "Tätigkeiten erfassen"),
+                  _buildFullWidthButton(context, "Tätigkeiten dokumentieren"),
                 ],
               ),
             ),
@@ -79,7 +79,7 @@ class HomeScreen extends StatelessWidget {
     final buttonDataList = viewModel.getButtonDataList();
     return [
       for (final buttonData in buttonDataList)
-        if (buttonData.title != "Tätigkeiten erfassen" &&
+        if (buttonData.title != "Tätigkeiten dokumentieren" &&
             buttonData.title != "Meine Tätigkeiten")
           _createButton(buttonData, buttonSize),
     ];

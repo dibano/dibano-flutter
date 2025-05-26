@@ -470,7 +470,7 @@ class _WorkstepSummaryState extends State<WorkstepSummary> {
           final result = await Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => TrackWorksteps(title: "Tätigkeit erfassen"),
+              builder: (context) => TrackWorksteps(title: "Tätigkeit dokumentieren"),
             ),
           );
           if (result == true) {
