@@ -13,15 +13,19 @@ final GoogleSignIn _googleSignIn = GoogleSignIn(
 );
 
 Future<GoogleSignInAccount?> singIn() async {
-  try {
-    final account = await _googleSignIn.signIn();
-    if (account != null) {
-      return account;
-    } else {
-      return null;
-    }
+    try {
+    GoogleSignInAccount? account = _googleSignIn.currentUser;
+
+    // Versuche ein "silent sign-in"
+    account ??= await _googleSignIn.signInSilently();
+
+    // Fallback: Nur wenn nötig, aktiv einloggen
+    account ??= await _googleSignIn.signIn();
+
+    return account;
   } catch (e) {
-    print("Error signing in: $e");
+    print("Fehler beim Anmelden: $e");
+    return null;
   }
 }
 

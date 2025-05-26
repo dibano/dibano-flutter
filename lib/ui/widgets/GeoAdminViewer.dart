@@ -128,7 +128,7 @@ class _FieldMapState extends State<FieldMap> {
     Widget build(BuildContext context) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Flutter Map Example"),
+          title: const Text("Feld per tippen auswählen"),
         ),
         body: Stack(
           children: [

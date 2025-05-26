@@ -10,8 +10,8 @@ class HomeScreenViewModel extends ChangeNotifier {
   final List<ButtonData> _buttonDataList = [
     ButtonData(
       icon: Icons.add_task,
-      title: 'Tätigkeiten erfassen',
-      routeWidget: TrackWorksteps(title: 'Tätigkeiten erfassen'),
+      title: 'Tätigkeiten dokumentieren',
+      routeWidget: TrackWorksteps(title: 'Tätigkeiten dokumentieren'),
       color: FarmColors.darkGreen,
     ),
     ButtonData(
